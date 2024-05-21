@@ -6,4 +6,4 @@ spring:
   cache:
     type: redis
   config:
-    import: conf/mysql-local.yml,conf/redis-yoga14s.yml,conf/jackson.yml,conf/boot-actuator.yml
+    import: conf/mysql-local.yml,conf/redis-yoga14s.yml,conf/boot-actuator.yml
