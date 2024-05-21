@@ -2,18 +2,16 @@ server:
   port: 9521
 spring:
   application:
-    name: sb2-security
-  redis:
-    host: 192.168.110.180
-    port: 6379
-    password: '123456'
-    database: 0
+    name: micro-srv-a
   cache:
     type: redis
   config:
-    import: conf/maria-local.yml
+    import: conf/mysql-local.yml,conf/redis-yoga14s.yml
 management:
   endpoints:
     web:
       exposure:
         include: '*'
+  health:
+    db:
+      enabled: off

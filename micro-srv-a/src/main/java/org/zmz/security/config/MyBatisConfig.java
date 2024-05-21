@@ -19,13 +19,13 @@ import javax.sql.DataSource;
         sqlSessionTemplateRef = "dataopenSqlSessionTemplate")
 public class MyBatisConfig {
     @Resource
-    private DataSource dataopenDataSource;
+    private DataSource dataopenMysqlDataSource;
 
     @Bean(name = "dataopenSqlSessionFactory")
     @Primary
     public SqlSessionFactory dataopenSqlSessionFactory() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dataopenDataSource);
+        sqlSessionFactoryBean.setDataSource(dataopenMysqlDataSource);
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
                 .getResources("classpath:mapper/dataopen/*Mapper.xml"));
         return sqlSessionFactoryBean.getObject();
@@ -34,7 +34,7 @@ public class MyBatisConfig {
     @Bean(name = "dataopenTransactionManager")
     @Primary
     public DataSourceTransactionManager dataopenTransactionManager() {
-        return new DataSourceTransactionManager(dataopenDataSource);
+        return new DataSourceTransactionManager(dataopenMysqlDataSource);
     }
 
     @Bean(name = "dataopenSqlSessionTemplate")

@@ -9,9 +9,15 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DataSourceConfig {
-    @Bean(name = "dataopenDataSource")
+    @Bean(name = "dataopenMariaDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.maria.dataopen")
-    public DataSource dataopenDataSource() {
+    public DataSource dataopenMariaDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "dataopenMysqlDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.mysql.dataopen")
+    public DataSource dataopenMysqlDataSource() {
         return DataSourceBuilder.create().build();
     }
 }

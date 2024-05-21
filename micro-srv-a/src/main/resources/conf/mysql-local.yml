@@ -2,8 +2,8 @@ spring:
   datasource:
     mysql:
       dataopen:
-        driverClassName: org.mariadb.jdbc.Driver
-        jdbcUrl: jdbc:mariadb://localhost:3306/mytest?serverTimezone=Asia/Shanghai
+        driverClassName: com.mysql.cj.jdbc.Driver
+        jdbcUrl: jdbc:mysql://localhost:3306/mytest?serverTimezone=Asia/Shanghai
         username: root
         password: '123456'
 
