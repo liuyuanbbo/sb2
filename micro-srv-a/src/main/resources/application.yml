@@ -6,12 +6,4 @@ spring:
   cache:
     type: redis
   config:
-    import: conf/mysql-local.yml,conf/redis-yoga14s.yml
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-  health:
-    db:
-      enabled: off
+    import: conf/mysql-local.yml,conf/redis-yoga14s.yml,conf/jackson.yml,conf/boot-actuator.yml

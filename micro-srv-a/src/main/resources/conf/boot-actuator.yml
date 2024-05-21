@@ -1,1 +1,8 @@
-mana
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  health:
+    db:
+      enabled: off
