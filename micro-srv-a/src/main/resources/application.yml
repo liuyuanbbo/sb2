@@ -1,0 +1,17 @@
+server:
+  port: 9521
+spring:
+  application:
+    name: sb2-security
+  redis:
+    host: 192.168.110.180
+    port: 6379
+    password: '123456'
+    database: 0
+  cache:
+    type: redis
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
