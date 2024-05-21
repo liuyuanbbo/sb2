@@ -14,11 +14,11 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @Slf4j
 @EnableRedisRepositories
-public class SecurityApp {
+public class MicroSrvA_App {
 
     public static void main(String[] args) {
         log.info("springboot 在端口 {} 启动", 9521);
-        SpringApplication.run(SecurityApp.class, args);
+        SpringApplication.run(MicroSrvA_App.class, args);
     }
 
     @Bean
