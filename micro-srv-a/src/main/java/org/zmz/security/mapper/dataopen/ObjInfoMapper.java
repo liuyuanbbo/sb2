@@ -9,5 +9,7 @@ import java.util.List;
 public interface ObjInfoMapper {
     LocalDateTime selectNow();
 
+    List<ObjInfo> queryConditionByChoose(ObjInfoQueryQo objInfoQueryQo);
+
     List<ObjInfo> queryCondition(ObjInfoQueryQo objInfoQueryQo);
 }

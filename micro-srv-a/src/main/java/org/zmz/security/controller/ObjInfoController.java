@@ -28,7 +28,15 @@ public class ObjInfoController {
 
     @PostMapping("/queryCondition")
     public R<List<ObjInfo>> queryCondition(@RequestBody ObjInfoQueryQo qo) {
-        return R.ok(objInfoService.queryCondition(qo));
+        Integer qoFlag = qo.getQoFlag();
+        List<ObjInfo> objInfos = null;
+        if (qoFlag == 1) {
+            objInfos = objInfoService.queryConditionByChoose(qo);
+        }
+        if (qoFlag == 2) {
+            objInfos = objInfoService.queryCondition(qo);
+        }
+        return R.ok(objInfos);
     }
 
 }

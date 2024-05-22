@@ -19,6 +19,10 @@ public class ObjInfoService {
         return objInfoMapper.selectNow();
     }
 
+    public List<ObjInfo> queryConditionByChoose(ObjInfoQueryQo qo) {
+        return objInfoMapper.queryConditionByChoose(qo);
+    }
+
     public List<ObjInfo> queryCondition(ObjInfoQueryQo qo) {
         return objInfoMapper.queryCondition(qo);
     }

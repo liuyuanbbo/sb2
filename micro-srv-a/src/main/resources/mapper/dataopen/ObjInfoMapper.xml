@@ -33,7 +33,7 @@
         select now()
     </select>
 
-    <select id="queryCondition" resultMap="baseMap" parameterType="org.zmz.security.vo.request.ObjInfoQueryQo">
+    <select id="queryConditionByChoose" resultMap="baseMap" parameterType="org.zmz.security.vo.request.ObjInfoQueryQo">
         select *
         from obj_info
         where status_cd != '1200'
@@ -50,5 +50,20 @@
             <otherwise>
             </otherwise>
         </choose>
+    </select>
+
+    <select id="queryCondition" resultMap="baseMap" parameterType="org.zmz.security.vo.request.ObjInfoQueryQo">
+        select *
+        from obj_info
+        where status_cd != '1200'
+        <if test="grpId!=null and grpId!=''">
+            and grp_id = #{grpId}
+        </if>
+        <if test="objectCode!=null and objectCode!=''">
+            and object_code = #{objectCode}
+        </if>
+        <if test="objectName!=null and objectName!=''">
+            and object_name = #{objectName}
+        </if>
     </select>
 </mapper>
