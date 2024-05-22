@@ -6,4 +6,9 @@ spring:
   cache:
     type: redis
   config:
-    import: conf/maria-local.yml,conf/redis-code01.yml,conf/boot-actuator.yml
+    import:
+      - conf/maria-local.yml
+      - conf/redis-code01.yml
+      - conf/boot-actuator.yml
+      - conf/kafka-code01.yml
+

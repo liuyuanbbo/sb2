@@ -3,3 +3,6 @@ server:
 spring:
   application:
     name: micro-srv-b
+  config:
+    import:
+      - conf/kafka-code01.yml
