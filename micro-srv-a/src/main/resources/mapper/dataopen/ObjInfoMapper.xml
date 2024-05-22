@@ -3,7 +3,52 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.zmz.security.mapper.dataopen.ObjInfoMapper">
+    <resultMap id="baseMap" type="org.zmz.security.model.ObjInfo">
+        <id column="object_id" property="objectId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="grp_id" property="grpId"/>
+        <result column="object_code" property="objectCode"/>
+        <result column="object_name" property="objectName"/>
+        <result column="primary_key" property="primaryKey"/>
+        <result column="meta_table_id" property="metaTableId"/>
+        <result column="table_code" property="tableCode"/>
+        <result column="table_type" property="tableType"/>
+        <result column="status_cd" property="statusCd"/>
+        <result column="layer" property="layer"/>
+        <result column="domain" property="domain"/>
+        <result column="comments" property="comments"/>
+        <result column="create_type" property="createType"/>
+        <result column="oper_id" property="operId"/>
+        <result column="com_acct_id" property="comAcctId"/>
+        <result column="dir_id" property="dirId"/>
+        <result column="datasource_id" property="datasourceId"/>
+        <result column="data_cnt_type" property="dataCntType"/>
+        <result column="object_alias" property="objectAlias"/>
+        <result column="project_id" property="projectId"/>
+        <result column="key_code" property="keyCode"/>
+        <result column="order_no" property="orderNo"/>
+    </resultMap>
+
     <select id="selectNow" resultType="java.time.LocalDateTime">
         select now()
+    </select>
+
+    <select id="queryCondition" resultMap="baseMap" parameterType="org.zmz.security.vo.request.ObjInfoQueryQo">
+        select *
+        from obj_info
+        where status_cd != '1200'
+        <choose>
+            <when test="grpId!=null and grpId!=''">
+                and grp_id = #{grpId}
+            </when>
+            <when test="objectCode!=null and objectCode!=''">
+                and object_code = #{objectCode}
+            </when>
+            <when test="objectName!=null and objectName!=''">
+                and object_name = #{objectName}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
     </select>
 </mapper>
