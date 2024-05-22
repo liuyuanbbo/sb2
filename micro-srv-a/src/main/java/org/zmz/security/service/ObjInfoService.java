@@ -27,4 +27,9 @@ public class ObjInfoService {
         return objInfoMapper.queryCondition(qo);
     }
 
+    public List<ObjInfo> selectAll(){
+        return objInfoMapper.selectAll();
+    }
+
+
 }

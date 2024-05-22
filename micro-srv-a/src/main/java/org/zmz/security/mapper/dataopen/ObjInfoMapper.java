@@ -12,4 +12,6 @@ public interface ObjInfoMapper {
     List<ObjInfo> queryConditionByChoose(ObjInfoQueryQo objInfoQueryQo);
 
     List<ObjInfo> queryCondition(ObjInfoQueryQo objInfoQueryQo);
+
+    List<ObjInfo> selectAll();
 }

@@ -66,4 +66,9 @@
             and object_name = #{objectName}
         </if>
     </select>
+
+    <select id="selectAll" resultMap="baseMap">
+        select *
+        from obj_info;
+    </select>
 </mapper>
