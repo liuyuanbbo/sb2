@@ -5,4 +5,5 @@ spring:
     name: micro-srv-b
   config:
     import:
-      - conf/kafka-code01.yml
+      # - conf/kafka-code01.yml
+      - conf/kafka-yoga14s.yml
