@@ -7,3 +7,5 @@ spring:
     import:
       # - conf/kafka-code01.yml
       - conf/kafka-yoga14s.yml
+      - conf/mybatis-plus.yml
+      - conf/mysql-local.yml

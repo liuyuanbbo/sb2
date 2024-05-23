@@ -1,10 +1,11 @@
-package org.zmz.b.kafka;
+package org.zmz.b.portal.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.zmz.common.Message;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @Component
 @Slf4j
+@ConditionalOnExpression("${kafka.schedule.receiver.enable:true}")
 public class KafkaReceiver {
 
     ObjectMapper objectMapper;
