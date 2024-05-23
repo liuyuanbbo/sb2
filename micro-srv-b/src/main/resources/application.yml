@@ -9,3 +9,6 @@ spring:
       - conf/kafka-yoga14s.yml
       - conf/mybatis-plus.yml
       - conf/mysql-local.yml
+logging:
+  level:
+    org.zmz.b: debug

@@ -20,7 +20,7 @@ create table t_data_center_metadata
     description   varchar(64)  not null comment '指标描述',
     index_sort    smallint(11) not null default '0' comment '指标排序',
     base_value    int(11)      not null default '10' comment '基准值,用来做展示数据',
-    gmt_create   datetime     not null default current_timestamp comment '创建时间',
+    gmt_create    datetime     not null default current_timestamp comment '创建时间',
     gmt_modified  datetime     not null default current_timestamp ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     status        tinyint(1)   not null default '1' comment '1-未删除 0-已删除',
     PRIMARY KEY (id)
@@ -40,7 +40,7 @@ create table t_data_center_collect
     content        varchar(255) not null comment '根据 collect_way配置,1-sql方式采集 则表示sql脚本,2-接口方式采集,表示接口url',
     duplicate_flag bit(1)       not null default b'0' comment '是否去重 1-去重,0-不去重',
     period_format  varchar(64)  not null comment '统计周期格式',
-    gmt_create    datetime     not null default current_timestamp comment '创建时间',
+    gmt_create     datetime     not null default current_timestamp comment '创建时间',
     gmt_modified   datetime     not null default current_timestamp ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     status         tinyint(1)   not null default '1' comment '1-未删除 0-已删除',
     PRIMARY KEY (id)
@@ -72,7 +72,7 @@ drop table if exists t_data_center_storage;
 CREATE TABLE t_data_center_storage
 (
     id           bigint(20)   NOT NULL AUTO_INCREMENT,
-    rule         bigint(20)   NOT NULL COMMENT '规则表主键id',
+    rule_id      bigint(20)   NOT NULL COMMENT '规则表主键id',
     data_source  varchar(128) NOT NULL DEFAULT 'data-center' COMMENT '存储当前规则下的指标所用的数据源，默认是data-center',
     table_prefix varchar(64)  NOT NULL DEFAULT 't_generate_' COMMENT '自动生成表前缀，默认为t_generate_，生成表的规则：t_generate_{en_name}_{dimension}_{date}',
     gmt_create   datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

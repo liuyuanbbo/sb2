@@ -1,4 +1,4 @@
-package org.zmz.b.infra.model;
+package org.zmz.b.infra.repository.model;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Getter;

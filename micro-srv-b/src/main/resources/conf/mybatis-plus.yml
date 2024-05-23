@@ -7,4 +7,4 @@ mybatis-plus:
       logic-not-delete-value: 1 # 1表示未删除
   configuration:
     map-underscore-to-camel-case: on
-  type-aliases-package: org.zmz.b.infra.model
+  type-aliases-package: org.zmz.b.infra.repository.model

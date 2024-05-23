@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.b.infra.repository.mapper.MetaDataMapper">
+    <resultMap id="baseMap" type="org.zmz.b.infra.repository.model.MetaData">
+        <id column="object_id" property="objectId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="grp_id" property="grpId"/>
+        <result column="object_code" property="objectCode"/>
+        <result column="object_name" property="objectName"/>
+        <result column="primary_key" property="primaryKey"/>
+        <result column="meta_table_id" property="metaTableId"/>
+        <result column="table_code" property="tableCode"/>
+        <result column="table_type" property="tableType"/>
+        <result column="status_cd" property="statusCd"/>
+        <result column="layer" property="layer"/>
+        <result column="domain" property="domain"/>
+        <result column="comments" property="comments"/>
+        <result column="create_type" property="createType"/>
+        <result column="oper_id" property="operId"/>
+        <result column="com_acct_id" property="comAcctId"/>
+        <result column="dir_id" property="dirId"/>
+        <result column="datasource_id" property="datasourceId"/>
+        <result column="data_cnt_type" property="dataCntType"/>
+        <result column="object_alias" property="objectAlias"/>
+        <result column="project_id" property="projectId"/>
+        <result column="key_code" property="keyCode"/>
+        <result column="order_no" property="orderNo"/>
+    </resultMap>
+
+    <select id="selectNow" resultType="java.time.LocalDateTime">
+        select now()
+    </select>
+</mapper>
