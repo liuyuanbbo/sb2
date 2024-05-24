@@ -1,5 +1,6 @@
 package org.zmz.b.test;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -14,6 +15,25 @@ import java.util.Map;
 
 @Slf4j
 public class HDFSApiTest {
+
+    private static final Map<ProIndexStateEnum, String> receiveUrlMap = new HashMap<>() {{
+        put(ProIndexStateEnum.ONLINE, "/smartservice/ProIndexJentityController/online");
+        put(ProIndexStateEnum.OFFLINE, "/smartservice/ProIndexJentityController/offline");
+        //put(ProIndexStateEnum.INVALID, "/smartservice/ProIndexJentityController/invalid");
+    }};
+
+    @Getter
+    enum ProIndexStateEnum {
+        /**
+         * 1000 提交 1100 草稿 1200 删除
+         */
+        OFFLINE("1100"), ONLINE("1000"), DELETE("1200"), INVALID("1300");
+        private final String state;
+
+        ProIndexStateEnum(String state) {
+            this.state = state;
+        }
+    }
 
     static class BizException extends RuntimeException {
         public BizException(String message) {
@@ -109,5 +129,15 @@ public class HDFSApiTest {
         log.info("testMapCompute 返回值2: {}", ov2);
         log.info("testMapCompute 获取值1: {}", map.get("aa"));
         log.info("testMapCompute 获取值2: {}", map.get("bb"));
+    }
+
+    @Test
+    public void testEnumMap() {
+        ProIndexStateEnum offlineEnum = ProIndexStateEnum.OFFLINE;
+        ProIndexStateEnum invalidEnum = ProIndexStateEnum.INVALID;
+        boolean isContainsOffline = receiveUrlMap.containsKey(offlineEnum);
+        boolean isContainsInvalidEnum = receiveUrlMap.containsKey(invalidEnum);
+        log.info("是否包含离线枚举:{}", isContainsOffline);
+        log.info("是否包含非法枚举:{}", isContainsInvalidEnum);
     }
 }
