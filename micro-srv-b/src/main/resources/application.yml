@@ -6,9 +6,11 @@ spring:
   config:
     import:
       # - conf/kafka-code01.yml
-      - conf/kafka-yoga14s.yml
+      # - conf/kafka-yoga14s.yml
+      - conf/kafka-code01.yml
       - conf/mybatis-plus.yml
-      - conf/mysql-local.yml
+      # - conf/mysql-local.yml
+      - conf/maria-local.yml
 logging:
   level:
     org.zmz.b: debug
