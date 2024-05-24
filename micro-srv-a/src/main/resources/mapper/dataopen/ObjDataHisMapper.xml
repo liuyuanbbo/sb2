@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.security.mapper.dataopen.ObjDataHisMapper">
+    <resultMap id="ObjDataHisResultMap" type="org.zmz.security.model.ObjDataHis">
+        <id column="version_id" property="versionId"/>
+        <result column="data_id" property="dataId"/>
+        <result column="data_type" property="dataType"/>
+        <result column="version" property="version"/>
+        <result column="history_create_time" property="historyCreateTime"/>
+        <result column="create_staff" property="createStaff"/>
+        <result column="create_staff_name" property="createStaffName"/>
+        <result column="json" property="json"/>
+    </resultMap>
+
+    <sql id="ObjDataHisColumns">
+        a
+        .
+        version_id
+        ,
+        a.data_id,
+        a.data_type,
+        a.version,
+        a.history_create_time,
+        a.create_staff,
+        a.create_staff_name,
+        a.json
+    </sql>
+
+    <select id="selectRecentTwoRecords" parameterType="org.zmz.security.vo.request.ObjDataHisQo"
+            resultMap="ObjDataHisResultMap">
+        SELECT
+        <include refid="ObjDataHisColumns"/>
+        FROM obj_data_his a
+        <where>
+            <if test="dataId != null and dataId != ''">
+                and a.data_id = #{dataId}
+            </if>
+            <if test="dataType != null and dataType != ''">
+                and a.data_type = #{dataType}
+            </if>
+            order by history_create_time desc , version desc
+            limit 2
+        </where>
+    </select>
+
+    <select id="listAll" resultMap="ObjDataHisResultMap">
+        SELECT
+        <include refid="ObjDataHisColumns"/>
+        FROM obj_data_his a
+    </select>
+</mapper>

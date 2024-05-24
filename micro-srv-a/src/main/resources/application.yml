@@ -8,10 +8,11 @@ spring:
   config:
     import:
       # - conf/maria-local.yml
-      # - conf/mysql-iwhale-dev.yml
-      - conf/mysql-local.yml
+      - conf/mysql-iwhale-dev.yml
+      # - conf/mysql-local.yml
       - conf/redis-code01.yml
       - conf/boot-actuator.yml
       # - conf/kafka-code01.yml
       - conf/kafka-yoga14s.yml
+      - conf/postgres-code01.yml
 

@@ -20,4 +20,10 @@ public class DataSourceConfig {
     public DataSource dataopenMysqlDataSource() {
         return DataSourceBuilder.create().build();
     }
+
+    @Bean(name = "hrdbPgsqlDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.pgsql.hrdb")
+    public DataSource hrdbPgsqlDataSource() {
+        return DataSourceBuilder.create().build();
+    }
 }
