@@ -3,6 +3,8 @@
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
+    <!--引用外部数据库配置文件-->
+    <properties resource="maria-local.properties"/>
     <!--targetRuntime="MyBatis3Simple"表示生成简易版本，这里创建原始版本,参数为MyBatis3-->
     <context id="testTables" targetRuntime="MyBatis3">
         <commentGenerator>
@@ -17,10 +19,10 @@
                         password="123456">
         </jdbcConnection>-->
         <!--mariadb连接信息-->
-        <jdbcConnection driverClass="org.mariadb.jdbc.Driver"
-                        connectionURL="jdbc:mariadb://localhost:3306/datacenter?serverTimezone=Asia/Shanghai"
-                        userId="root"
-                        password="123456">
+        <jdbcConnection driverClass="${jdbc.driver-class-name}"
+                        connectionURL="${jdbc.url}"
+                        userId="${jdbc.username}"
+                        password="${jdbc.password}">
         </jdbcConnection>
 
         <!-- 默认false，把JDBC DECIMAL和NUMERIC类型解析为Integer，为true时把JDBC DECIMAL 和
@@ -31,7 +33,7 @@
 
         <!-- targetProject:POJO类生成的位置 -->
         <javaModelGenerator targetPackage="org.zmz.model"
-                            targetProject="./src/main/java">
+                            targetProject="src/main/java">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
             <!-- 从数据库返回的值被清理前后的空格 -->
@@ -39,14 +41,14 @@
         </javaModelGenerator>
         <!-- targetProject:mapper映射文件生成的位置 -->
         <sqlMapGenerator targetPackage="mapper"
-                         targetProject="./src/main/resources">
+                         targetProject="src/main/resources">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- targetPackage：mapper接口生成的位置 -->
         <javaClientGenerator type="XMLMAPPER"
                              targetPackage="org.zmz.mapper"
-                             targetProject="./src/main/java">
+                             targetProject="src/main/java">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
