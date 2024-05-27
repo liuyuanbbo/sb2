@@ -13,6 +13,7 @@
         <module>micro-srv-b</module>
         <module>micro-srv-common</module>
         <module>mbpGenerator</module>
+        <module>micro-srv-c</module>
     </modules>
 
     <properties>

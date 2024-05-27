@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    maria:
+      local:
+        driverClassName: org.mariadb.jdbc.Driver
+        jdbcUrl: jdbc:mariadb://localhost:3306/datacenter?serverTimezone=Asia/Shanghai
+        username: root
+        password: '123456'
