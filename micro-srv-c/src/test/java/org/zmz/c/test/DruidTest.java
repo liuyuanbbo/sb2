@@ -24,7 +24,7 @@ public class DruidTest {
     DataSource localPgsqlDataSource;
 
     @Test
-    public void t1() {
+    public void testDruidJdbcUtils() {
         String sql = "select * from t_data_center_storage";
         try {
             List<Map<String, Object>> result = JdbcUtils.executeQuery(localPgsqlDataSource, sql);
