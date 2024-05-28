@@ -1,5 +1,5 @@
 <configuration debug="false">
-    <appender name="STDOUT" class="org.zmz.security.logback.CustomerConsoleAppender">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{10}):%boldMagenta(%method) - %cyan(%msg%n)</pattern>
         </encoder>
