@@ -14,7 +14,7 @@ public class FooController {
 
     @GetMapping("/t1")
     public R<Map<String, Object>> t1(HttpServletResponse response) {
-        response.setHeader("error", "This is error");
+        response.setHeader("error", "srvC error");
         return R.ok(Map.of("code", "000000", "msg", "", "data", "OK"));
     }
 

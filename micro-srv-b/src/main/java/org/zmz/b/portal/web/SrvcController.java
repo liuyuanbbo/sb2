@@ -1,13 +1,13 @@
 package org.zmz.b.portal.web;
 
+import feign.Response;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zmz.b.biz.feign.FeignSrvC;
-import org.zmz.common.R;
 
 import javax.annotation.Resource;
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/srvc")
@@ -17,8 +17,10 @@ public class SrvcController {
     FeignSrvC feignSrvC;
 
     @GetMapping("/fooT1")
-    public R<Map<String, Object>> fooT1() {
-        return feignSrvC.fooT1();
+    public Response fooT1(HttpServletResponse response) {
+        response.addHeader("error", "srvB error");
+        Response resp = feignSrvC.fooT1();
+        return resp;
     }
 
 }
