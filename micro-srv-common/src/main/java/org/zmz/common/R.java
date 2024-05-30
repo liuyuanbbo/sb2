@@ -1,4 +1,4 @@
-package org.zmz.security.vo.response;
+package org.zmz.common;
 
 import lombok.Getter;
 import lombok.Setter;

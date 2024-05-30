@@ -19,13 +19,13 @@ import javax.sql.DataSource;
         sqlSessionTemplateRef = "code01MariaSqlSessionTemplate")
 public class MyBatisCode01MariaConfig {
     @Resource
-    private DataSource code01MariaDataSource;
+    private DataSource yoga14sMysqlDataSource;
 
     @Bean(name = "code01MariaSqlSessionFactory")
     @Primary
     public SqlSessionFactory code01MariaSqlSessionFactory() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(code01MariaDataSource);
+        sqlSessionFactoryBean.setDataSource(yoga14sMysqlDataSource);
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
                 .getResources("classpath:mapper/code01/maria/*Mapper.xml"));
         return sqlSessionFactoryBean.getObject();
@@ -34,7 +34,7 @@ public class MyBatisCode01MariaConfig {
     @Bean(name = "code01MariaTransactionManager")
     @Primary
     public DataSourceTransactionManager code01MariaTransactionManager() {
-        return new DataSourceTransactionManager(code01MariaDataSource);
+        return new DataSourceTransactionManager(yoga14sMysqlDataSource);
     }
 
     @Bean(name = "code01MariaSqlSessionTemplate")

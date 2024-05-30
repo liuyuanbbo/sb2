@@ -5,11 +5,18 @@ spring:
     name: micro-srv-b
   config:
     import:
-      # - conf/kafka-yoga14s.yml
-      - conf/kafka-code01.yml
+      - conf/kafka-yoga14s.yml
+      # - conf/kafka-code01.yml
       - conf/mybatis-plus.yml
-      # - conf/mysql-yoga14s.yml
-      - conf/maria-code01.yml
+      - conf/mysql-yoga14s.yml
+      # - conf/maria-code01.yml
+custom:
+  datasource:
+    typeKey: yoga14sMysqlDataSource
 logging:
   level:
     org.zmz.b: debug
+management:
+  health:
+    db:
+      enabled: off

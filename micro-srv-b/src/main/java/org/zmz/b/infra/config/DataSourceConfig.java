@@ -14,4 +14,10 @@ public class DataSourceConfig {
     public DataSource code01MariaDataSource() {
         return DataSourceBuilder.create().build();
     }
+
+    @Bean(name = "yoga14sMysqlDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.yoga14s.mysql")
+    public DataSource yoga14sMysqlDataSource() {
+        return DataSourceBuilder.create().build();
+    }
 }
