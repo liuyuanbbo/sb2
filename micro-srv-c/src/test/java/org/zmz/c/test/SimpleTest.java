@@ -34,4 +34,11 @@ public class SimpleTest {
         }
         log.info("{}", s);
     }
+
+    @Test
+    public void t4() {
+        Long indexId = 1001L;
+        String pageUrl = String.format("/ext/smart/atomicIndicator/detail?indexId=%s&viewType=popupView", indexId);
+        log.info("{}", pageUrl);
+    }
 }

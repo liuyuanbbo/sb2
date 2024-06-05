@@ -22,12 +22,49 @@ public class FooController {
         IntStream.rangeClosed(1, 255).forEach(sb::append);
         log.info("{}", sb);
         log.info("{}", sb.length());
-        String s = "嗲话发简历阿达用户不存在";
+        String s = "嗲话发简历阿达用户不存在dadafafbkwfnwfnkwfnwfnlwfnwlfnwlfnwlfnwlfnwlfnwlfnwlfnlwnflwfnlwnflw饭卡别烦我开办费课外班反馈无法别看我不管看我别看我";
         String us = URLEncodeUtil.encode(s);
 
+        String json = """
+                {
+                    "resultCode": "0",
+                    "resultMsg": null,
+                    "resultObject": {
+                        "comAcctId": 1351,
+                        "comments": "q125",
+                        "createDate": 1717484169000,
+                        "createType": "virtual",
+                        "dataCntType": "3",
+                        "datasourceId": 59752,
+                        "dirId": null,
+                        "domain": null,
+                        "grpId": 118302,
+                        "keyCode": "bill_user_flag",
+                        "layer": null,
+                        "metaTableId": 24709,
+                        "objectAlias": null,
+                        "objectCode": "q125",
+                        "objectId": 27360,
+                        "objectName": "q125",
+                        "operId": 20290,
+                        "orderNo": null,
+                        "parentId": -1,
+                        "primaryKey": "146892",
+                        "projectId": 10007,
+                        "statusCd": "你好",
+                        "tableCode": "dwd_prod_inst_m",
+                        "tableType": "gp",
+                        "version": null
+                    },
+                    "success": true
+                }
+                """;
+
         log.info("{}  -----  {}", us, us.length());
-        response.setHeader("error", us);
-        return R.ok(Map.of("code", "000000", "msg", "", "data", "OK"));
+        String jsonUrlEncode = URLEncodeUtil.encode(json);
+        log.info("jsonUrlEncode length {} ", jsonUrlEncode.length());
+        response.setHeader("error", jsonUrlEncode);
+        return R.ok(Map.of("code", "000000", "msg", "", "data", json));
     }
 
 }

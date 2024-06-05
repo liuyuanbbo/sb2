@@ -17,9 +17,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class ReflectTest {
@@ -146,4 +148,20 @@ public class ReflectTest {
     static class CodeName {
         private String fieldCode;
     }
+
+    @Test
+    public void t5() throws IOException {
+        Path path = Path.of("D:\\worksp\\ideaProjects\\sb2\\micro-srv-c\\src\\main\\resources\\txt\\column-ids.txt");
+
+        List<String> ids = Files.readAllLines(path);
+        Set<String> longIds = ids.stream().map(e -> e + "L").collect(Collectors.toSet());
+        log.info("{}", longIds);
+    }
+
+    @Test
+    public void t6() {
+        String s = "bill_user_flag,bill_user_flag，bill_user_flag，bill_user_flagbill_user_flag,bill_user_flag，bill_user_flag，bill_user_flagbill_user_flag,bill_user_flag，bill_user_flag，bill_user_flagbill_user_flag,bill_user_flag，bill_user_flag，bill_user_flagbill_user_flag,bill_user_flag，bill_user_flag，bill_user_flagbill_user_flag,bill_user_flag，bill_user_flag，bill_user_flagbill_user_flag,bill_user_flag，bill_user_flag，bill_user_flagbill_user_flag,bill_user_flag，bill_user_flag，bill_user_flagbill_user_flag,bill_user_flag，bill_user_flag，bill_user_flag";
+        System.out.println(s.length());
+    }
+
 }
