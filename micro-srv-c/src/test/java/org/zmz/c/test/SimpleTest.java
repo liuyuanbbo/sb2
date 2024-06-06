@@ -2,6 +2,9 @@ package org.zmz.c.test;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -79,6 +82,85 @@ public class SimpleTest {
         Object code = map.get("code");
         if ("0".equals(code) || Integer.valueOf(0).equals(code)) {
             log.info("成功");
+        }
+    }
+
+    @Test
+    public void t7() {
+        String json = """
+                {"success":true,"code":0,"msg":"http://135.32.120.118/mydiskdx/applyDownload.html#nodeIds=2c9a31a88f22c248018fec50a95a0403&token=97583a6c69dc2512640e973f1a55697a","data":null}
+                """;
+        HashMap<?, ?> map = JSONUtil.toBean(json, HashMap.class);
+        log.info("{}", map);
+        String code = getStringValue(map, "code");
+        if ("0".equals(code)) {
+            log.info("成功");
+        }
+        log.info("{} -- {}", code, code.getClass());
+    }
+
+    public static String getStringValue(Map<?, ?> paramMap, String key) {
+        Object value = paramMap.get(key);
+        if (value == null) {
+            return "";
+        }
+
+        if (value instanceof String) {
+            return (String) value;
+        } else {
+            return value.toString();
+        }
+
+    }
+
+    @Test
+    public void t8() {
+        String json = """
+                {"success":true,"code":0,"msg":"http://135.32.120.118/mydiskdx/applyDownload.html#nodeIds=2c9a31a88f22c248018fec50a95a0403&token=97583a6c69dc2512640e973f1a55697a","data":null}
+                """;
+        Map map = fromJson(json, Map.class);
+        log.info("{}", map);
+        String success = getStringValue(map, "success");
+        String code = getStringValue(map, "code");
+        if ("true".equals(success)) {
+            log.info("成功");
+        }
+        if ("0".equals(code)) {
+            log.info("code 是 0 ");
+        }
+        log.info("{} -- {}", code, code.getClass());
+    }
+
+    public static <T> T fromJson(String json, Class<T> clazz) {
+        return (T) fromJson(json, clazz, null);
+    }
+
+    public static <T> T fromJson(String json, Class<T> clazz, String datePattern) {
+        if (StrUtil.isBlank(json)) {
+            return null;
+        }
+        GsonBuilder builder = new GsonBuilder();
+        if (StrUtil.isBlank(datePattern)) {
+            datePattern = "yyyy-MM-dd HH:mm:ss";
+        }
+        builder.setDateFormat(datePattern);
+        Gson gson = builder.create();
+        try {
+            return (T) gson.fromJson(json, clazz);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Test
+    public void t9() {
+        int i = 10;
+        if (i > 9) {
+            log.info("1");
+        } else if (i > 8) {
+            log.info("2");
+        } else {
+            log.info("3");
         }
     }
 
