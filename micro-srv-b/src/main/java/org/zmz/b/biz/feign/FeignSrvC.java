@@ -10,4 +10,10 @@ public interface FeignSrvC {
     @GetMapping("/foo/t1")
     Response fooT1();
 
+    @GetMapping("/bar/t1")
+    Response bar1();
+
+    @GetMapping("/bar/t2")
+    Response bar2();
+
 }
