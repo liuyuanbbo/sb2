@@ -1,6 +1,7 @@
 package org.zmz.c.controller;
 
 import cn.hutool.core.net.URLEncodeUtil;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.zmz.common.R;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.util.Map;
 import java.util.stream.IntStream;
 
@@ -65,6 +67,21 @@ public class FooController {
         log.info("jsonUrlEncode length {} ", jsonUrlEncode.length());
         response.setHeader("error", jsonUrlEncode);
         return R.ok(Map.of("code", "000000", "msg", "", "data", json));
+    }
+
+
+    @GetMapping("/t2")
+    public void t2(HttpServletResponse response) {
+        Map<String, Object> map = Map.of("code", 200, "msg", "OK");
+        try (PrintWriter writer = response.getWriter()) {
+            response.setHeader("Content-Type", "application/json;charset=UTF-8");
+            String jsonStr = JSONUtil.toJsonStr(map);
+            writer.println(jsonStr);
+            writer.flush();
+        } catch (Exception e) {
+            log.error("输出响应流出错", e);
+        }
+        log.info("刷出响应流成功");
     }
 
 }
