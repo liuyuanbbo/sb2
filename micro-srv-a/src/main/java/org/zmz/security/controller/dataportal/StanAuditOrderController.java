@@ -1,5 +1,7 @@
 package org.zmz.security.controller.dataportal;
 
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.map.MapUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +13,7 @@ import org.zmz.security.vo.request.dataportal.BatchInsertDaAuditOrderReq;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/stanAuditOrder")
@@ -21,7 +24,10 @@ public class StanAuditOrderController {
     private StanAuditOrderService stanAuditOrderService;
 
     @PostMapping("/batchInsertDaAuditOrder")
-    public R<Long> batchInsertDaAuditOrder(@RequestBody List<BatchInsertDaAuditOrderReq> list) {
+    public R<Long> batchInsertDaAuditOrder(@RequestBody Map<String, Object> params) {
+        List<BatchInsertDaAuditOrderReq> list = MapUtil.get(params, "reqList",
+                new TypeReference<List<BatchInsertDaAuditOrderReq>>() {
+                });
         Long count = stanAuditOrderService.batchInsertDaAuditOrder(list);
         log.info("插入行数: {}", count);
         return R.ok(count);

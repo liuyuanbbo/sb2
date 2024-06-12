@@ -16,14 +16,19 @@
         select now()
     </select>
 
-    <select id="batchInsertDaAuditOrder" resultType="java.lang.Long">
+    <insert id="batchInsertDaAuditOrder" useGeneratedKeys="true" keyProperty="orderId">
         insert into stan_audit_order
         (order_id, audit_obj_id, audit_obj_type, create_date, create_by, com_acct_id)
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.orderId}, #{item.auditObjId}, #{item.auditObjType}, #{item.createDate}, #{item.createBy}, #{item.comAcctId})
+            (#{item.orderId},
+            #{item.auditObjId},
+            #{item.auditObjType},
+            #{item.createDate},
+            #{item.createBy},
+            #{item.comAcctId})
         </foreach>
-    </select>
+    </insert>
 
     <select id="simpleList" resultMap="baseMap">
         select * from dataportal.stan_audit_order where com_acct_id is not null order by create_date desc limit 10
