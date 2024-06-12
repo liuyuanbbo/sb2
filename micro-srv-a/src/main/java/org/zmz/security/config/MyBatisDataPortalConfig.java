@@ -15,32 +15,32 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "org.zmz.security.mapper.dataopen",
-        sqlSessionTemplateRef = "dataopenSqlSessionTemplate")
-public class MyBatisConfig {
+@MapperScan(basePackages = "org.zmz.security.mapper.dataportal",
+        sqlSessionTemplateRef = "dataportalSqlSessionTemplate")
+public class MyBatisDataPortalConfig {
     @Resource
-    private DataSource dataopenMysqlDataSource;
+    private DataSource dataportalMysqlDataSource;
 
-    @Bean(name = "dataopenSqlSessionFactory")
+    @Bean(name = "dataportalSqlSessionFactory")
     @Primary
-    public SqlSessionFactory dataopenSqlSessionFactory() throws Exception {
+    public SqlSessionFactory dataportalSqlSessionFactory() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dataopenMysqlDataSource);
+        sqlSessionFactoryBean.setDataSource(dataportalMysqlDataSource);
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath:mapper/dataopen/*Mapper.xml"));
+                .getResources("classpath:mapper/dataportal/*Mapper.xml"));
         return sqlSessionFactoryBean.getObject();
     }
 
-    @Bean(name = "dataopenTransactionManager")
+    @Bean(name = "dataportalTransactionManager")
     @Primary
-    public DataSourceTransactionManager dataopenTransactionManager() {
-        return new DataSourceTransactionManager(dataopenMysqlDataSource);
+    public DataSourceTransactionManager dataportalTransactionManager() {
+        return new DataSourceTransactionManager(dataportalMysqlDataSource);
     }
 
-    @Bean(name = "dataopenSqlSessionTemplate")
+    @Bean(name = "dataportalSqlSessionTemplate")
     @Primary
-    public SqlSessionTemplate dataopenSqlSessionTemplate(
-            @Qualifier("dataopenSqlSessionFactory") SqlSessionFactory dataopenSqlSessionFactory) {
-        return new SqlSessionTemplate(dataopenSqlSessionFactory);
+    public SqlSessionTemplate dataportalSqlSessionTemplate(
+            @Qualifier("dataportalSqlSessionFactory") SqlSessionFactory dataportalSqlSessionFactory) {
+        return new SqlSessionTemplate(dataportalSqlSessionFactory);
     }
 }

@@ -154,14 +154,7 @@ public class SimpleTest {
 
     @Test
     public void t9() {
-        int i = 10;
-        if (i > 9) {
-            log.info("1");
-        } else if (i > 8) {
-            log.info("2");
-        } else {
-            log.info("3");
-        }
+        log.info("-- {} 》》》 {}", "1");
     }
 
 }

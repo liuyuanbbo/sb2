@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.security.mapper.dataportal.StanAuditOrderMapper">
+    <resultMap id="baseMap" type="org.zmz.security.model.StanAuditOrder">
+        <id column="order_id" property="orderId"/>
+        <result column="audit_obj_id" property="auditObjId"/>
+        <result column="audit_obj_type" property="auditObjType"/>
+        <result column="create_date" property="createDate"/>
+        <result column="create_by" property="createBy"/>
+        <result column="com_acct_id" property="comAcctId"/>
+    </resultMap>
+
+    <select id="selectNow" resultType="java.time.LocalDateTime">
+        select now()
+    </select>
+
+    <select id="batchInsertDaAuditOrder" resultType="java.lang.Long">
+        insert into stan_audit_order
+        (order_id, audit_obj_id, audit_obj_type, create_date, create_by, com_acct_id)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.orderId}, #{item.auditObjId}, #{item.auditObjType}, #{item.createDate}, #{item.createBy}, #{item.comAcctId})
+        </foreach>
+    </select>
+
+    <select id="simpleList" resultMap="baseMap">
+        select * from dataportal.stan_audit_order where com_acct_id is not null order by create_date desc limit 10
+    </select>
+</mapper>

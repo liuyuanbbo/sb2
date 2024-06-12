@@ -7,8 +7,9 @@ spring:
     type: redis
   config:
     import:
-      - conf/maria-code01.yml
-      # - conf/mysql-iwhale-dev.yml
+      # - conf/maria-code01.yml
+      # - conf/mysql-iwhale-dev-dataopen.yml
+      - conf/mysql-iwhale-dev-dataportal.yml
       # - conf/mysql-yoga14s.yml
       - conf/redis-code01.yml
       - conf/boot-actuator.yml

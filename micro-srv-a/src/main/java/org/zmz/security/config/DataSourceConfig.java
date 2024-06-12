@@ -21,6 +21,12 @@ public class DataSourceConfig {
         return DataSourceBuilder.create().build();
     }
 
+    @Bean(name = "dataportalMysqlDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.mysql.dataportal")
+    public DataSource dataportalMysqlDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
     @Bean(name = "hrdbPgsqlDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.pgsql.hrdb")
     public DataSource hrdbPgsqlDataSource() {
