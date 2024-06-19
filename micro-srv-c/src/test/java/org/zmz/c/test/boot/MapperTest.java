@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zmz.c.mapper.dataopen.DimIndexMapper;
 import org.zmz.c.mapper.dataopen.ProIndexMapper;
+import org.zmz.c.pojo.dataopen.ProIndex;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootTest
 @Slf4j
@@ -26,6 +28,14 @@ public class MapperTest {
 
         log.info("{}", proIndexNow);
         log.info("{}", dimIndexNow);
+    }
+
+    @Test
+    public void testList() {
+        List<ProIndex> proIndexList = proIndexMapper.selectAll();
+        List<ProIndex> subList = proIndexList.subList(1, 3);
+        log.info("{}", subList.size());
+        subList.forEach(e -> log.info("{}", e));
     }
 
 }
