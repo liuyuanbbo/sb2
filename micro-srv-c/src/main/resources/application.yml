@@ -5,9 +5,11 @@ spring:
     name: micro-srv-c
   config:
     import:
-      # - conf/kafka-code01.yml
       - conf/maria-local.yml
       - conf/pgsql-local.yml
+      - conf/mysql-dev-dataopen.yml
+      - conf/mysql-dev-dataportal.yml
+      - conf/pgsql-dev.yml
 logging:
   level:
     org.zmz.c: debug
