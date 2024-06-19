@@ -28,6 +28,38 @@ public class AlgorithmTest {
         log.info("{}", pair.getRight());
     }
 
+    @Test
+    public void t2() {
+        Map<String, String> params = MapUtil.newHashMap();
+        params.put("primaryKey", "4");
+        params.put("keyCode", "b");
+
+        Pair<String, String> pair = o1(params);
+        /*
+         expect result
+         * 4
+         * b
+         */
+        log.info("{}", pair.getLeft());
+        log.info("{}", pair.getRight());
+    }
+
+    @Test
+    public void t3() {
+        Map<String, String> params = MapUtil.newHashMap();
+        params.put("primaryKey", null);
+        params.put("keyCode", null);
+
+        Pair<String, String> pair = o1(params);
+        /*
+         expect result
+         *
+         *
+         */
+        log.info("{}", pair.getLeft());
+        log.info("{}", pair.getRight());
+    }
+
     private Pair<String, String> o1(Map<?, ?> map) {
         String primaryKey = MapUtil.getStr(map, "primaryKey");
         String keyCode = MapUtil.getStr(map, "keyCode");
