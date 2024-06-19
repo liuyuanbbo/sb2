@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -154,7 +155,19 @@ public class SimpleTest {
 
     @Test
     public void t9() {
-        log.info("-- {} 》》》 {}", "1");
+        Long id = null;
+        String s = String.valueOf(id);
+
+
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("aa", null);
+
+        String aa = map.get("aa");
+        log.info("{}", aa);
+
+        String did = null;
+        Long l = Long.valueOf(did);
+        log.info("{}", l);
     }
 
 }
