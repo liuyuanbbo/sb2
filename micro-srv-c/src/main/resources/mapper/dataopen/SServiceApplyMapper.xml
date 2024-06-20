@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.SServiceApplyMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.SServiceApply">
+        <id column="apply_id" jdbcType="BIGINT" property="applyId"/>
+        <result column="rela_id" jdbcType="BIGINT" property="relaId"/>
+        <result column="rela_apply_id" jdbcType="BIGINT" property="relaApplyId"/>
+        <result column="apply_code" jdbcType="VARCHAR" property="applyCode"/>
+        <result column="apply_name" jdbcType="VARCHAR" property="applyName"/>
+        <result column="service_id" jdbcType="BIGINT" property="serviceId"/>
+        <result column="service_type" jdbcType="VARCHAR" property="serviceType"/>
+        <result column="service_sub_type" jdbcType="VARCHAR" property="serviceSubType"/>
+        <result column="smart_id" jdbcType="BIGINT" property="smartId"/>
+        <result column="eff_date" jdbcType="TIMESTAMP" property="effDate"/>
+        <result column="exp_date" jdbcType="TIMESTAMP" property="expDate"/>
+        <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate"/>
+        <result column="apply_staff_id" jdbcType="BIGINT" property="applyStaffId"/>
+        <result column="apply_reason" jdbcType="VARCHAR" property="applyReason"/>
+        <result column="cust_id" jdbcType="BIGINT" property="custId"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="state_date" jdbcType="TIMESTAMP" property="stateDate"/>
+        <result column="src_type" jdbcType="VARCHAR" property="srcType"/>
+        <result column="task_id" jdbcType="BIGINT" property="taskId"/>
+        <result column="dn_id" jdbcType="BIGINT" property="dnId"/>
+        <result column="create_staff_id" jdbcType="BIGINT" property="createStaffId"/>
+        <result column="electronic_id" jdbcType="VARCHAR" property="electronicId"/>
+        <result column="system_id" jdbcType="BIGINT" property="systemId"/>
+        <result column="meta_table_id" jdbcType="BIGINT" property="metaTableId"/>
+        <result column="src_system" jdbcType="VARCHAR" property="srcSystem"/>
+        <result column="page_url" jdbcType="VARCHAR" property="pageUrl"/>
+        <result column="receive_url" jdbcType="VARCHAR" property="receiveUrl"/>
+        <result column="is_elecontron" jdbcType="VARCHAR" property="isElecontron"/>
+        <result column="new_apply_id" jdbcType="BIGINT" property="newApplyId"/>
+        <result column="file_id" jdbcType="BIGINT" property="fileId"/>
+        <result column="project_id" jdbcType="BIGINT" property="projectId"/>
+        <result column="project_name" jdbcType="VARCHAR" property="projectName"/>
+        <result column="tenant_code" jdbcType="VARCHAR" property="tenantCode"/>
+        <result column="service_name" jdbcType="VARCHAR" property="serviceName"/>
+        <result column="cluster_type" jdbcType="VARCHAR" property="clusterType"/>
+        <result column="cluster_connect_string" jdbcType="VARCHAR" property="clusterConnectString"/>
+        <result column="super_tennant_code" jdbcType="VARCHAR" property="superTennantCode"/>
+        <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode"/>
+        <result column="datasource_id" jdbcType="BIGINT" property="datasourceId"/>
+        <result column="channel" jdbcType="VARCHAR" property="channel"/>
+        <result column="apply_state" jdbcType="VARCHAR" property="applyState"/>
+        <result column="renew_type" jdbcType="VARCHAR" property="renewType"/>
+        <result column="renew_time_data" jdbcType="VARCHAR" property="renewTimeData"/>
+        <result column="template_id" jdbcType="BIGINT" property="templateId"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.c.pojo.dataopen.SServiceApply">
+        <result column="form_obj" jdbcType="LONGVARCHAR" property="formObj"/>
+    </resultMap>
+</mapper>

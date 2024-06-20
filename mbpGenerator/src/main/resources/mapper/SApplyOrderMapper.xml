@@ -1,0 +1,2930 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.mapper.SApplyOrderMapper">
+  <resultMap id="BaseResultMap" type="org.zmz.model.SApplyOrder">
+    <id column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="order_name" jdbcType="VARCHAR" property="orderName" />
+    <result column="flow_type_id" jdbcType="VARCHAR" property="flowTypeId" />
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="cur_tache_name" jdbcType="VARCHAR" property="curTacheName" />
+    <result column="cur_tache_id" jdbcType="INTEGER" property="curTacheId" />
+    <result column="deal_obj_type" jdbcType="VARCHAR" property="dealObjType" />
+    <result column="deal_obj_id" jdbcType="BIGINT" property="dealObjId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_staff_id" jdbcType="INTEGER" property="createStaffId" />
+    <result column="deal_staff_id" jdbcType="INTEGER" property="dealStaffId" />
+    <result column="deal_content" jdbcType="VARCHAR" property="dealContent" />
+    <result column="deal_result" jdbcType="VARCHAR" property="dealResult" />
+    <result column="deal_date" jdbcType="TIMESTAMP" property="dealDate" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="return_tache_id" jdbcType="INTEGER" property="returnTacheId" />
+    <result column="DEAL_TYPE" jdbcType="INTEGER" property="dealType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    order_id, order_code, order_name, flow_type_id, apply_id, cur_tache_name, cur_tache_id, 
+    deal_obj_type, deal_obj_id, create_date, create_staff_id, deal_staff_id, deal_content, 
+    deal_result, deal_date, state, return_tache_id, DEAL_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.SApplyOrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from s_apply_order
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.SApplyOrderExample">
+    delete from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order (order_id, order_code, order_name, 
+      flow_type_id, apply_id, cur_tache_name, 
+      cur_tache_id, deal_obj_type, deal_obj_id, 
+      create_date, create_staff_id, deal_staff_id, 
+      deal_content, deal_result, deal_date, 
+      state, return_tache_id, DEAL_TYPE
+      )
+    values (#{orderId,jdbcType=INTEGER}, #{orderCode,jdbcType=VARCHAR}, #{orderName,jdbcType=VARCHAR}, 
+      #{flowTypeId,jdbcType=VARCHAR}, #{applyId,jdbcType=INTEGER}, #{curTacheName,jdbcType=VARCHAR}, 
+      #{curTacheId,jdbcType=INTEGER}, #{dealObjType,jdbcType=VARCHAR}, #{dealObjId,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createStaffId,jdbcType=INTEGER}, #{dealStaffId,jdbcType=INTEGER}, 
+      #{dealContent,jdbcType=VARCHAR}, #{dealResult,jdbcType=VARCHAR}, #{dealDate,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=VARCHAR}, #{returnTacheId,jdbcType=INTEGER}, #{dealType,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderCode != null">
+        order_code,
+      </if>
+      <if test="orderName != null">
+        order_name,
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id,
+      </if>
+      <if test="applyId != null">
+        apply_id,
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name,
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id,
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type,
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id,
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id,
+      </if>
+      <if test="dealContent != null">
+        deal_content,
+      </if>
+      <if test="dealResult != null">
+        deal_result,
+      </if>
+      <if test="dealDate != null">
+        deal_date,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id,
+      </if>
+      <if test="dealType != null">
+        DEAL_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="orderCode != null">
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        #{returnTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealType != null">
+        #{dealType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.SApplyOrderExample" resultType="java.lang.Long">
+    select count(*) from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update s_apply_order
+    <set>
+      <if test="row.orderId != null">
+        order_id = #{row.orderId,jdbcType=INTEGER},
+      </if>
+      <if test="row.orderCode != null">
+        order_code = #{row.orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.orderName != null">
+        order_name = #{row.orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.flowTypeId != null">
+        flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.applyId != null">
+        apply_id = #{row.applyId,jdbcType=INTEGER},
+      </if>
+      <if test="row.curTacheName != null">
+        cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.curTacheId != null">
+        cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealObjType != null">
+        deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealObjId != null">
+        deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaffId != null">
+        create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealStaffId != null">
+        deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealContent != null">
+        deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealResult != null">
+        deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealDate != null">
+        deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=VARCHAR},
+      </if>
+      <if test="row.returnTacheId != null">
+        return_tache_id = #{row.returnTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealType != null">
+        DEAL_TYPE = #{row.dealType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update s_apply_order
+    set order_id = #{row.orderId,jdbcType=INTEGER},
+      order_code = #{row.orderCode,jdbcType=VARCHAR},
+      order_name = #{row.orderName,jdbcType=VARCHAR},
+      flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{row.applyId,jdbcType=INTEGER},
+      cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      state = #{row.state,jdbcType=VARCHAR},
+      return_tache_id = #{row.returnTacheId,jdbcType=INTEGER},
+      DEAL_TYPE = #{row.dealType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    <set>
+      <if test="orderCode != null">
+        order_code = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        order_name = #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        apply_id = #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        deal_content = #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        deal_result = #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id = #{returnTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealType != null">
+        DEAL_TYPE = #{dealType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    set order_code = #{orderCode,jdbcType=VARCHAR},
+      order_name = #{orderName,jdbcType=VARCHAR},
+      flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{applyId,jdbcType=INTEGER},
+      cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      deal_content = #{dealContent,jdbcType=VARCHAR},
+      deal_result = #{dealResult,jdbcType=VARCHAR},
+      deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=VARCHAR},
+      return_tache_id = #{returnTacheId,jdbcType=INTEGER},
+      DEAL_TYPE = #{dealType,jdbcType=INTEGER}
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.SApplyOrder">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="order_name" jdbcType="VARCHAR" property="orderName" />
+    <result column="flow_type_id" jdbcType="VARCHAR" property="flowTypeId" />
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="cur_tache_name" jdbcType="VARCHAR" property="curTacheName" />
+    <result column="cur_tache_id" jdbcType="INTEGER" property="curTacheId" />
+    <result column="deal_obj_type" jdbcType="VARCHAR" property="dealObjType" />
+    <result column="deal_obj_id" jdbcType="BIGINT" property="dealObjId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_staff_id" jdbcType="INTEGER" property="createStaffId" />
+    <result column="deal_staff_id" jdbcType="INTEGER" property="dealStaffId" />
+    <result column="deal_content" jdbcType="VARCHAR" property="dealContent" />
+    <result column="deal_result" jdbcType="VARCHAR" property="dealResult" />
+    <result column="deal_date" jdbcType="TIMESTAMP" property="dealDate" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="return_tache_id" jdbcType="BIGINT" property="returnTacheId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    order_id, order_code, order_name, flow_type_id, apply_id, cur_tache_name, cur_tache_id, 
+    deal_obj_type, deal_obj_id, create_date, create_staff_id, deal_staff_id, deal_content, 
+    deal_result, deal_date, state, return_tache_id
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.SApplyOrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.SApplyOrderExample">
+    delete from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order (order_id, order_code, order_name, 
+      flow_type_id, apply_id, cur_tache_name, 
+      cur_tache_id, deal_obj_type, deal_obj_id, 
+      create_date, create_staff_id, deal_staff_id, 
+      deal_content, deal_result, deal_date, 
+      state, return_tache_id)
+    values (#{orderId,jdbcType=BIGINT}, #{orderCode,jdbcType=VARCHAR}, #{orderName,jdbcType=VARCHAR}, 
+      #{flowTypeId,jdbcType=VARCHAR}, #{applyId,jdbcType=INTEGER}, #{curTacheName,jdbcType=VARCHAR}, 
+      #{curTacheId,jdbcType=INTEGER}, #{dealObjType,jdbcType=VARCHAR}, #{dealObjId,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createStaffId,jdbcType=INTEGER}, #{dealStaffId,jdbcType=INTEGER}, 
+      #{dealContent,jdbcType=VARCHAR}, #{dealResult,jdbcType=VARCHAR}, #{dealDate,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=VARCHAR}, #{returnTacheId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderCode != null">
+        order_code,
+      </if>
+      <if test="orderName != null">
+        order_name,
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id,
+      </if>
+      <if test="applyId != null">
+        apply_id,
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name,
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id,
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type,
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id,
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id,
+      </if>
+      <if test="dealContent != null">
+        deal_content,
+      </if>
+      <if test="dealResult != null">
+        deal_result,
+      </if>
+      <if test="dealDate != null">
+        deal_date,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderCode != null">
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        #{returnTacheId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.SApplyOrderExample" resultType="java.lang.Long">
+    select count(*) from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update s_apply_order
+    <set>
+      <if test="row.orderId != null">
+        order_id = #{row.orderId,jdbcType=BIGINT},
+      </if>
+      <if test="row.orderCode != null">
+        order_code = #{row.orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.orderName != null">
+        order_name = #{row.orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.flowTypeId != null">
+        flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.applyId != null">
+        apply_id = #{row.applyId,jdbcType=INTEGER},
+      </if>
+      <if test="row.curTacheName != null">
+        cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.curTacheId != null">
+        cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealObjType != null">
+        deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealObjId != null">
+        deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaffId != null">
+        create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealStaffId != null">
+        deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealContent != null">
+        deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealResult != null">
+        deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealDate != null">
+        deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=VARCHAR},
+      </if>
+      <if test="row.returnTacheId != null">
+        return_tache_id = #{row.returnTacheId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update s_apply_order
+    set order_id = #{row.orderId,jdbcType=BIGINT},
+      order_code = #{row.orderCode,jdbcType=VARCHAR},
+      order_name = #{row.orderName,jdbcType=VARCHAR},
+      flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{row.applyId,jdbcType=INTEGER},
+      cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      state = #{row.state,jdbcType=VARCHAR},
+      return_tache_id = #{row.returnTacheId,jdbcType=BIGINT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    <set>
+      <if test="orderCode != null">
+        order_code = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        order_name = #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        apply_id = #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        deal_content = #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        deal_result = #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id = #{returnTacheId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    set order_code = #{orderCode,jdbcType=VARCHAR},
+      order_name = #{orderName,jdbcType=VARCHAR},
+      flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{applyId,jdbcType=INTEGER},
+      cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      deal_content = #{dealContent,jdbcType=VARCHAR},
+      deal_result = #{dealResult,jdbcType=VARCHAR},
+      deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=VARCHAR},
+      return_tache_id = #{returnTacheId,jdbcType=BIGINT}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.SApplyOrder">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="order_name" jdbcType="VARCHAR" property="orderName" />
+    <result column="flow_type_id" jdbcType="VARCHAR" property="flowTypeId" />
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="cur_tache_name" jdbcType="VARCHAR" property="curTacheName" />
+    <result column="cur_tache_id" jdbcType="INTEGER" property="curTacheId" />
+    <result column="deal_obj_type" jdbcType="VARCHAR" property="dealObjType" />
+    <result column="deal_obj_id" jdbcType="BIGINT" property="dealObjId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_staff_id" jdbcType="INTEGER" property="createStaffId" />
+    <result column="deal_staff_id" jdbcType="INTEGER" property="dealStaffId" />
+    <result column="deal_content" jdbcType="VARCHAR" property="dealContent" />
+    <result column="deal_result" jdbcType="VARCHAR" property="dealResult" />
+    <result column="deal_date" jdbcType="TIMESTAMP" property="dealDate" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="return_tache_id" jdbcType="INTEGER" property="returnTacheId" />
+    <result column="DEAL_TYPE" jdbcType="INTEGER" property="dealType" />
+    <result column="p_apply_id" jdbcType="BIGINT" property="pApplyId" />
+    <result column="p_tache_id" jdbcType="BIGINT" property="pTacheId" />
+    <result column="extended_field" jdbcType="VARCHAR" property="extendedField" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    order_id, order_code, order_name, flow_type_id, apply_id, cur_tache_name, cur_tache_id, 
+    deal_obj_type, deal_obj_id, create_date, create_staff_id, deal_staff_id, deal_content, 
+    deal_result, deal_date, state, return_tache_id, DEAL_TYPE, p_apply_id, p_tache_id, 
+    extended_field
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.SApplyOrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.SApplyOrderExample">
+    delete from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order (order_id, order_code, order_name, 
+      flow_type_id, apply_id, cur_tache_name, 
+      cur_tache_id, deal_obj_type, deal_obj_id, 
+      create_date, create_staff_id, deal_staff_id, 
+      deal_content, deal_result, deal_date, 
+      state, return_tache_id, DEAL_TYPE, 
+      p_apply_id, p_tache_id, extended_field
+      )
+    values (#{orderId,jdbcType=BIGINT}, #{orderCode,jdbcType=VARCHAR}, #{orderName,jdbcType=VARCHAR}, 
+      #{flowTypeId,jdbcType=VARCHAR}, #{applyId,jdbcType=INTEGER}, #{curTacheName,jdbcType=VARCHAR}, 
+      #{curTacheId,jdbcType=INTEGER}, #{dealObjType,jdbcType=VARCHAR}, #{dealObjId,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createStaffId,jdbcType=INTEGER}, #{dealStaffId,jdbcType=INTEGER}, 
+      #{dealContent,jdbcType=VARCHAR}, #{dealResult,jdbcType=VARCHAR}, #{dealDate,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=VARCHAR}, #{returnTacheId,jdbcType=INTEGER}, #{dealType,jdbcType=INTEGER}, 
+      #{pApplyId,jdbcType=BIGINT}, #{pTacheId,jdbcType=BIGINT}, #{extendedField,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderCode != null">
+        order_code,
+      </if>
+      <if test="orderName != null">
+        order_name,
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id,
+      </if>
+      <if test="applyId != null">
+        apply_id,
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name,
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id,
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type,
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id,
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id,
+      </if>
+      <if test="dealContent != null">
+        deal_content,
+      </if>
+      <if test="dealResult != null">
+        deal_result,
+      </if>
+      <if test="dealDate != null">
+        deal_date,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id,
+      </if>
+      <if test="dealType != null">
+        DEAL_TYPE,
+      </if>
+      <if test="pApplyId != null">
+        p_apply_id,
+      </if>
+      <if test="pTacheId != null">
+        p_tache_id,
+      </if>
+      <if test="extendedField != null">
+        extended_field,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderCode != null">
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        #{returnTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealType != null">
+        #{dealType,jdbcType=INTEGER},
+      </if>
+      <if test="pApplyId != null">
+        #{pApplyId,jdbcType=BIGINT},
+      </if>
+      <if test="pTacheId != null">
+        #{pTacheId,jdbcType=BIGINT},
+      </if>
+      <if test="extendedField != null">
+        #{extendedField,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.SApplyOrderExample" resultType="java.lang.Long">
+    select count(*) from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update s_apply_order
+    <set>
+      <if test="row.orderId != null">
+        order_id = #{row.orderId,jdbcType=BIGINT},
+      </if>
+      <if test="row.orderCode != null">
+        order_code = #{row.orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.orderName != null">
+        order_name = #{row.orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.flowTypeId != null">
+        flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.applyId != null">
+        apply_id = #{row.applyId,jdbcType=INTEGER},
+      </if>
+      <if test="row.curTacheName != null">
+        cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.curTacheId != null">
+        cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealObjType != null">
+        deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealObjId != null">
+        deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaffId != null">
+        create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealStaffId != null">
+        deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealContent != null">
+        deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealResult != null">
+        deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealDate != null">
+        deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=VARCHAR},
+      </if>
+      <if test="row.returnTacheId != null">
+        return_tache_id = #{row.returnTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealType != null">
+        DEAL_TYPE = #{row.dealType,jdbcType=INTEGER},
+      </if>
+      <if test="row.pApplyId != null">
+        p_apply_id = #{row.pApplyId,jdbcType=BIGINT},
+      </if>
+      <if test="row.pTacheId != null">
+        p_tache_id = #{row.pTacheId,jdbcType=BIGINT},
+      </if>
+      <if test="row.extendedField != null">
+        extended_field = #{row.extendedField,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update s_apply_order
+    set order_id = #{row.orderId,jdbcType=BIGINT},
+      order_code = #{row.orderCode,jdbcType=VARCHAR},
+      order_name = #{row.orderName,jdbcType=VARCHAR},
+      flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{row.applyId,jdbcType=INTEGER},
+      cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      state = #{row.state,jdbcType=VARCHAR},
+      return_tache_id = #{row.returnTacheId,jdbcType=INTEGER},
+      DEAL_TYPE = #{row.dealType,jdbcType=INTEGER},
+      p_apply_id = #{row.pApplyId,jdbcType=BIGINT},
+      p_tache_id = #{row.pTacheId,jdbcType=BIGINT},
+      extended_field = #{row.extendedField,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    <set>
+      <if test="orderCode != null">
+        order_code = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        order_name = #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        apply_id = #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        deal_content = #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        deal_result = #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id = #{returnTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealType != null">
+        DEAL_TYPE = #{dealType,jdbcType=INTEGER},
+      </if>
+      <if test="pApplyId != null">
+        p_apply_id = #{pApplyId,jdbcType=BIGINT},
+      </if>
+      <if test="pTacheId != null">
+        p_tache_id = #{pTacheId,jdbcType=BIGINT},
+      </if>
+      <if test="extendedField != null">
+        extended_field = #{extendedField,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    set order_code = #{orderCode,jdbcType=VARCHAR},
+      order_name = #{orderName,jdbcType=VARCHAR},
+      flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{applyId,jdbcType=INTEGER},
+      cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      deal_content = #{dealContent,jdbcType=VARCHAR},
+      deal_result = #{dealResult,jdbcType=VARCHAR},
+      deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=VARCHAR},
+      return_tache_id = #{returnTacheId,jdbcType=INTEGER},
+      DEAL_TYPE = #{dealType,jdbcType=INTEGER},
+      p_apply_id = #{pApplyId,jdbcType=BIGINT},
+      p_tache_id = #{pTacheId,jdbcType=BIGINT},
+      extended_field = #{extendedField,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.SApplyOrder">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="order_name" jdbcType="VARCHAR" property="orderName" />
+    <result column="flow_type_id" jdbcType="VARCHAR" property="flowTypeId" />
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="cur_tache_name" jdbcType="VARCHAR" property="curTacheName" />
+    <result column="cur_tache_id" jdbcType="INTEGER" property="curTacheId" />
+    <result column="deal_obj_type" jdbcType="VARCHAR" property="dealObjType" />
+    <result column="deal_obj_id" jdbcType="BIGINT" property="dealObjId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_staff_id" jdbcType="INTEGER" property="createStaffId" />
+    <result column="deal_staff_id" jdbcType="INTEGER" property="dealStaffId" />
+    <result column="deal_content" jdbcType="VARCHAR" property="dealContent" />
+    <result column="deal_result" jdbcType="VARCHAR" property="dealResult" />
+    <result column="deal_date" jdbcType="TIMESTAMP" property="dealDate" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="return_tache_id" jdbcType="INTEGER" property="returnTacheId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    order_id, order_code, order_name, flow_type_id, apply_id, cur_tache_name, cur_tache_id, 
+    deal_obj_type, deal_obj_id, create_date, create_staff_id, deal_staff_id, deal_content, 
+    deal_result, deal_date, state, return_tache_id
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.SApplyOrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.SApplyOrderExample">
+    delete from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order (order_id, order_code, order_name, 
+      flow_type_id, apply_id, cur_tache_name, 
+      cur_tache_id, deal_obj_type, deal_obj_id, 
+      create_date, create_staff_id, deal_staff_id, 
+      deal_content, deal_result, deal_date, 
+      state, return_tache_id)
+    values (#{orderId,jdbcType=BIGINT}, #{orderCode,jdbcType=VARCHAR}, #{orderName,jdbcType=VARCHAR}, 
+      #{flowTypeId,jdbcType=VARCHAR}, #{applyId,jdbcType=INTEGER}, #{curTacheName,jdbcType=VARCHAR}, 
+      #{curTacheId,jdbcType=INTEGER}, #{dealObjType,jdbcType=VARCHAR}, #{dealObjId,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createStaffId,jdbcType=INTEGER}, #{dealStaffId,jdbcType=INTEGER}, 
+      #{dealContent,jdbcType=VARCHAR}, #{dealResult,jdbcType=VARCHAR}, #{dealDate,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=VARCHAR}, #{returnTacheId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderCode != null">
+        order_code,
+      </if>
+      <if test="orderName != null">
+        order_name,
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id,
+      </if>
+      <if test="applyId != null">
+        apply_id,
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name,
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id,
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type,
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id,
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id,
+      </if>
+      <if test="dealContent != null">
+        deal_content,
+      </if>
+      <if test="dealResult != null">
+        deal_result,
+      </if>
+      <if test="dealDate != null">
+        deal_date,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderCode != null">
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        #{returnTacheId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.SApplyOrderExample" resultType="java.lang.Long">
+    select count(*) from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update s_apply_order
+    <set>
+      <if test="row.orderId != null">
+        order_id = #{row.orderId,jdbcType=BIGINT},
+      </if>
+      <if test="row.orderCode != null">
+        order_code = #{row.orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.orderName != null">
+        order_name = #{row.orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.flowTypeId != null">
+        flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.applyId != null">
+        apply_id = #{row.applyId,jdbcType=INTEGER},
+      </if>
+      <if test="row.curTacheName != null">
+        cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.curTacheId != null">
+        cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealObjType != null">
+        deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealObjId != null">
+        deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaffId != null">
+        create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealStaffId != null">
+        deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealContent != null">
+        deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealResult != null">
+        deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealDate != null">
+        deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=VARCHAR},
+      </if>
+      <if test="row.returnTacheId != null">
+        return_tache_id = #{row.returnTacheId,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update s_apply_order
+    set order_id = #{row.orderId,jdbcType=BIGINT},
+      order_code = #{row.orderCode,jdbcType=VARCHAR},
+      order_name = #{row.orderName,jdbcType=VARCHAR},
+      flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{row.applyId,jdbcType=INTEGER},
+      cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      state = #{row.state,jdbcType=VARCHAR},
+      return_tache_id = #{row.returnTacheId,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    <set>
+      <if test="orderCode != null">
+        order_code = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        order_name = #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        apply_id = #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        deal_content = #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        deal_result = #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id = #{returnTacheId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    set order_code = #{orderCode,jdbcType=VARCHAR},
+      order_name = #{orderName,jdbcType=VARCHAR},
+      flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{applyId,jdbcType=INTEGER},
+      cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      deal_content = #{dealContent,jdbcType=VARCHAR},
+      deal_result = #{dealResult,jdbcType=VARCHAR},
+      deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=VARCHAR},
+      return_tache_id = #{returnTacheId,jdbcType=INTEGER}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.SApplyOrder">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="order_name" jdbcType="VARCHAR" property="orderName" />
+    <result column="flow_type_id" jdbcType="VARCHAR" property="flowTypeId" />
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="cur_tache_name" jdbcType="VARCHAR" property="curTacheName" />
+    <result column="cur_tache_id" jdbcType="INTEGER" property="curTacheId" />
+    <result column="deal_obj_type" jdbcType="VARCHAR" property="dealObjType" />
+    <result column="deal_obj_id" jdbcType="BIGINT" property="dealObjId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_staff_id" jdbcType="INTEGER" property="createStaffId" />
+    <result column="deal_staff_id" jdbcType="INTEGER" property="dealStaffId" />
+    <result column="deal_content" jdbcType="VARCHAR" property="dealContent" />
+    <result column="deal_result" jdbcType="VARCHAR" property="dealResult" />
+    <result column="deal_date" jdbcType="TIMESTAMP" property="dealDate" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="return_tache_id" jdbcType="BIGINT" property="returnTacheId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    order_id, order_code, order_name, flow_type_id, apply_id, cur_tache_name, cur_tache_id, 
+    deal_obj_type, deal_obj_id, create_date, create_staff_id, deal_staff_id, deal_content, 
+    deal_result, deal_date, state, return_tache_id
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.SApplyOrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.SApplyOrderExample">
+    delete from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order (order_id, order_code, order_name, 
+      flow_type_id, apply_id, cur_tache_name, 
+      cur_tache_id, deal_obj_type, deal_obj_id, 
+      create_date, create_staff_id, deal_staff_id, 
+      deal_content, deal_result, deal_date, 
+      state, return_tache_id)
+    values (#{orderId,jdbcType=BIGINT}, #{orderCode,jdbcType=VARCHAR}, #{orderName,jdbcType=VARCHAR}, 
+      #{flowTypeId,jdbcType=VARCHAR}, #{applyId,jdbcType=INTEGER}, #{curTacheName,jdbcType=VARCHAR}, 
+      #{curTacheId,jdbcType=INTEGER}, #{dealObjType,jdbcType=VARCHAR}, #{dealObjId,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createStaffId,jdbcType=INTEGER}, #{dealStaffId,jdbcType=INTEGER}, 
+      #{dealContent,jdbcType=VARCHAR}, #{dealResult,jdbcType=VARCHAR}, #{dealDate,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=VARCHAR}, #{returnTacheId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderCode != null">
+        order_code,
+      </if>
+      <if test="orderName != null">
+        order_name,
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id,
+      </if>
+      <if test="applyId != null">
+        apply_id,
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name,
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id,
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type,
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id,
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id,
+      </if>
+      <if test="dealContent != null">
+        deal_content,
+      </if>
+      <if test="dealResult != null">
+        deal_result,
+      </if>
+      <if test="dealDate != null">
+        deal_date,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderCode != null">
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        #{returnTacheId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.SApplyOrderExample" resultType="java.lang.Long">
+    select count(*) from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update s_apply_order
+    <set>
+      <if test="row.orderId != null">
+        order_id = #{row.orderId,jdbcType=BIGINT},
+      </if>
+      <if test="row.orderCode != null">
+        order_code = #{row.orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.orderName != null">
+        order_name = #{row.orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.flowTypeId != null">
+        flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.applyId != null">
+        apply_id = #{row.applyId,jdbcType=INTEGER},
+      </if>
+      <if test="row.curTacheName != null">
+        cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.curTacheId != null">
+        cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealObjType != null">
+        deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealObjId != null">
+        deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaffId != null">
+        create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealStaffId != null">
+        deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealContent != null">
+        deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealResult != null">
+        deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealDate != null">
+        deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=VARCHAR},
+      </if>
+      <if test="row.returnTacheId != null">
+        return_tache_id = #{row.returnTacheId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update s_apply_order
+    set order_id = #{row.orderId,jdbcType=BIGINT},
+      order_code = #{row.orderCode,jdbcType=VARCHAR},
+      order_name = #{row.orderName,jdbcType=VARCHAR},
+      flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{row.applyId,jdbcType=INTEGER},
+      cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      state = #{row.state,jdbcType=VARCHAR},
+      return_tache_id = #{row.returnTacheId,jdbcType=BIGINT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    <set>
+      <if test="orderCode != null">
+        order_code = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        order_name = #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        apply_id = #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        deal_content = #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        deal_result = #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id = #{returnTacheId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    set order_code = #{orderCode,jdbcType=VARCHAR},
+      order_name = #{orderName,jdbcType=VARCHAR},
+      flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{applyId,jdbcType=INTEGER},
+      cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      deal_content = #{dealContent,jdbcType=VARCHAR},
+      deal_result = #{dealResult,jdbcType=VARCHAR},
+      deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=VARCHAR},
+      return_tache_id = #{returnTacheId,jdbcType=BIGINT}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.SApplyOrder">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="order_name" jdbcType="VARCHAR" property="orderName" />
+    <result column="flow_type_id" jdbcType="VARCHAR" property="flowTypeId" />
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="cur_tache_name" jdbcType="VARCHAR" property="curTacheName" />
+    <result column="cur_tache_id" jdbcType="INTEGER" property="curTacheId" />
+    <result column="deal_obj_type" jdbcType="VARCHAR" property="dealObjType" />
+    <result column="deal_obj_id" jdbcType="BIGINT" property="dealObjId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_staff_id" jdbcType="INTEGER" property="createStaffId" />
+    <result column="deal_staff_id" jdbcType="INTEGER" property="dealStaffId" />
+    <result column="deal_content" jdbcType="VARCHAR" property="dealContent" />
+    <result column="deal_result" jdbcType="VARCHAR" property="dealResult" />
+    <result column="deal_date" jdbcType="TIMESTAMP" property="dealDate" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="return_tache_id" jdbcType="INTEGER" property="returnTacheId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    order_id, order_code, order_name, flow_type_id, apply_id, cur_tache_name, cur_tache_id, 
+    deal_obj_type, deal_obj_id, create_date, create_staff_id, deal_staff_id, deal_content, 
+    deal_result, deal_date, state, return_tache_id
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.SApplyOrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.SApplyOrderExample">
+    delete from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order (order_id, order_code, order_name, 
+      flow_type_id, apply_id, cur_tache_name, 
+      cur_tache_id, deal_obj_type, deal_obj_id, 
+      create_date, create_staff_id, deal_staff_id, 
+      deal_content, deal_result, deal_date, 
+      state, return_tache_id)
+    values (#{orderId,jdbcType=BIGINT}, #{orderCode,jdbcType=VARCHAR}, #{orderName,jdbcType=VARCHAR}, 
+      #{flowTypeId,jdbcType=VARCHAR}, #{applyId,jdbcType=INTEGER}, #{curTacheName,jdbcType=VARCHAR}, 
+      #{curTacheId,jdbcType=INTEGER}, #{dealObjType,jdbcType=VARCHAR}, #{dealObjId,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createStaffId,jdbcType=INTEGER}, #{dealStaffId,jdbcType=INTEGER}, 
+      #{dealContent,jdbcType=VARCHAR}, #{dealResult,jdbcType=VARCHAR}, #{dealDate,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=VARCHAR}, #{returnTacheId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderCode != null">
+        order_code,
+      </if>
+      <if test="orderName != null">
+        order_name,
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id,
+      </if>
+      <if test="applyId != null">
+        apply_id,
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name,
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id,
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type,
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id,
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id,
+      </if>
+      <if test="dealContent != null">
+        deal_content,
+      </if>
+      <if test="dealResult != null">
+        deal_result,
+      </if>
+      <if test="dealDate != null">
+        deal_date,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderCode != null">
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        #{returnTacheId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.SApplyOrderExample" resultType="java.lang.Long">
+    select count(*) from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update s_apply_order
+    <set>
+      <if test="row.orderId != null">
+        order_id = #{row.orderId,jdbcType=BIGINT},
+      </if>
+      <if test="row.orderCode != null">
+        order_code = #{row.orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.orderName != null">
+        order_name = #{row.orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.flowTypeId != null">
+        flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.applyId != null">
+        apply_id = #{row.applyId,jdbcType=INTEGER},
+      </if>
+      <if test="row.curTacheName != null">
+        cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.curTacheId != null">
+        cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealObjType != null">
+        deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealObjId != null">
+        deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaffId != null">
+        create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealStaffId != null">
+        deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealContent != null">
+        deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealResult != null">
+        deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealDate != null">
+        deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=VARCHAR},
+      </if>
+      <if test="row.returnTacheId != null">
+        return_tache_id = #{row.returnTacheId,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update s_apply_order
+    set order_id = #{row.orderId,jdbcType=BIGINT},
+      order_code = #{row.orderCode,jdbcType=VARCHAR},
+      order_name = #{row.orderName,jdbcType=VARCHAR},
+      flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{row.applyId,jdbcType=INTEGER},
+      cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      state = #{row.state,jdbcType=VARCHAR},
+      return_tache_id = #{row.returnTacheId,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    <set>
+      <if test="orderCode != null">
+        order_code = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        order_name = #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        apply_id = #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        deal_content = #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        deal_result = #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id = #{returnTacheId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    set order_code = #{orderCode,jdbcType=VARCHAR},
+      order_name = #{orderName,jdbcType=VARCHAR},
+      flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{applyId,jdbcType=INTEGER},
+      cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      deal_content = #{dealContent,jdbcType=VARCHAR},
+      deal_result = #{dealResult,jdbcType=VARCHAR},
+      deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=VARCHAR},
+      return_tache_id = #{returnTacheId,jdbcType=INTEGER}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.SApplyOrder">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="order_name" jdbcType="VARCHAR" property="orderName" />
+    <result column="flow_type_id" jdbcType="VARCHAR" property="flowTypeId" />
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="cur_tache_name" jdbcType="VARCHAR" property="curTacheName" />
+    <result column="cur_tache_id" jdbcType="INTEGER" property="curTacheId" />
+    <result column="deal_obj_type" jdbcType="VARCHAR" property="dealObjType" />
+    <result column="deal_obj_id" jdbcType="BIGINT" property="dealObjId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_staff_id" jdbcType="INTEGER" property="createStaffId" />
+    <result column="deal_staff_id" jdbcType="INTEGER" property="dealStaffId" />
+    <result column="deal_content" jdbcType="VARCHAR" property="dealContent" />
+    <result column="deal_result" jdbcType="VARCHAR" property="dealResult" />
+    <result column="deal_date" jdbcType="TIMESTAMP" property="dealDate" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="return_tache_id" jdbcType="INTEGER" property="returnTacheId" />
+    <result column="DEAL_TYPE" jdbcType="INTEGER" property="dealType" />
+    <result column="p_apply_id" jdbcType="BIGINT" property="pApplyId" />
+    <result column="p_tache_id" jdbcType="BIGINT" property="pTacheId" />
+    <result column="extended_field" jdbcType="VARCHAR" property="extendedField" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    order_id, order_code, order_name, flow_type_id, apply_id, cur_tache_name, cur_tache_id, 
+    deal_obj_type, deal_obj_id, create_date, create_staff_id, deal_staff_id, deal_content, 
+    deal_result, deal_date, state, return_tache_id, DEAL_TYPE, p_apply_id, p_tache_id, 
+    extended_field
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.SApplyOrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from s_apply_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.SApplyOrderExample">
+    delete from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order (order_id, order_code, order_name, 
+      flow_type_id, apply_id, cur_tache_name, 
+      cur_tache_id, deal_obj_type, deal_obj_id, 
+      create_date, create_staff_id, deal_staff_id, 
+      deal_content, deal_result, deal_date, 
+      state, return_tache_id, DEAL_TYPE, 
+      p_apply_id, p_tache_id, extended_field
+      )
+    values (#{orderId,jdbcType=BIGINT}, #{orderCode,jdbcType=VARCHAR}, #{orderName,jdbcType=VARCHAR}, 
+      #{flowTypeId,jdbcType=VARCHAR}, #{applyId,jdbcType=INTEGER}, #{curTacheName,jdbcType=VARCHAR}, 
+      #{curTacheId,jdbcType=INTEGER}, #{dealObjType,jdbcType=VARCHAR}, #{dealObjId,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createStaffId,jdbcType=INTEGER}, #{dealStaffId,jdbcType=INTEGER}, 
+      #{dealContent,jdbcType=VARCHAR}, #{dealResult,jdbcType=VARCHAR}, #{dealDate,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=VARCHAR}, #{returnTacheId,jdbcType=INTEGER}, #{dealType,jdbcType=INTEGER}, 
+      #{pApplyId,jdbcType=BIGINT}, #{pTacheId,jdbcType=BIGINT}, #{extendedField,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.SApplyOrder">
+    insert into s_apply_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderCode != null">
+        order_code,
+      </if>
+      <if test="orderName != null">
+        order_name,
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id,
+      </if>
+      <if test="applyId != null">
+        apply_id,
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name,
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id,
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type,
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id,
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id,
+      </if>
+      <if test="dealContent != null">
+        deal_content,
+      </if>
+      <if test="dealResult != null">
+        deal_result,
+      </if>
+      <if test="dealDate != null">
+        deal_date,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id,
+      </if>
+      <if test="dealType != null">
+        DEAL_TYPE,
+      </if>
+      <if test="pApplyId != null">
+        p_apply_id,
+      </if>
+      <if test="pTacheId != null">
+        p_tache_id,
+      </if>
+      <if test="extendedField != null">
+        extended_field,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderCode != null">
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        #{returnTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealType != null">
+        #{dealType,jdbcType=INTEGER},
+      </if>
+      <if test="pApplyId != null">
+        #{pApplyId,jdbcType=BIGINT},
+      </if>
+      <if test="pTacheId != null">
+        #{pTacheId,jdbcType=BIGINT},
+      </if>
+      <if test="extendedField != null">
+        #{extendedField,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.SApplyOrderExample" resultType="java.lang.Long">
+    select count(*) from s_apply_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update s_apply_order
+    <set>
+      <if test="row.orderId != null">
+        order_id = #{row.orderId,jdbcType=BIGINT},
+      </if>
+      <if test="row.orderCode != null">
+        order_code = #{row.orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.orderName != null">
+        order_name = #{row.orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.flowTypeId != null">
+        flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="row.applyId != null">
+        apply_id = #{row.applyId,jdbcType=INTEGER},
+      </if>
+      <if test="row.curTacheName != null">
+        cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.curTacheId != null">
+        cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealObjType != null">
+        deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealObjId != null">
+        deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaffId != null">
+        create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealStaffId != null">
+        deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealContent != null">
+        deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealResult != null">
+        deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dealDate != null">
+        deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=VARCHAR},
+      </if>
+      <if test="row.returnTacheId != null">
+        return_tache_id = #{row.returnTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="row.dealType != null">
+        DEAL_TYPE = #{row.dealType,jdbcType=INTEGER},
+      </if>
+      <if test="row.pApplyId != null">
+        p_apply_id = #{row.pApplyId,jdbcType=BIGINT},
+      </if>
+      <if test="row.pTacheId != null">
+        p_tache_id = #{row.pTacheId,jdbcType=BIGINT},
+      </if>
+      <if test="row.extendedField != null">
+        extended_field = #{row.extendedField,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update s_apply_order
+    set order_id = #{row.orderId,jdbcType=BIGINT},
+      order_code = #{row.orderCode,jdbcType=VARCHAR},
+      order_name = #{row.orderName,jdbcType=VARCHAR},
+      flow_type_id = #{row.flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{row.applyId,jdbcType=INTEGER},
+      cur_tache_name = #{row.curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{row.curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{row.dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{row.dealObjId,jdbcType=BIGINT},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{row.createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{row.dealStaffId,jdbcType=INTEGER},
+      deal_content = #{row.dealContent,jdbcType=VARCHAR},
+      deal_result = #{row.dealResult,jdbcType=VARCHAR},
+      deal_date = #{row.dealDate,jdbcType=TIMESTAMP},
+      state = #{row.state,jdbcType=VARCHAR},
+      return_tache_id = #{row.returnTacheId,jdbcType=INTEGER},
+      DEAL_TYPE = #{row.dealType,jdbcType=INTEGER},
+      p_apply_id = #{row.pApplyId,jdbcType=BIGINT},
+      p_tache_id = #{row.pTacheId,jdbcType=BIGINT},
+      extended_field = #{row.extendedField,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    <set>
+      <if test="orderCode != null">
+        order_code = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null">
+        order_name = #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeId != null">
+        flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        apply_id = #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="curTacheName != null">
+        cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      </if>
+      <if test="curTacheId != null">
+        cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealObjType != null">
+        deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealObjId != null">
+        deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaffId != null">
+        create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealStaffId != null">
+        deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      </if>
+      <if test="dealContent != null">
+        deal_content = #{dealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="dealResult != null">
+        deal_result = #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null">
+        deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTacheId != null">
+        return_tache_id = #{returnTacheId,jdbcType=INTEGER},
+      </if>
+      <if test="dealType != null">
+        DEAL_TYPE = #{dealType,jdbcType=INTEGER},
+      </if>
+      <if test="pApplyId != null">
+        p_apply_id = #{pApplyId,jdbcType=BIGINT},
+      </if>
+      <if test="pTacheId != null">
+        p_tache_id = #{pTacheId,jdbcType=BIGINT},
+      </if>
+      <if test="extendedField != null">
+        extended_field = #{extendedField,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.SApplyOrder">
+    update s_apply_order
+    set order_code = #{orderCode,jdbcType=VARCHAR},
+      order_name = #{orderName,jdbcType=VARCHAR},
+      flow_type_id = #{flowTypeId,jdbcType=VARCHAR},
+      apply_id = #{applyId,jdbcType=INTEGER},
+      cur_tache_name = #{curTacheName,jdbcType=VARCHAR},
+      cur_tache_id = #{curTacheId,jdbcType=INTEGER},
+      deal_obj_type = #{dealObjType,jdbcType=VARCHAR},
+      deal_obj_id = #{dealObjId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_staff_id = #{createStaffId,jdbcType=INTEGER},
+      deal_staff_id = #{dealStaffId,jdbcType=INTEGER},
+      deal_content = #{dealContent,jdbcType=VARCHAR},
+      deal_result = #{dealResult,jdbcType=VARCHAR},
+      deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=VARCHAR},
+      return_tache_id = #{returnTacheId,jdbcType=INTEGER},
+      DEAL_TYPE = #{dealType,jdbcType=INTEGER},
+      p_apply_id = #{pApplyId,jdbcType=BIGINT},
+      p_tache_id = #{pTacheId,jdbcType=BIGINT},
+      extended_field = #{extendedField,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+</mapper>
