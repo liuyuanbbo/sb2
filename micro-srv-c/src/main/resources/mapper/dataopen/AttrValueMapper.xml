@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.AttrValueMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.AttrValue">
+        <id column="attr_value_id" jdbcType="BIGINT" property="attrValueId"/>
+        <result column="attr_id" jdbcType="BIGINT" property="attrId"/>
+        <result column="attr_value_name" jdbcType="VARCHAR" property="attrValueName"/>
+        <result column="attr_value" jdbcType="VARCHAR" property="attrValue"/>
+        <result column="status_cd" jdbcType="VARCHAR" property="statusCd"/>
+        <result column="attr_value_desc" jdbcType="VARCHAR" property="attrValueDesc"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="status_date" jdbcType="TIMESTAMP" property="statusDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="create_staff" jdbcType="BIGINT" property="createStaff"/>
+        <result column="update_staff" jdbcType="BIGINT" property="updateStaff"/>
+        <result column="attr_value_sort" jdbcType="INTEGER" property="attrValueSort"/>
+        <result column="parent_value" jdbcType="VARCHAR" property="parentValue"/>
+        <result column="attr_value_english_name" jdbcType="VARCHAR" property="attrValueEnglishName"/>
+        <result column="attr_value_tw_name" jdbcType="VARCHAR" property="attrValueTwName"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.c.pojo.dataopen.AttrValue">
+        <result column="remark" jdbcType="LONGVARCHAR" property="remark"/>
+    </resultMap>
+</mapper>

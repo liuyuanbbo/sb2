@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.DataGrpMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.DataGrp">
+        <id column="grp_id" jdbcType="BIGINT" property="grpId"/>
+        <result column="grp_name" jdbcType="VARCHAR" property="grpName"/>
+        <result column="grp_desc" jdbcType="VARCHAR" property="grpDesc"/>
+        <result column="grp_type" jdbcType="VARCHAR" property="grpType"/>
+        <result column="status_cd" jdbcType="VARCHAR" property="statusCd"/>
+        <result column="create_staff" jdbcType="BIGINT" property="createStaff"/>
+        <result column="update_staff" jdbcType="BIGINT" property="updateStaff"/>
+        <result column="create_date" jdbcType="DATE" property="createDate"/>
+        <result column="status_date" jdbcType="DATE" property="statusDate"/>
+        <result column="update_date" jdbcType="DATE" property="updateDate"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="parent_grp_id" jdbcType="BIGINT" property="parentGrpId"/>
+        <result column="path_code" jdbcType="VARCHAR" property="pathCode"/>
+        <result column="grp_code" jdbcType="VARCHAR" property="grpCode"/>
+        <result column="grp_name_en" jdbcType="VARCHAR" property="grpNameEn"/>
+        <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId"/>
+        <result column="is_leaf" jdbcType="VARCHAR" property="isLeaf"/>
+        <result column="rel_grp_id" jdbcType="BIGINT" property="relGrpId"/>
+        <result column="coderule_id" jdbcType="BIGINT" property="coderuleId"/>
+    </resultMap>
+</mapper>

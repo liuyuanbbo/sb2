@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.DimIndexKeyRelaMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.DimIndexKeyRela">
+        <id column="rela_id" jdbcType="BIGINT" property="relaId"/>
+        <result column="dim_index_id" jdbcType="BIGINT" property="dimIndexId"/>
+        <result column="table_code" jdbcType="VARCHAR" property="tableCode"/>
+        <result column="rela_key_object_id" jdbcType="BIGINT" property="relaKeyObjectId"/>
+        <result column="src_rela_id" jdbcType="BIGINT" property="srcRelaId"/>
+        <result column="status_cd" jdbcType="VARCHAR" property="statusCd"/>
+        <result column="data_type" jdbcType="VARCHAR" property="dataType"/>
+    </resultMap>
+</mapper>

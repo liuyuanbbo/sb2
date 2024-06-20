@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.ObjTableRelaMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.ObjTableRela">
+        <id column="rela_id" jdbcType="BIGINT" property="relaId"/>
+        <result column="object_id" jdbcType="BIGINT" property="objectId"/>
+        <result column="meta_data_id" jdbcType="BIGINT" property="metaDataId"/>
+        <result column="meta_data_code" jdbcType="VARCHAR" property="metaDataCode"/>
+        <result column="main_flag" jdbcType="INTEGER" property="mainFlag"/>
+        <result column="meta_data_type" jdbcType="VARCHAR" property="metaDataType"/>
+        <result column="status_cd" jdbcType="VARCHAR" property="statusCd"/>
+        <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId"/>
+        <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode"/>
+        <result column="data_cycle" jdbcType="VARCHAR" property="dataCycle"/>
+    </resultMap>
+</mapper>

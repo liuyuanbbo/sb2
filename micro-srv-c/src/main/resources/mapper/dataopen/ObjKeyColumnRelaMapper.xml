@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.ObjKeyColumnRelaMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.ObjKeyColumnRela">
+        <id column="rela_id" jdbcType="BIGINT" property="relaId"/>
+        <result column="parent_rela_id" jdbcType="BIGINT" property="parentRelaId"/>
+        <result column="object_id" jdbcType="BIGINT" property="objectId"/>
+        <result column="column_code" jdbcType="VARCHAR" property="columnCode"/>
+        <result column="column_id" jdbcType="BIGINT" property="columnId"/>
+        <result column="rela_column_id" jdbcType="BIGINT" property="relaColumnId"/>
+        <result column="rela_column_code" jdbcType="VARCHAR" property="relaColumnCode"/>
+    </resultMap>
+</mapper>
