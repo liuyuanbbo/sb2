@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataportal.StanReqTemplateFieldMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataportal.StanReqTemplateField">
+        <id column="TEMPLATE_FIELD_ID" jdbcType="BIGINT" property="templateFieldId"/>
+        <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId"/>
+        <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode"/>
+        <result column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId"/>
+        <result column="FIELD_CODE" jdbcType="VARCHAR" property="fieldCode"/>
+        <result column="T_CN_NAME" jdbcType="VARCHAR" property="tCnName"/>
+        <result column="T_EN_NAME" jdbcType="VARCHAR" property="tEnName"/>
+        <result column="T_SAVE_FIELD" jdbcType="VARCHAR" property="tSaveField"/>
+        <result column="T_FIELD_VALUE_TYPE" jdbcType="VARCHAR" property="tFieldValueType"/>
+        <result column="T_VALUE_INIT_PARAM" jdbcType="VARCHAR" property="tValueInitParam"/>
+        <result column="T_EDIT_REQUIRED" jdbcType="INTEGER" property="tEditRequired"/>
+        <result column="T_EDIT_DISABLED" jdbcType="INTEGER" property="tEditDisabled"/>
+        <result column="T_STATE" jdbcType="INTEGER" property="tState"/>
+        <result column="T_EDIT_WIDGET" jdbcType="VARCHAR" property="tEditWidget"/>
+        <result column="T_EDIT_WIDGET_DATA_TYPE" jdbcType="INTEGER" property="tEditWidgetDataType"/>
+        <result column="T_EDIT_WIDGET_DATA_REL_ID" jdbcType="VARCHAR" property="tEditWidgetDataRelId"/>
+        <result column="T_EDIT_EXPRESSION" jdbcType="VARCHAR" property="tEditExpression"/>
+        <result column="T_EDIT_DEFAULT_VALUE" jdbcType="VARCHAR" property="tEditDefaultValue"/>
+        <result column="T_EDIT_VERIFY_EXPRESSION" jdbcType="VARCHAR" property="tEditVerifyExpression"/>
+        <result column="T_EDIT_PLACEHOLDER" jdbcType="VARCHAR" property="tEditPlaceholder"/>
+        <result column="T_SORT" jdbcType="INTEGER" property="tSort"/>
+        <result column="T_REMARK" jdbcType="VARCHAR" property="tRemark"/>
+        <result column="T_SHOW" jdbcType="INTEGER" property="tShow"/>
+        <result column="T_DETAIL_PLACEHOLDER" jdbcType="VARCHAR" property="tDetailPlaceholder"/>
+        <result column="EXCEL_SEG" jdbcType="INTEGER" property="excelSeg"/>
+        <result column="EXCEL_SAMPLE" jdbcType="VARCHAR" property="excelSample"/>
+        <result column="T_IMPORT_REQUIRED" jdbcType="INTEGER" property="tImportRequired"/>
+        <result column="EXCEL_FIELD" jdbcType="INTEGER" property="excelField"/>
+    </resultMap>
+</mapper>

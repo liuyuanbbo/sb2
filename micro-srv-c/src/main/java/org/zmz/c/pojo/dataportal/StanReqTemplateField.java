@@ -1,4 +1,4 @@
-package org.zmz.c.pojo.dataopen;
+package org.zmz.c.pojo.dataportal;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -67,5 +67,7 @@ public class StanReqTemplateField {
     private String excelSample;
 
     private Integer tImportRequired;
+
+    private Integer excelField;
 
 }

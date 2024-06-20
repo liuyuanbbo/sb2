@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataportal.StanReqTemplateGroupMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataportal.StanReqTemplateGroup">
+        <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId"/>
+        <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId"/>
+        <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName"/>
+        <result column="T_SORT" jdbcType="INTEGER" property="tSort"/>
+        <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark"/>
+    </resultMap>
+</mapper>

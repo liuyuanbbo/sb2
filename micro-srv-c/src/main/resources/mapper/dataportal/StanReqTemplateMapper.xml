@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataportal.StanReqTemplateMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataportal.StanReqTemplate">
+        <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId"/>
+        <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode"/>
+        <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName"/>
+        <result column="I_STATE" jdbcType="VARCHAR" property="iState"/>
+        <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId"/>
+        <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName"/>
+        <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId"/>
+        <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="I_SORT" jdbcType="INTEGER" property="iSort"/>
+        <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark"/>
+        <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType"/>
+    </resultMap>
+</mapper>
