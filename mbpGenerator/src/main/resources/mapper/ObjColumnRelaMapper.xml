@@ -1,0 +1,2454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.mapper.ObjColumnRelaMapper">
+  <resultMap id="BaseResultMap" type="org.zmz.model.ObjColumnRela">
+    <id column="rela_id" jdbcType="BIGINT" property="relaId" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
+    <result column="src_object_id" jdbcType="BIGINT" property="srcObjectId" />
+    <result column="column_id" jdbcType="BIGINT" property="columnId" />
+    <result column="column_code" jdbcType="VARCHAR" property="columnCode" />
+    <result column="column_name" jdbcType="VARCHAR" property="columnName" />
+    <result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="src_table_id" jdbcType="BIGINT" property="srcTableId" />
+    <result column="datasource_id" jdbcType="BIGINT" property="datasourceId" />
+    <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode" />
+    <result column="col_attr" jdbcType="VARCHAR" property="colAttr" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+    <result column="data_name" jdbcType="VARCHAR" property="dataName" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId" />
+    <result column="src_column_id" jdbcType="BIGINT" property="srcColumnId" />
+    <result column="seq" jdbcType="BIGINT" property="seq" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    rela_id, object_id, src_object_id, column_id, column_code, column_name, column_type, 
+    table_code, src_table_id, datasource_id, datasource_code, col_attr, data_id, data_name, 
+    status_cd, com_acct_id, src_column_id, seq
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.ObjColumnRelaExample">
+    delete from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela (rela_id, object_id, src_object_id, 
+      column_id, column_code, column_name, 
+      column_type, table_code, src_table_id, 
+      datasource_id, datasource_code, col_attr, 
+      data_id, data_name, status_cd, 
+      com_acct_id, src_column_id, seq
+      )
+    values (#{relaId,jdbcType=BIGINT}, #{objectId,jdbcType=BIGINT}, #{srcObjectId,jdbcType=BIGINT}, 
+      #{columnId,jdbcType=BIGINT}, #{columnCode,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}, 
+      #{columnType,jdbcType=VARCHAR}, #{tableCode,jdbcType=VARCHAR}, #{srcTableId,jdbcType=BIGINT}, 
+      #{datasourceId,jdbcType=BIGINT}, #{datasourceCode,jdbcType=VARCHAR}, #{colAttr,jdbcType=VARCHAR}, 
+      #{dataId,jdbcType=BIGINT}, #{dataName,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, 
+      #{comAcctId,jdbcType=BIGINT}, #{srcColumnId,jdbcType=BIGINT}, #{seq,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        rela_id,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id,
+      </if>
+      <if test="columnId != null">
+        column_id,
+      </if>
+      <if test="columnCode != null">
+        column_code,
+      </if>
+      <if test="columnName != null">
+        column_name,
+      </if>
+      <if test="columnType != null">
+        column_type,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="srcTableId != null">
+        src_table_id,
+      </if>
+      <if test="datasourceId != null">
+        datasource_id,
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code,
+      </if>
+      <if test="colAttr != null">
+        col_attr,
+      </if>
+      <if test="dataId != null">
+        data_id,
+      </if>
+      <if test="dataName != null">
+        data_name,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id,
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        #{relaId,jdbcType=BIGINT},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colAttr != null">
+        #{colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultType="java.lang.Long">
+    select count(*) from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update obj_column_rela
+    <set>
+      <if test="row.relaId != null">
+        rela_id = #{row.relaId,jdbcType=BIGINT},
+      </if>
+      <if test="row.objectId != null">
+        object_id = #{row.objectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcObjectId != null">
+        src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnId != null">
+        column_id = #{row.columnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnCode != null">
+        column_code = #{row.columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnName != null">
+        column_name = #{row.columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnType != null">
+        column_type = #{row.columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableCode != null">
+        table_code = #{row.tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.srcTableId != null">
+        src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceId != null">
+        datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceCode != null">
+        datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.colAttr != null">
+        col_attr = #{row.colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dataId != null">
+        data_id = #{row.dataId,jdbcType=BIGINT},
+      </if>
+      <if test="row.dataName != null">
+        data_name = #{row.dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.comAcctId != null">
+        com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcColumnId != null">
+        src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.seq != null">
+        seq = #{row.seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update obj_column_rela
+    set rela_id = #{row.relaId,jdbcType=BIGINT},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      col_attr = #{row.colAttr,jdbcType=VARCHAR},
+      data_id = #{row.dataId,jdbcType=BIGINT},
+      data_name = #{row.dataName,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      seq = #{row.seq,jdbcType=BIGINT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    <set>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        column_code = #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        column_type = #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        src_table_id = #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        datasource_id = #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colAttr != null">
+        col_attr = #{colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        data_id = #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        data_name = #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    set object_id = #{objectId,jdbcType=BIGINT},
+      src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      column_id = #{columnId,jdbcType=BIGINT},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      src_table_id = #{srcTableId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      col_attr = #{colAttr,jdbcType=VARCHAR},
+      data_id = #{dataId,jdbcType=BIGINT},
+      data_name = #{dataName,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      seq = #{seq,jdbcType=BIGINT}
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.ObjColumnRela">
+    <id column="rela_id" jdbcType="BIGINT" property="relaId" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
+    <result column="src_object_id" jdbcType="BIGINT" property="srcObjectId" />
+    <result column="src_column_id" jdbcType="BIGINT" property="srcColumnId" />
+    <result column="column_id" jdbcType="BIGINT" property="columnId" />
+    <result column="column_code" jdbcType="VARCHAR" property="columnCode" />
+    <result column="column_name" jdbcType="VARCHAR" property="columnName" />
+    <result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="src_table_id" jdbcType="BIGINT" property="srcTableId" />
+    <result column="datasource_id" jdbcType="BIGINT" property="datasourceId" />
+    <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+    <result column="data_name" jdbcType="VARCHAR" property="dataName" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId" />
+    <result column="seq" jdbcType="BIGINT" property="seq" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    rela_id, object_id, src_object_id, src_column_id, column_id, column_code, column_name, 
+    column_type, table_code, src_table_id, datasource_id, datasource_code, data_id, data_name, 
+    status_cd, com_acct_id, seq
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.ObjColumnRelaExample">
+    delete from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela (rela_id, object_id, src_object_id, 
+      src_column_id, column_id, column_code, 
+      column_name, column_type, table_code, 
+      src_table_id, datasource_id, datasource_code, 
+      data_id, data_name, status_cd, 
+      com_acct_id, seq)
+    values (#{relaId,jdbcType=BIGINT}, #{objectId,jdbcType=BIGINT}, #{srcObjectId,jdbcType=BIGINT}, 
+      #{srcColumnId,jdbcType=BIGINT}, #{columnId,jdbcType=BIGINT}, #{columnCode,jdbcType=VARCHAR}, 
+      #{columnName,jdbcType=VARCHAR}, #{columnType,jdbcType=VARCHAR}, #{tableCode,jdbcType=VARCHAR}, 
+      #{srcTableId,jdbcType=BIGINT}, #{datasourceId,jdbcType=BIGINT}, #{datasourceCode,jdbcType=VARCHAR}, 
+      #{dataId,jdbcType=BIGINT}, #{dataName,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, 
+      #{comAcctId,jdbcType=BIGINT}, #{seq,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        rela_id,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id,
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id,
+      </if>
+      <if test="columnId != null">
+        column_id,
+      </if>
+      <if test="columnCode != null">
+        column_code,
+      </if>
+      <if test="columnName != null">
+        column_name,
+      </if>
+      <if test="columnType != null">
+        column_type,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="srcTableId != null">
+        src_table_id,
+      </if>
+      <if test="datasourceId != null">
+        datasource_id,
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code,
+      </if>
+      <if test="dataId != null">
+        data_id,
+      </if>
+      <if test="dataName != null">
+        data_name,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        #{relaId,jdbcType=BIGINT},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultType="java.lang.Long">
+    select count(*) from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update obj_column_rela
+    <set>
+      <if test="row.relaId != null">
+        rela_id = #{row.relaId,jdbcType=BIGINT},
+      </if>
+      <if test="row.objectId != null">
+        object_id = #{row.objectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcObjectId != null">
+        src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcColumnId != null">
+        src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnId != null">
+        column_id = #{row.columnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnCode != null">
+        column_code = #{row.columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnName != null">
+        column_name = #{row.columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnType != null">
+        column_type = #{row.columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableCode != null">
+        table_code = #{row.tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.srcTableId != null">
+        src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceId != null">
+        datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceCode != null">
+        datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dataId != null">
+        data_id = #{row.dataId,jdbcType=BIGINT},
+      </if>
+      <if test="row.dataName != null">
+        data_name = #{row.dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.comAcctId != null">
+        com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="row.seq != null">
+        seq = #{row.seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update obj_column_rela
+    set rela_id = #{row.relaId,jdbcType=BIGINT},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      data_id = #{row.dataId,jdbcType=BIGINT},
+      data_name = #{row.dataName,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      seq = #{row.seq,jdbcType=BIGINT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    <set>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        column_code = #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        column_type = #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        src_table_id = #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        datasource_id = #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        data_id = #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        data_name = #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    set object_id = #{objectId,jdbcType=BIGINT},
+      src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      column_id = #{columnId,jdbcType=BIGINT},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      src_table_id = #{srcTableId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      data_id = #{dataId,jdbcType=BIGINT},
+      data_name = #{dataName,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      seq = #{seq,jdbcType=BIGINT}
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.ObjColumnRela">
+    <id column="rela_id" jdbcType="BIGINT" property="relaId" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
+    <result column="src_object_id" jdbcType="BIGINT" property="srcObjectId" />
+    <result column="src_column_id" jdbcType="BIGINT" property="srcColumnId" />
+    <result column="column_id" jdbcType="BIGINT" property="columnId" />
+    <result column="column_code" jdbcType="VARCHAR" property="columnCode" />
+    <result column="column_name" jdbcType="VARCHAR" property="columnName" />
+    <result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="src_table_id" jdbcType="BIGINT" property="srcTableId" />
+    <result column="datasource_id" jdbcType="BIGINT" property="datasourceId" />
+    <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+    <result column="data_name" jdbcType="VARCHAR" property="dataName" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId" />
+    <result column="seq" jdbcType="BIGINT" property="seq" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    rela_id, object_id, src_object_id, src_column_id, column_id, column_code, column_name, 
+    column_type, table_code, src_table_id, datasource_id, datasource_code, data_id, data_name, 
+    status_cd, com_acct_id, seq
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.ObjColumnRelaExample">
+    delete from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela (rela_id, object_id, src_object_id, 
+      src_column_id, column_id, column_code, 
+      column_name, column_type, table_code, 
+      src_table_id, datasource_id, datasource_code, 
+      data_id, data_name, status_cd, 
+      com_acct_id, seq)
+    values (#{relaId,jdbcType=BIGINT}, #{objectId,jdbcType=BIGINT}, #{srcObjectId,jdbcType=BIGINT}, 
+      #{srcColumnId,jdbcType=BIGINT}, #{columnId,jdbcType=BIGINT}, #{columnCode,jdbcType=VARCHAR}, 
+      #{columnName,jdbcType=VARCHAR}, #{columnType,jdbcType=VARCHAR}, #{tableCode,jdbcType=VARCHAR}, 
+      #{srcTableId,jdbcType=BIGINT}, #{datasourceId,jdbcType=BIGINT}, #{datasourceCode,jdbcType=VARCHAR}, 
+      #{dataId,jdbcType=BIGINT}, #{dataName,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, 
+      #{comAcctId,jdbcType=BIGINT}, #{seq,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        rela_id,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id,
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id,
+      </if>
+      <if test="columnId != null">
+        column_id,
+      </if>
+      <if test="columnCode != null">
+        column_code,
+      </if>
+      <if test="columnName != null">
+        column_name,
+      </if>
+      <if test="columnType != null">
+        column_type,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="srcTableId != null">
+        src_table_id,
+      </if>
+      <if test="datasourceId != null">
+        datasource_id,
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code,
+      </if>
+      <if test="dataId != null">
+        data_id,
+      </if>
+      <if test="dataName != null">
+        data_name,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        #{relaId,jdbcType=BIGINT},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultType="java.lang.Long">
+    select count(*) from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update obj_column_rela
+    <set>
+      <if test="row.relaId != null">
+        rela_id = #{row.relaId,jdbcType=BIGINT},
+      </if>
+      <if test="row.objectId != null">
+        object_id = #{row.objectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcObjectId != null">
+        src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcColumnId != null">
+        src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnId != null">
+        column_id = #{row.columnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnCode != null">
+        column_code = #{row.columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnName != null">
+        column_name = #{row.columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnType != null">
+        column_type = #{row.columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableCode != null">
+        table_code = #{row.tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.srcTableId != null">
+        src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceId != null">
+        datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceCode != null">
+        datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dataId != null">
+        data_id = #{row.dataId,jdbcType=BIGINT},
+      </if>
+      <if test="row.dataName != null">
+        data_name = #{row.dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.comAcctId != null">
+        com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="row.seq != null">
+        seq = #{row.seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update obj_column_rela
+    set rela_id = #{row.relaId,jdbcType=BIGINT},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      data_id = #{row.dataId,jdbcType=BIGINT},
+      data_name = #{row.dataName,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      seq = #{row.seq,jdbcType=BIGINT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    <set>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        column_code = #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        column_type = #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        src_table_id = #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        datasource_id = #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        data_id = #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        data_name = #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    set object_id = #{objectId,jdbcType=BIGINT},
+      src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      column_id = #{columnId,jdbcType=BIGINT},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      src_table_id = #{srcTableId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      data_id = #{dataId,jdbcType=BIGINT},
+      data_name = #{dataName,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      seq = #{seq,jdbcType=BIGINT}
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.ObjColumnRela">
+    <id column="rela_id" jdbcType="BIGINT" property="relaId" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
+    <result column="src_object_id" jdbcType="BIGINT" property="srcObjectId" />
+    <result column="column_id" jdbcType="BIGINT" property="columnId" />
+    <result column="column_code" jdbcType="VARCHAR" property="columnCode" />
+    <result column="column_name" jdbcType="VARCHAR" property="columnName" />
+    <result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="src_table_id" jdbcType="BIGINT" property="srcTableId" />
+    <result column="datasource_id" jdbcType="BIGINT" property="datasourceId" />
+    <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode" />
+    <result column="col_attr" jdbcType="VARCHAR" property="colAttr" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+    <result column="data_name" jdbcType="VARCHAR" property="dataName" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId" />
+    <result column="src_column_id" jdbcType="BIGINT" property="srcColumnId" />
+    <result column="seq" jdbcType="BIGINT" property="seq" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    rela_id, object_id, src_object_id, column_id, column_code, column_name, column_type, 
+    table_code, src_table_id, datasource_id, datasource_code, col_attr, data_id, data_name, 
+    status_cd, com_acct_id, src_column_id, seq
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.ObjColumnRelaExample">
+    delete from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela (rela_id, object_id, src_object_id, 
+      column_id, column_code, column_name, 
+      column_type, table_code, src_table_id, 
+      datasource_id, datasource_code, col_attr, 
+      data_id, data_name, status_cd, 
+      com_acct_id, src_column_id, seq
+      )
+    values (#{relaId,jdbcType=BIGINT}, #{objectId,jdbcType=BIGINT}, #{srcObjectId,jdbcType=BIGINT}, 
+      #{columnId,jdbcType=BIGINT}, #{columnCode,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}, 
+      #{columnType,jdbcType=VARCHAR}, #{tableCode,jdbcType=VARCHAR}, #{srcTableId,jdbcType=BIGINT}, 
+      #{datasourceId,jdbcType=BIGINT}, #{datasourceCode,jdbcType=VARCHAR}, #{colAttr,jdbcType=VARCHAR}, 
+      #{dataId,jdbcType=BIGINT}, #{dataName,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, 
+      #{comAcctId,jdbcType=BIGINT}, #{srcColumnId,jdbcType=BIGINT}, #{seq,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        rela_id,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id,
+      </if>
+      <if test="columnId != null">
+        column_id,
+      </if>
+      <if test="columnCode != null">
+        column_code,
+      </if>
+      <if test="columnName != null">
+        column_name,
+      </if>
+      <if test="columnType != null">
+        column_type,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="srcTableId != null">
+        src_table_id,
+      </if>
+      <if test="datasourceId != null">
+        datasource_id,
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code,
+      </if>
+      <if test="colAttr != null">
+        col_attr,
+      </if>
+      <if test="dataId != null">
+        data_id,
+      </if>
+      <if test="dataName != null">
+        data_name,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id,
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        #{relaId,jdbcType=BIGINT},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colAttr != null">
+        #{colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultType="java.lang.Long">
+    select count(*) from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update obj_column_rela
+    <set>
+      <if test="row.relaId != null">
+        rela_id = #{row.relaId,jdbcType=BIGINT},
+      </if>
+      <if test="row.objectId != null">
+        object_id = #{row.objectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcObjectId != null">
+        src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnId != null">
+        column_id = #{row.columnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnCode != null">
+        column_code = #{row.columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnName != null">
+        column_name = #{row.columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnType != null">
+        column_type = #{row.columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableCode != null">
+        table_code = #{row.tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.srcTableId != null">
+        src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceId != null">
+        datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceCode != null">
+        datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.colAttr != null">
+        col_attr = #{row.colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dataId != null">
+        data_id = #{row.dataId,jdbcType=BIGINT},
+      </if>
+      <if test="row.dataName != null">
+        data_name = #{row.dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.comAcctId != null">
+        com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcColumnId != null">
+        src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.seq != null">
+        seq = #{row.seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update obj_column_rela
+    set rela_id = #{row.relaId,jdbcType=BIGINT},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      col_attr = #{row.colAttr,jdbcType=VARCHAR},
+      data_id = #{row.dataId,jdbcType=BIGINT},
+      data_name = #{row.dataName,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      seq = #{row.seq,jdbcType=BIGINT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    <set>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        column_code = #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        column_type = #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        src_table_id = #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        datasource_id = #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colAttr != null">
+        col_attr = #{colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        data_id = #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        data_name = #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    set object_id = #{objectId,jdbcType=BIGINT},
+      src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      column_id = #{columnId,jdbcType=BIGINT},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      src_table_id = #{srcTableId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      col_attr = #{colAttr,jdbcType=VARCHAR},
+      data_id = #{dataId,jdbcType=BIGINT},
+      data_name = #{dataName,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      seq = #{seq,jdbcType=BIGINT}
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.ObjColumnRela">
+    <id column="rela_id" jdbcType="BIGINT" property="relaId" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
+    <result column="src_object_id" jdbcType="BIGINT" property="srcObjectId" />
+    <result column="column_id" jdbcType="BIGINT" property="columnId" />
+    <result column="column_code" jdbcType="VARCHAR" property="columnCode" />
+    <result column="column_name" jdbcType="VARCHAR" property="columnName" />
+    <result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="src_table_id" jdbcType="BIGINT" property="srcTableId" />
+    <result column="datasource_id" jdbcType="BIGINT" property="datasourceId" />
+    <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode" />
+    <result column="col_attr" jdbcType="VARCHAR" property="colAttr" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+    <result column="data_name" jdbcType="VARCHAR" property="dataName" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId" />
+    <result column="src_column_id" jdbcType="BIGINT" property="srcColumnId" />
+    <result column="seq" jdbcType="BIGINT" property="seq" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    rela_id, object_id, src_object_id, column_id, column_code, column_name, column_type, 
+    table_code, src_table_id, datasource_id, datasource_code, col_attr, data_id, data_name, 
+    status_cd, com_acct_id, src_column_id, seq
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.ObjColumnRelaExample">
+    delete from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela (rela_id, object_id, src_object_id, 
+      column_id, column_code, column_name, 
+      column_type, table_code, src_table_id, 
+      datasource_id, datasource_code, col_attr, 
+      data_id, data_name, status_cd, 
+      com_acct_id, src_column_id, seq
+      )
+    values (#{relaId,jdbcType=BIGINT}, #{objectId,jdbcType=BIGINT}, #{srcObjectId,jdbcType=BIGINT}, 
+      #{columnId,jdbcType=BIGINT}, #{columnCode,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}, 
+      #{columnType,jdbcType=VARCHAR}, #{tableCode,jdbcType=VARCHAR}, #{srcTableId,jdbcType=BIGINT}, 
+      #{datasourceId,jdbcType=BIGINT}, #{datasourceCode,jdbcType=VARCHAR}, #{colAttr,jdbcType=VARCHAR}, 
+      #{dataId,jdbcType=BIGINT}, #{dataName,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, 
+      #{comAcctId,jdbcType=BIGINT}, #{srcColumnId,jdbcType=BIGINT}, #{seq,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        rela_id,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id,
+      </if>
+      <if test="columnId != null">
+        column_id,
+      </if>
+      <if test="columnCode != null">
+        column_code,
+      </if>
+      <if test="columnName != null">
+        column_name,
+      </if>
+      <if test="columnType != null">
+        column_type,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="srcTableId != null">
+        src_table_id,
+      </if>
+      <if test="datasourceId != null">
+        datasource_id,
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code,
+      </if>
+      <if test="colAttr != null">
+        col_attr,
+      </if>
+      <if test="dataId != null">
+        data_id,
+      </if>
+      <if test="dataName != null">
+        data_name,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id,
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        #{relaId,jdbcType=BIGINT},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colAttr != null">
+        #{colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultType="java.lang.Long">
+    select count(*) from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update obj_column_rela
+    <set>
+      <if test="row.relaId != null">
+        rela_id = #{row.relaId,jdbcType=BIGINT},
+      </if>
+      <if test="row.objectId != null">
+        object_id = #{row.objectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcObjectId != null">
+        src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnId != null">
+        column_id = #{row.columnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnCode != null">
+        column_code = #{row.columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnName != null">
+        column_name = #{row.columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnType != null">
+        column_type = #{row.columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableCode != null">
+        table_code = #{row.tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.srcTableId != null">
+        src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceId != null">
+        datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceCode != null">
+        datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.colAttr != null">
+        col_attr = #{row.colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dataId != null">
+        data_id = #{row.dataId,jdbcType=BIGINT},
+      </if>
+      <if test="row.dataName != null">
+        data_name = #{row.dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.comAcctId != null">
+        com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcColumnId != null">
+        src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.seq != null">
+        seq = #{row.seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update obj_column_rela
+    set rela_id = #{row.relaId,jdbcType=BIGINT},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      col_attr = #{row.colAttr,jdbcType=VARCHAR},
+      data_id = #{row.dataId,jdbcType=BIGINT},
+      data_name = #{row.dataName,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      seq = #{row.seq,jdbcType=BIGINT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    <set>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        column_code = #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        column_type = #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        src_table_id = #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        datasource_id = #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colAttr != null">
+        col_attr = #{colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        data_id = #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        data_name = #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    set object_id = #{objectId,jdbcType=BIGINT},
+      src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      column_id = #{columnId,jdbcType=BIGINT},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      src_table_id = #{srcTableId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      col_attr = #{colAttr,jdbcType=VARCHAR},
+      data_id = #{dataId,jdbcType=BIGINT},
+      data_name = #{dataName,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      seq = #{seq,jdbcType=BIGINT}
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.ObjColumnRela">
+    <id column="rela_id" jdbcType="BIGINT" property="relaId" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
+    <result column="src_object_id" jdbcType="BIGINT" property="srcObjectId" />
+    <result column="column_id" jdbcType="BIGINT" property="columnId" />
+    <result column="column_code" jdbcType="VARCHAR" property="columnCode" />
+    <result column="column_name" jdbcType="VARCHAR" property="columnName" />
+    <result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="src_table_id" jdbcType="BIGINT" property="srcTableId" />
+    <result column="datasource_id" jdbcType="BIGINT" property="datasourceId" />
+    <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode" />
+    <result column="col_attr" jdbcType="VARCHAR" property="colAttr" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+    <result column="data_name" jdbcType="VARCHAR" property="dataName" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId" />
+    <result column="src_column_id" jdbcType="BIGINT" property="srcColumnId" />
+    <result column="seq" jdbcType="BIGINT" property="seq" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    rela_id, object_id, src_object_id, column_id, column_code, column_name, column_type, 
+    table_code, src_table_id, datasource_id, datasource_code, col_attr, data_id, data_name, 
+    status_cd, com_acct_id, src_column_id, seq
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from obj_column_rela
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.ObjColumnRelaExample">
+    delete from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela (rela_id, object_id, src_object_id, 
+      column_id, column_code, column_name, 
+      column_type, table_code, src_table_id, 
+      datasource_id, datasource_code, col_attr, 
+      data_id, data_name, status_cd, 
+      com_acct_id, src_column_id, seq
+      )
+    values (#{relaId,jdbcType=BIGINT}, #{objectId,jdbcType=BIGINT}, #{srcObjectId,jdbcType=BIGINT}, 
+      #{columnId,jdbcType=BIGINT}, #{columnCode,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}, 
+      #{columnType,jdbcType=VARCHAR}, #{tableCode,jdbcType=VARCHAR}, #{srcTableId,jdbcType=BIGINT}, 
+      #{datasourceId,jdbcType=BIGINT}, #{datasourceCode,jdbcType=VARCHAR}, #{colAttr,jdbcType=VARCHAR}, 
+      #{dataId,jdbcType=BIGINT}, #{dataName,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, 
+      #{comAcctId,jdbcType=BIGINT}, #{srcColumnId,jdbcType=BIGINT}, #{seq,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.ObjColumnRela">
+    insert into obj_column_rela
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        rela_id,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id,
+      </if>
+      <if test="columnId != null">
+        column_id,
+      </if>
+      <if test="columnCode != null">
+        column_code,
+      </if>
+      <if test="columnName != null">
+        column_name,
+      </if>
+      <if test="columnType != null">
+        column_type,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="srcTableId != null">
+        src_table_id,
+      </if>
+      <if test="datasourceId != null">
+        datasource_id,
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code,
+      </if>
+      <if test="colAttr != null">
+        col_attr,
+      </if>
+      <if test="dataId != null">
+        data_id,
+      </if>
+      <if test="dataName != null">
+        data_name,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id,
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="relaId != null">
+        #{relaId,jdbcType=BIGINT},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colAttr != null">
+        #{colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.ObjColumnRelaExample" resultType="java.lang.Long">
+    select count(*) from obj_column_rela
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update obj_column_rela
+    <set>
+      <if test="row.relaId != null">
+        rela_id = #{row.relaId,jdbcType=BIGINT},
+      </if>
+      <if test="row.objectId != null">
+        object_id = #{row.objectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcObjectId != null">
+        src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnId != null">
+        column_id = #{row.columnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnCode != null">
+        column_code = #{row.columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnName != null">
+        column_name = #{row.columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnType != null">
+        column_type = #{row.columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableCode != null">
+        table_code = #{row.tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.srcTableId != null">
+        src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceId != null">
+        datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceCode != null">
+        datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.colAttr != null">
+        col_attr = #{row.colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dataId != null">
+        data_id = #{row.dataId,jdbcType=BIGINT},
+      </if>
+      <if test="row.dataName != null">
+        data_name = #{row.dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.comAcctId != null">
+        com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="row.srcColumnId != null">
+        src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.seq != null">
+        seq = #{row.seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update obj_column_rela
+    set rela_id = #{row.relaId,jdbcType=BIGINT},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      src_object_id = #{row.srcObjectId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      src_table_id = #{row.srcTableId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      datasource_code = #{row.datasourceCode,jdbcType=VARCHAR},
+      col_attr = #{row.colAttr,jdbcType=VARCHAR},
+      data_id = #{row.dataId,jdbcType=BIGINT},
+      data_name = #{row.dataName,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{row.comAcctId,jdbcType=BIGINT},
+      src_column_id = #{row.srcColumnId,jdbcType=BIGINT},
+      seq = #{row.seq,jdbcType=BIGINT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    <set>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="srcObjectId != null">
+        src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="columnCode != null">
+        column_code = #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        column_type = #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcTableId != null">
+        src_table_id = #{srcTableId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        datasource_id = #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceCode != null">
+        datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="colAttr != null">
+        col_attr = #{colAttr,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        data_id = #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataName != null">
+        data_name = #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      </if>
+      <if test="srcColumnId != null">
+        src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=BIGINT},
+      </if>
+    </set>
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.ObjColumnRela">
+    update obj_column_rela
+    set object_id = #{objectId,jdbcType=BIGINT},
+      src_object_id = #{srcObjectId,jdbcType=BIGINT},
+      column_id = #{columnId,jdbcType=BIGINT},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      src_table_id = #{srcTableId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      datasource_code = #{datasourceCode,jdbcType=VARCHAR},
+      col_attr = #{colAttr,jdbcType=VARCHAR},
+      data_id = #{dataId,jdbcType=BIGINT},
+      data_name = #{dataName,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      com_acct_id = #{comAcctId,jdbcType=BIGINT},
+      src_column_id = #{srcColumnId,jdbcType=BIGINT},
+      seq = #{seq,jdbcType=BIGINT}
+    where rela_id = #{relaId,jdbcType=BIGINT}
+  </update>
+</mapper>
