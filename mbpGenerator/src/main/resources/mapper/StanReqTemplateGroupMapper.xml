@@ -1,0 +1,2074 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.mapper.StanReqTemplateGroupMapper">
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplateGroup">
+    <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId" />
+    <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName" />
+    <result column="T_SORT" jdbcType="INTEGER" property="tSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, T_SORT, S_REMARK
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample">
+    delete from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group (TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, 
+      T_SORT, S_REMARK)
+    values (#{templateGroupId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateGroupName,jdbcType=VARCHAR}, 
+      #{tSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        TEMPLATE_GROUP_ID,
+      </if>
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME,
+      </if>
+      <if test="tSort != null">
+        T_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        #{templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template_group
+    <set>
+      <if test="row.templateGroupId != null">
+        TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tSort != null">
+        T_SORT = #{row.tSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template_group
+    set TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{row.tSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    <set>
+      <if test="templateId != null">
+        TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        T_SORT = #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    set TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{tSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR}
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplateGroup">
+    <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId" />
+    <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName" />
+    <result column="T_SORT" jdbcType="INTEGER" property="tSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, T_SORT, S_REMARK
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample">
+    delete from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group (TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, 
+      T_SORT, S_REMARK)
+    values (#{templateGroupId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateGroupName,jdbcType=VARCHAR}, 
+      #{tSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        TEMPLATE_GROUP_ID,
+      </if>
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME,
+      </if>
+      <if test="tSort != null">
+        T_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        #{templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template_group
+    <set>
+      <if test="row.templateGroupId != null">
+        TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tSort != null">
+        T_SORT = #{row.tSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template_group
+    set TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{row.tSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    <set>
+      <if test="templateId != null">
+        TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        T_SORT = #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    set TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{tSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR}
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplateGroup">
+    <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId" />
+    <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName" />
+    <result column="T_SORT" jdbcType="INTEGER" property="tSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, T_SORT, S_REMARK
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample">
+    delete from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group (TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, 
+      T_SORT, S_REMARK)
+    values (#{templateGroupId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateGroupName,jdbcType=VARCHAR}, 
+      #{tSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        TEMPLATE_GROUP_ID,
+      </if>
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME,
+      </if>
+      <if test="tSort != null">
+        T_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        #{templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template_group
+    <set>
+      <if test="row.templateGroupId != null">
+        TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tSort != null">
+        T_SORT = #{row.tSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template_group
+    set TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{row.tSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    <set>
+      <if test="templateId != null">
+        TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        T_SORT = #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    set TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{tSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR}
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplateGroup">
+    <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId" />
+    <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName" />
+    <result column="T_SORT" jdbcType="INTEGER" property="tSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, T_SORT, S_REMARK
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample">
+    delete from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group (TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, 
+      T_SORT, S_REMARK)
+    values (#{templateGroupId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateGroupName,jdbcType=VARCHAR}, 
+      #{tSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        TEMPLATE_GROUP_ID,
+      </if>
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME,
+      </if>
+      <if test="tSort != null">
+        T_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        #{templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template_group
+    <set>
+      <if test="row.templateGroupId != null">
+        TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tSort != null">
+        T_SORT = #{row.tSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template_group
+    set TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{row.tSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    <set>
+      <if test="templateId != null">
+        TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        T_SORT = #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    set TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{tSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR}
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplateGroup">
+    <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId" />
+    <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName" />
+    <result column="T_SORT" jdbcType="INTEGER" property="tSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, T_SORT, S_REMARK
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample">
+    delete from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group (TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, 
+      T_SORT, S_REMARK)
+    values (#{templateGroupId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateGroupName,jdbcType=VARCHAR}, 
+      #{tSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        TEMPLATE_GROUP_ID,
+      </if>
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME,
+      </if>
+      <if test="tSort != null">
+        T_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        #{templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template_group
+    <set>
+      <if test="row.templateGroupId != null">
+        TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tSort != null">
+        T_SORT = #{row.tSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template_group
+    set TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{row.tSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    <set>
+      <if test="templateId != null">
+        TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        T_SORT = #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    set TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{tSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR}
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplateGroup">
+    <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId" />
+    <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName" />
+    <result column="T_SORT" jdbcType="INTEGER" property="tSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, T_SORT, S_REMARK
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample">
+    delete from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group (TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, 
+      T_SORT, S_REMARK)
+    values (#{templateGroupId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateGroupName,jdbcType=VARCHAR}, 
+      #{tSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        TEMPLATE_GROUP_ID,
+      </if>
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME,
+      </if>
+      <if test="tSort != null">
+        T_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        #{templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template_group
+    <set>
+      <if test="row.templateGroupId != null">
+        TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tSort != null">
+        T_SORT = #{row.tSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template_group
+    set TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{row.tSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    <set>
+      <if test="templateId != null">
+        TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        T_SORT = #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    set TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{tSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR}
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplateGroup">
+    <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId" />
+    <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName" />
+    <result column="T_SORT" jdbcType="INTEGER" property="tSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, T_SORT, S_REMARK
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample">
+    delete from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group (TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, 
+      T_SORT, S_REMARK)
+    values (#{templateGroupId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateGroupName,jdbcType=VARCHAR}, 
+      #{tSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        TEMPLATE_GROUP_ID,
+      </if>
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME,
+      </if>
+      <if test="tSort != null">
+        T_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        #{templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template_group
+    <set>
+      <if test="row.templateGroupId != null">
+        TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tSort != null">
+        T_SORT = #{row.tSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template_group
+    set TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{row.tSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    <set>
+      <if test="templateId != null">
+        TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        T_SORT = #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    set TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{tSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR}
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplateGroup">
+    <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId" />
+    <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName" />
+    <result column="T_SORT" jdbcType="INTEGER" property="tSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, T_SORT, S_REMARK
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample">
+    delete from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group (TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, 
+      T_SORT, S_REMARK)
+    values (#{templateGroupId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateGroupName,jdbcType=VARCHAR}, 
+      #{tSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        TEMPLATE_GROUP_ID,
+      </if>
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME,
+      </if>
+      <if test="tSort != null">
+        T_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        #{templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template_group
+    <set>
+      <if test="row.templateGroupId != null">
+        TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tSort != null">
+        T_SORT = #{row.tSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template_group
+    set TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{row.tSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    <set>
+      <if test="templateId != null">
+        TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        T_SORT = #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    set TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{tSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR}
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplateGroup">
+    <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId" />
+    <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName" />
+    <result column="T_SORT" jdbcType="INTEGER" property="tSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, T_SORT, S_REMARK
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample">
+    delete from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group (TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, 
+      T_SORT, S_REMARK)
+    values (#{templateGroupId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateGroupName,jdbcType=VARCHAR}, 
+      #{tSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        TEMPLATE_GROUP_ID,
+      </if>
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME,
+      </if>
+      <if test="tSort != null">
+        T_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        #{templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template_group
+    <set>
+      <if test="row.templateGroupId != null">
+        TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tSort != null">
+        T_SORT = #{row.tSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template_group
+    set TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{row.tSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    <set>
+      <if test="templateId != null">
+        TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        T_SORT = #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    set TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{tSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR}
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplateGroup">
+    <id column="TEMPLATE_GROUP_ID" jdbcType="BIGINT" property="templateGroupId" />
+    <result column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_GROUP_NAME" jdbcType="VARCHAR" property="templateGroupName" />
+    <result column="T_SORT" jdbcType="INTEGER" property="tSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, T_SORT, S_REMARK
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template_group
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample">
+    delete from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group (TEMPLATE_GROUP_ID, TEMPLATE_ID, TEMPLATE_GROUP_NAME, 
+      T_SORT, S_REMARK)
+    values (#{templateGroupId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{templateGroupName,jdbcType=VARCHAR}, 
+      #{tSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    insert into stan_req_template_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        TEMPLATE_GROUP_ID,
+      </if>
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME,
+      </if>
+      <if test="tSort != null">
+        T_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateGroupId != null">
+        #{templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateGroupExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template_group
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template_group
+    <set>
+      <if test="row.templateGroupId != null">
+        TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tSort != null">
+        T_SORT = #{row.tSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template_group
+    set TEMPLATE_GROUP_ID = #{row.templateGroupId,jdbcType=BIGINT},
+      TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{row.templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{row.tSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    <set>
+      <if test="templateId != null">
+        TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateGroupName != null">
+        TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tSort != null">
+        T_SORT = #{tSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplateGroup">
+    update stan_req_template_group
+    set TEMPLATE_ID = #{templateId,jdbcType=BIGINT},
+      TEMPLATE_GROUP_NAME = #{templateGroupName,jdbcType=VARCHAR},
+      T_SORT = #{tSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR}
+    where TEMPLATE_GROUP_ID = #{templateGroupId,jdbcType=BIGINT}
+  </update>
+</mapper>

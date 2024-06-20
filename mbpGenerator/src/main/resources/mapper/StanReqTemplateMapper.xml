@@ -1,0 +1,3344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.mapper.StanReqTemplateMapper">
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplate">
+    <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="I_STATE" jdbcType="VARCHAR" property="iState" />
+    <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId" />
+    <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName" />
+    <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId" />
+    <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="I_SORT" jdbcType="INTEGER" property="iSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+    <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+    UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, UPDATE_TIME, I_SORT, S_REMARK, TEMPLATE_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateExample">
+    delete from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template (TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, 
+      I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+      UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, 
+      UPDATE_TIME, I_SORT, S_REMARK, 
+      TEMPLATE_TYPE)
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{iState,jdbcType=VARCHAR}, #{createStaffId,jdbcType=BIGINT}, #{createStaffName,jdbcType=VARCHAR}, 
+      #{updateStaffId,jdbcType=BIGINT}, #{updateStaffName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateCode != null">
+        TEMPLATE_CODE,
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME,
+      </if>
+      <if test="iState != null">
+        I_STATE,
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID,
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME,
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID,
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="iSort != null">
+        I_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template
+    <set>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateCode != null">
+        TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateName != null">
+        TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.iState != null">
+        I_STATE = #{row.iState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffId != null">
+        CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createStaffName != null">
+        CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateStaffId != null">
+        UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaffName != null">
+        UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.iSort != null">
+        I_SORT = #{row.iSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateType != null">
+        TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template
+    set TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      I_STATE = #{row.iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{row.iSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    <set>
+      <if test="templateCode != null">
+        TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        I_STATE = #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        I_SORT = #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    set TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      I_STATE = #{iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{iSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER}
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplate">
+    <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="I_STATE" jdbcType="VARCHAR" property="iState" />
+    <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId" />
+    <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName" />
+    <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId" />
+    <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="I_SORT" jdbcType="INTEGER" property="iSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+    <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+    UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, UPDATE_TIME, I_SORT, S_REMARK, TEMPLATE_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateExample">
+    delete from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template (TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, 
+      I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+      UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, 
+      UPDATE_TIME, I_SORT, S_REMARK, 
+      TEMPLATE_TYPE)
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{iState,jdbcType=VARCHAR}, #{createStaffId,jdbcType=BIGINT}, #{createStaffName,jdbcType=VARCHAR}, 
+      #{updateStaffId,jdbcType=BIGINT}, #{updateStaffName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateCode != null">
+        TEMPLATE_CODE,
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME,
+      </if>
+      <if test="iState != null">
+        I_STATE,
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID,
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME,
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID,
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="iSort != null">
+        I_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template
+    <set>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateCode != null">
+        TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateName != null">
+        TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.iState != null">
+        I_STATE = #{row.iState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffId != null">
+        CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createStaffName != null">
+        CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateStaffId != null">
+        UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaffName != null">
+        UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.iSort != null">
+        I_SORT = #{row.iSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateType != null">
+        TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template
+    set TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      I_STATE = #{row.iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{row.iSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    <set>
+      <if test="templateCode != null">
+        TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        I_STATE = #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        I_SORT = #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    set TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      I_STATE = #{iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{iSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER}
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplate">
+    <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="I_STATE" jdbcType="VARCHAR" property="iState" />
+    <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId" />
+    <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName" />
+    <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId" />
+    <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="I_SORT" jdbcType="INTEGER" property="iSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+    <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+    UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, UPDATE_TIME, I_SORT, S_REMARK, TEMPLATE_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateExample">
+    delete from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template (TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, 
+      I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+      UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, 
+      UPDATE_TIME, I_SORT, S_REMARK, 
+      TEMPLATE_TYPE)
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{iState,jdbcType=VARCHAR}, #{createStaffId,jdbcType=BIGINT}, #{createStaffName,jdbcType=VARCHAR}, 
+      #{updateStaffId,jdbcType=BIGINT}, #{updateStaffName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateCode != null">
+        TEMPLATE_CODE,
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME,
+      </if>
+      <if test="iState != null">
+        I_STATE,
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID,
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME,
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID,
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="iSort != null">
+        I_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template
+    <set>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateCode != null">
+        TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateName != null">
+        TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.iState != null">
+        I_STATE = #{row.iState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffId != null">
+        CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createStaffName != null">
+        CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateStaffId != null">
+        UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaffName != null">
+        UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.iSort != null">
+        I_SORT = #{row.iSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateType != null">
+        TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template
+    set TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      I_STATE = #{row.iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{row.iSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    <set>
+      <if test="templateCode != null">
+        TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        I_STATE = #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        I_SORT = #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    set TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      I_STATE = #{iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{iSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER}
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplate">
+    <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="I_STATE" jdbcType="VARCHAR" property="iState" />
+    <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId" />
+    <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName" />
+    <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId" />
+    <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="I_SORT" jdbcType="INTEGER" property="iSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+    <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+    UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, UPDATE_TIME, I_SORT, S_REMARK, TEMPLATE_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateExample">
+    delete from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template (TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, 
+      I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+      UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, 
+      UPDATE_TIME, I_SORT, S_REMARK, 
+      TEMPLATE_TYPE)
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{iState,jdbcType=VARCHAR}, #{createStaffId,jdbcType=BIGINT}, #{createStaffName,jdbcType=VARCHAR}, 
+      #{updateStaffId,jdbcType=BIGINT}, #{updateStaffName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateCode != null">
+        TEMPLATE_CODE,
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME,
+      </if>
+      <if test="iState != null">
+        I_STATE,
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID,
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME,
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID,
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="iSort != null">
+        I_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template
+    <set>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateCode != null">
+        TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateName != null">
+        TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.iState != null">
+        I_STATE = #{row.iState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffId != null">
+        CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createStaffName != null">
+        CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateStaffId != null">
+        UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaffName != null">
+        UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.iSort != null">
+        I_SORT = #{row.iSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateType != null">
+        TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template
+    set TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      I_STATE = #{row.iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{row.iSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    <set>
+      <if test="templateCode != null">
+        TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        I_STATE = #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        I_SORT = #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    set TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      I_STATE = #{iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{iSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER}
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplate">
+    <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="I_STATE" jdbcType="VARCHAR" property="iState" />
+    <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId" />
+    <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName" />
+    <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId" />
+    <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="I_SORT" jdbcType="INTEGER" property="iSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+    <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+    UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, UPDATE_TIME, I_SORT, S_REMARK, TEMPLATE_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateExample">
+    delete from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template (TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, 
+      I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+      UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, 
+      UPDATE_TIME, I_SORT, S_REMARK, 
+      TEMPLATE_TYPE)
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{iState,jdbcType=VARCHAR}, #{createStaffId,jdbcType=BIGINT}, #{createStaffName,jdbcType=VARCHAR}, 
+      #{updateStaffId,jdbcType=BIGINT}, #{updateStaffName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateCode != null">
+        TEMPLATE_CODE,
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME,
+      </if>
+      <if test="iState != null">
+        I_STATE,
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID,
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME,
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID,
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="iSort != null">
+        I_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template
+    <set>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateCode != null">
+        TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateName != null">
+        TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.iState != null">
+        I_STATE = #{row.iState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffId != null">
+        CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createStaffName != null">
+        CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateStaffId != null">
+        UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaffName != null">
+        UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.iSort != null">
+        I_SORT = #{row.iSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateType != null">
+        TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template
+    set TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      I_STATE = #{row.iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{row.iSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    <set>
+      <if test="templateCode != null">
+        TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        I_STATE = #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        I_SORT = #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    set TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      I_STATE = #{iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{iSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER}
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplate">
+    <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="I_STATE" jdbcType="VARCHAR" property="iState" />
+    <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId" />
+    <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName" />
+    <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId" />
+    <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="I_SORT" jdbcType="INTEGER" property="iSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+    <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+    UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, UPDATE_TIME, I_SORT, S_REMARK, TEMPLATE_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateExample">
+    delete from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template (TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, 
+      I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+      UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, 
+      UPDATE_TIME, I_SORT, S_REMARK, 
+      TEMPLATE_TYPE)
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{iState,jdbcType=VARCHAR}, #{createStaffId,jdbcType=BIGINT}, #{createStaffName,jdbcType=VARCHAR}, 
+      #{updateStaffId,jdbcType=BIGINT}, #{updateStaffName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateCode != null">
+        TEMPLATE_CODE,
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME,
+      </if>
+      <if test="iState != null">
+        I_STATE,
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID,
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME,
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID,
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="iSort != null">
+        I_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template
+    <set>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateCode != null">
+        TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateName != null">
+        TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.iState != null">
+        I_STATE = #{row.iState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffId != null">
+        CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createStaffName != null">
+        CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateStaffId != null">
+        UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaffName != null">
+        UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.iSort != null">
+        I_SORT = #{row.iSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateType != null">
+        TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template
+    set TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      I_STATE = #{row.iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{row.iSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    <set>
+      <if test="templateCode != null">
+        TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        I_STATE = #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        I_SORT = #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    set TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      I_STATE = #{iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{iSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER}
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplate">
+    <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="I_STATE" jdbcType="VARCHAR" property="iState" />
+    <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId" />
+    <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName" />
+    <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId" />
+    <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="I_SORT" jdbcType="INTEGER" property="iSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+    <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+    UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, UPDATE_TIME, I_SORT, S_REMARK, TEMPLATE_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateExample">
+    delete from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template (TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, 
+      I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+      UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, 
+      UPDATE_TIME, I_SORT, S_REMARK, 
+      TEMPLATE_TYPE)
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{iState,jdbcType=VARCHAR}, #{createStaffId,jdbcType=BIGINT}, #{createStaffName,jdbcType=VARCHAR}, 
+      #{updateStaffId,jdbcType=BIGINT}, #{updateStaffName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateCode != null">
+        TEMPLATE_CODE,
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME,
+      </if>
+      <if test="iState != null">
+        I_STATE,
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID,
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME,
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID,
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="iSort != null">
+        I_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template
+    <set>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateCode != null">
+        TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateName != null">
+        TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.iState != null">
+        I_STATE = #{row.iState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffId != null">
+        CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createStaffName != null">
+        CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateStaffId != null">
+        UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaffName != null">
+        UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.iSort != null">
+        I_SORT = #{row.iSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateType != null">
+        TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template
+    set TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      I_STATE = #{row.iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{row.iSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    <set>
+      <if test="templateCode != null">
+        TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        I_STATE = #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        I_SORT = #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    set TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      I_STATE = #{iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{iSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER}
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplate">
+    <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="I_STATE" jdbcType="VARCHAR" property="iState" />
+    <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId" />
+    <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName" />
+    <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId" />
+    <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="I_SORT" jdbcType="INTEGER" property="iSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+    <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+    UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, UPDATE_TIME, I_SORT, S_REMARK, TEMPLATE_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateExample">
+    delete from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template (TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, 
+      I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+      UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, 
+      UPDATE_TIME, I_SORT, S_REMARK, 
+      TEMPLATE_TYPE)
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{iState,jdbcType=VARCHAR}, #{createStaffId,jdbcType=BIGINT}, #{createStaffName,jdbcType=VARCHAR}, 
+      #{updateStaffId,jdbcType=BIGINT}, #{updateStaffName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateCode != null">
+        TEMPLATE_CODE,
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME,
+      </if>
+      <if test="iState != null">
+        I_STATE,
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID,
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME,
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID,
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="iSort != null">
+        I_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template
+    <set>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateCode != null">
+        TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateName != null">
+        TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.iState != null">
+        I_STATE = #{row.iState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffId != null">
+        CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createStaffName != null">
+        CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateStaffId != null">
+        UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaffName != null">
+        UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.iSort != null">
+        I_SORT = #{row.iSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateType != null">
+        TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template
+    set TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      I_STATE = #{row.iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{row.iSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    <set>
+      <if test="templateCode != null">
+        TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        I_STATE = #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        I_SORT = #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    set TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      I_STATE = #{iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{iSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER}
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplate">
+    <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="I_STATE" jdbcType="VARCHAR" property="iState" />
+    <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId" />
+    <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName" />
+    <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId" />
+    <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="I_SORT" jdbcType="INTEGER" property="iSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+    <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+    UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, UPDATE_TIME, I_SORT, S_REMARK, TEMPLATE_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateExample">
+    delete from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template (TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, 
+      I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+      UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, 
+      UPDATE_TIME, I_SORT, S_REMARK, 
+      TEMPLATE_TYPE)
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{iState,jdbcType=VARCHAR}, #{createStaffId,jdbcType=BIGINT}, #{createStaffName,jdbcType=VARCHAR}, 
+      #{updateStaffId,jdbcType=BIGINT}, #{updateStaffName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateCode != null">
+        TEMPLATE_CODE,
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME,
+      </if>
+      <if test="iState != null">
+        I_STATE,
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID,
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME,
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID,
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="iSort != null">
+        I_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template
+    <set>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateCode != null">
+        TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateName != null">
+        TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.iState != null">
+        I_STATE = #{row.iState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffId != null">
+        CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createStaffName != null">
+        CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateStaffId != null">
+        UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaffName != null">
+        UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.iSort != null">
+        I_SORT = #{row.iSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateType != null">
+        TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template
+    set TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      I_STATE = #{row.iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{row.iSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    <set>
+      <if test="templateCode != null">
+        TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        I_STATE = #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        I_SORT = #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    set TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      I_STATE = #{iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{iSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER}
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.StanReqTemplate">
+    <id column="TEMPLATE_ID" jdbcType="BIGINT" property="templateId" />
+    <result column="TEMPLATE_CODE" jdbcType="VARCHAR" property="templateCode" />
+    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+    <result column="I_STATE" jdbcType="VARCHAR" property="iState" />
+    <result column="CREATE_STAFF_ID" jdbcType="BIGINT" property="createStaffId" />
+    <result column="CREATE_STAFF_NAME" jdbcType="VARCHAR" property="createStaffName" />
+    <result column="UPDATE_STAFF_ID" jdbcType="BIGINT" property="updateStaffId" />
+    <result column="UPDATE_STAFF_NAME" jdbcType="VARCHAR" property="updateStaffName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="I_SORT" jdbcType="INTEGER" property="iSort" />
+    <result column="S_REMARK" jdbcType="VARCHAR" property="sRemark" />
+    <result column="TEMPLATE_TYPE" jdbcType="INTEGER" property="templateType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+    UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, UPDATE_TIME, I_SORT, S_REMARK, TEMPLATE_TYPE
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stan_req_template
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.StanReqTemplateExample">
+    delete from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template (TEMPLATE_ID, TEMPLATE_CODE, TEMPLATE_NAME, 
+      I_STATE, CREATE_STAFF_ID, CREATE_STAFF_NAME, 
+      UPDATE_STAFF_ID, UPDATE_STAFF_NAME, CREATE_TIME, 
+      UPDATE_TIME, I_SORT, S_REMARK, 
+      TEMPLATE_TYPE)
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{iState,jdbcType=VARCHAR}, #{createStaffId,jdbcType=BIGINT}, #{createStaffName,jdbcType=VARCHAR}, 
+      #{updateStaffId,jdbcType=BIGINT}, #{updateStaffName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iSort,jdbcType=INTEGER}, #{sRemark,jdbcType=VARCHAR}, 
+      #{templateType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.StanReqTemplate">
+    insert into stan_req_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        TEMPLATE_ID,
+      </if>
+      <if test="templateCode != null">
+        TEMPLATE_CODE,
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME,
+      </if>
+      <if test="iState != null">
+        I_STATE,
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID,
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME,
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID,
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="iSort != null">
+        I_SORT,
+      </if>
+      <if test="sRemark != null">
+        S_REMARK,
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null">
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        #{templateType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.StanReqTemplateExample" resultType="java.lang.Long">
+    select count(*) from stan_req_template
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stan_req_template
+    <set>
+      <if test="row.templateId != null">
+        TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="row.templateCode != null">
+        TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateName != null">
+        TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.iState != null">
+        I_STATE = #{row.iState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffId != null">
+        CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.createStaffName != null">
+        CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateStaffId != null">
+        UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaffName != null">
+        UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createTime != null">
+        CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateTime != null">
+        UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.iSort != null">
+        I_SORT = #{row.iSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.sRemark != null">
+        S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="row.templateType != null">
+        TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stan_req_template
+    set TEMPLATE_ID = #{row.templateId,jdbcType=BIGINT},
+      TEMPLATE_CODE = #{row.templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{row.templateName,jdbcType=VARCHAR},
+      I_STATE = #{row.iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{row.createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{row.createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{row.updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{row.updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{row.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{row.updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{row.iSort,jdbcType=INTEGER},
+      S_REMARK = #{row.sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{row.templateType,jdbcType=INTEGER}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    <set>
+      <if test="templateCode != null">
+        TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null">
+        TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="iState != null">
+        I_STATE = #{iState,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffId != null">
+        CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="createStaffName != null">
+        CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateStaffId != null">
+        UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaffName != null">
+        UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iSort != null">
+        I_SORT = #{iSort,jdbcType=INTEGER},
+      </if>
+      <if test="sRemark != null">
+        S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null">
+        TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.StanReqTemplate">
+    update stan_req_template
+    set TEMPLATE_CODE = #{templateCode,jdbcType=VARCHAR},
+      TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR},
+      I_STATE = #{iState,jdbcType=VARCHAR},
+      CREATE_STAFF_ID = #{createStaffId,jdbcType=BIGINT},
+      CREATE_STAFF_NAME = #{createStaffName,jdbcType=VARCHAR},
+      UPDATE_STAFF_ID = #{updateStaffId,jdbcType=BIGINT},
+      UPDATE_STAFF_NAME = #{updateStaffName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      I_SORT = #{iSort,jdbcType=INTEGER},
+      S_REMARK = #{sRemark,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=INTEGER}
+    where TEMPLATE_ID = #{templateId,jdbcType=BIGINT}
+  </update>
+</mapper>
