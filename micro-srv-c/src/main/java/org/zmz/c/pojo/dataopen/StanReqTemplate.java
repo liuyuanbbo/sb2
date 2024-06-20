@@ -2,11 +2,18 @@ package org.zmz.c.pojo.dataopen;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import tk.mybatis.mapper.annotation.NameStyle;
+import tk.mybatis.mapper.code.Style;
 
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
+@Table(name = "stan_req_template")
+@NameStyle(value = Style.camelhumpAndLowercase)
 public class StanReqTemplate {
     private Long templateId;
     private String templateCode;

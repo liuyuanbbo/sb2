@@ -2,9 +2,17 @@ package org.zmz.c.pojo.dataopen;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import tk.mybatis.mapper.annotation.NameStyle;
+import tk.mybatis.mapper.code.Style;
+
+import javax.persistence.Table;
 
 @Getter
 @Setter
+@ToString
+@Table(name = "stan_req_template_field")
+@NameStyle(value = Style.camelhumpAndLowercase)
 public class StanReqTemplateField {
     private Long templateFieldId;
 

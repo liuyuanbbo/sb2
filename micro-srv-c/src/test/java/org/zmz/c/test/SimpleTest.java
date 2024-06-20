@@ -165,9 +165,29 @@ public class SimpleTest {
         String aa = map.get("aa");
         log.info("{}", aa);
 
-        String did = null;
-        Long l = Long.valueOf(did);
-        log.info("{}", l);
+//        String did = null;
+//        Long l = Long.valueOf(did);
+//        log.info("{}", l);
+
+        log.info("=============================================");
+
+        Long[] list = new Long[]{1L, 2L, null, 3L};
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < list.length; i++) {
+            Long obj = list[i];
+            if (obj != null) {
+                sb.append(obj);
+                if (i != list.length - 1) {
+                    sb.append(",");
+                }
+            }
+        }
+
+        log.info("{}", sb);
+
+        log.info("=============================================");
     }
 
 }
