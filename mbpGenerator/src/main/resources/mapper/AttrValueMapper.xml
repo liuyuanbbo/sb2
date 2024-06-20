@@ -1,0 +1,3112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.mapper.AttrValueMapper">
+  <resultMap id="BaseResultMap" type="org.zmz.model.AttrValue">
+    <id column="attr_value_id" jdbcType="BIGINT" property="attrValueId" />
+    <result column="attr_id" jdbcType="BIGINT" property="attrId" />
+    <result column="attr_value_name" jdbcType="VARCHAR" property="attrValueName" />
+    <result column="attr_value" jdbcType="VARCHAR" property="attrValue" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="attr_value_desc" jdbcType="VARCHAR" property="attrValueDesc" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status_date" jdbcType="TIMESTAMP" property="statusDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_staff" jdbcType="BIGINT" property="createStaff" />
+    <result column="update_staff" jdbcType="BIGINT" property="updateStaff" />
+    <result column="attr_value_sort" jdbcType="INTEGER" property="attrValueSort" />
+    <result column="parent_value" jdbcType="VARCHAR" property="parentValue" />
+    <result column="attr_value_english_name" jdbcType="VARCHAR" property="attrValueEnglishName" />
+    <result column="attr_value_tw_name" jdbcType="VARCHAR" property="attrValueTwName" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.model.AttrValue">
+    <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    attr_value_id, attr_id, attr_value_name, attr_value, status_cd, attr_value_desc, 
+    create_date, status_date, update_date, create_staff, update_staff, attr_value_sort, 
+    parent_value, attr_value_english_name, attr_value_tw_name
+  </sql>
+  <sql id="Blob_Column_List">
+    remark
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.zmz.model.AttrValueExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.zmz.model.AttrValueExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.AttrValueExample">
+    delete from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value (attr_value_id, attr_id, attr_value_name, 
+      attr_value, status_cd, attr_value_desc, 
+      create_date, status_date, update_date, 
+      create_staff, update_staff, attr_value_sort, 
+      parent_value, attr_value_english_name, attr_value_tw_name, 
+      remark)
+    values (#{attrValueId,jdbcType=BIGINT}, #{attrId,jdbcType=BIGINT}, #{attrValueName,jdbcType=VARCHAR}, 
+      #{attrValue,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, #{attrValueDesc,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{statusDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{createStaff,jdbcType=BIGINT}, #{updateStaff,jdbcType=BIGINT}, #{attrValueSort,jdbcType=INTEGER}, 
+      #{parentValue,jdbcType=VARCHAR}, #{attrValueEnglishName,jdbcType=VARCHAR}, #{attrValueTwName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        attr_value_id,
+      </if>
+      <if test="attrId != null">
+        attr_id,
+      </if>
+      <if test="attrValueName != null">
+        attr_value_name,
+      </if>
+      <if test="attrValue != null">
+        attr_value,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="attrValueDesc != null">
+        attr_value_desc,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="statusDate != null">
+        status_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="createStaff != null">
+        create_staff,
+      </if>
+      <if test="updateStaff != null">
+        update_staff,
+      </if>
+      <if test="attrValueSort != null">
+        attr_value_sort,
+      </if>
+      <if test="parentValue != null">
+        parent_value,
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name,
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        #{attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="attrId != null">
+        #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValue != null">
+        #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.AttrValueExample" resultType="java.lang.Long">
+    select count(*) from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update attr_value
+    <set>
+      <if test="row.attrValueId != null">
+        attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrId != null">
+        attr_id = #{row.attrId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueName != null">
+        attr_value_name = #{row.attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValue != null">
+        attr_value = #{row.attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueDesc != null">
+        attr_value_desc = #{row.attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.statusDate != null">
+        status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateDate != null">
+        update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaff != null">
+        create_staff = #{row.createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaff != null">
+        update_staff = #{row.updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueSort != null">
+        attr_value_sort = #{row.attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.parentValue != null">
+        parent_value = #{row.parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueEnglishName != null">
+        attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueTwName != null">
+        attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.remark != null">
+        remark = #{row.remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      attr_id = #{row.attrId,jdbcType=BIGINT},
+      attr_value_name = #{row.attrValueName,jdbcType=VARCHAR},
+      attr_value = #{row.attrValue,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      attr_value_desc = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{row.createStaff,jdbcType=BIGINT},
+      update_staff = #{row.updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{row.attrValueSort,jdbcType=INTEGER},
+      parent_value = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      remark = #{row.remark,jdbcType=LONGVARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      attr_id = #{row.attrId,jdbcType=BIGINT},
+      attr_value_name = #{row.attrValueName,jdbcType=VARCHAR},
+      attr_value = #{row.attrValue,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      attr_value_desc = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{row.createStaff,jdbcType=BIGINT},
+      update_staff = #{row.updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{row.attrValueSort,jdbcType=INTEGER},
+      parent_value = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    <set>
+      <if test="attrId != null">
+        attr_id = #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        attr_value_name = #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValue != null">
+        attr_value = #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        attr_value_desc = #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        status_date = #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        create_staff = #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        update_staff = #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        attr_value_sort = #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        parent_value = #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set attr_id = #{attrId,jdbcType=BIGINT},
+      attr_value_name = #{attrValueName,jdbcType=VARCHAR},
+      attr_value = #{attrValue,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      attr_value_desc = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status_date = #{statusDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{createStaff,jdbcType=BIGINT},
+      update_staff = #{updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{attrValueSort,jdbcType=INTEGER},
+      parent_value = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=LONGVARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set attr_id = #{attrId,jdbcType=BIGINT},
+      attr_value_name = #{attrValueName,jdbcType=VARCHAR},
+      attr_value = #{attrValue,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      attr_value_desc = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status_date = #{statusDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{createStaff,jdbcType=BIGINT},
+      update_staff = #{updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{attrValueSort,jdbcType=INTEGER},
+      parent_value = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.AttrValue">
+    <id column="attr_value_id" jdbcType="BIGINT" property="attrValueId" />
+    <result column="attr_id" jdbcType="BIGINT" property="attrId" />
+    <result column="attr_value_name" jdbcType="VARCHAR" property="attrValueName" />
+    <result column="attr_value_desc" jdbcType="VARCHAR" property="attrValueDesc" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status_date" jdbcType="TIMESTAMP" property="statusDate" />
+    <result column="ATTR_VALUE" jdbcType="VARCHAR" property="attrValue" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_staff" jdbcType="BIGINT" property="createStaff" />
+    <result column="update_staff" jdbcType="BIGINT" property="updateStaff" />
+    <result column="attr_value_sort" jdbcType="INTEGER" property="attrValueSort" />
+    <result column="parent_value" jdbcType="VARCHAR" property="parentValue" />
+    <result column="attr_value_english_name" jdbcType="VARCHAR" property="attrValueEnglishName" />
+    <result column="attr_value_tw_name" jdbcType="VARCHAR" property="attrValueTwName" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.model.AttrValue">
+    <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    attr_value_id, attr_id, attr_value_name, attr_value_desc, create_date, status_date, 
+    ATTR_VALUE, status_cd, update_date, create_staff, update_staff, attr_value_sort, 
+    parent_value, attr_value_english_name, attr_value_tw_name
+  </sql>
+  <sql id="Blob_Column_List">
+    remark
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.zmz.model.AttrValueExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.zmz.model.AttrValueExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.AttrValueExample">
+    delete from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value (attr_value_id, attr_id, attr_value_name, 
+      attr_value_desc, create_date, status_date, 
+      ATTR_VALUE, status_cd, update_date, 
+      create_staff, update_staff, attr_value_sort, 
+      parent_value, attr_value_english_name, attr_value_tw_name, 
+      remark)
+    values (#{attrValueId,jdbcType=BIGINT}, #{attrId,jdbcType=BIGINT}, #{attrValueName,jdbcType=VARCHAR}, 
+      #{attrValueDesc,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{statusDate,jdbcType=TIMESTAMP}, 
+      #{attrValue,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{createStaff,jdbcType=BIGINT}, #{updateStaff,jdbcType=BIGINT}, #{attrValueSort,jdbcType=INTEGER}, 
+      #{parentValue,jdbcType=VARCHAR}, #{attrValueEnglishName,jdbcType=VARCHAR}, #{attrValueTwName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        attr_value_id,
+      </if>
+      <if test="attrId != null">
+        attr_id,
+      </if>
+      <if test="attrValueName != null">
+        attr_value_name,
+      </if>
+      <if test="attrValueDesc != null">
+        attr_value_desc,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="statusDate != null">
+        status_date,
+      </if>
+      <if test="attrValue != null">
+        ATTR_VALUE,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="createStaff != null">
+        create_staff,
+      </if>
+      <if test="updateStaff != null">
+        update_staff,
+      </if>
+      <if test="attrValueSort != null">
+        attr_value_sort,
+      </if>
+      <if test="parentValue != null">
+        parent_value,
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name,
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        #{attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="attrId != null">
+        #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attrValue != null">
+        #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.AttrValueExample" resultType="java.lang.Long">
+    select count(*) from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update attr_value
+    <set>
+      <if test="row.attrValueId != null">
+        attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrId != null">
+        attr_id = #{row.attrId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueName != null">
+        attr_value_name = #{row.attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueDesc != null">
+        attr_value_desc = #{row.attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.statusDate != null">
+        status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.attrValue != null">
+        ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateDate != null">
+        update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaff != null">
+        create_staff = #{row.createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaff != null">
+        update_staff = #{row.updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueSort != null">
+        attr_value_sort = #{row.attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.parentValue != null">
+        parent_value = #{row.parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueEnglishName != null">
+        attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueTwName != null">
+        attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.remark != null">
+        remark = #{row.remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      attr_id = #{row.attrId,jdbcType=BIGINT},
+      attr_value_name = #{row.attrValueName,jdbcType=VARCHAR},
+      attr_value_desc = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{row.createStaff,jdbcType=BIGINT},
+      update_staff = #{row.updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{row.attrValueSort,jdbcType=INTEGER},
+      parent_value = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      remark = #{row.remark,jdbcType=LONGVARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      attr_id = #{row.attrId,jdbcType=BIGINT},
+      attr_value_name = #{row.attrValueName,jdbcType=VARCHAR},
+      attr_value_desc = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{row.createStaff,jdbcType=BIGINT},
+      update_staff = #{row.updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{row.attrValueSort,jdbcType=INTEGER},
+      parent_value = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    <set>
+      <if test="attrId != null">
+        attr_id = #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        attr_value_name = #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        attr_value_desc = #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        status_date = #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attrValue != null">
+        ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        create_staff = #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        update_staff = #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        attr_value_sort = #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        parent_value = #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set attr_id = #{attrId,jdbcType=BIGINT},
+      attr_value_name = #{attrValueName,jdbcType=VARCHAR},
+      attr_value_desc = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status_date = #{statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{createStaff,jdbcType=BIGINT},
+      update_staff = #{updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{attrValueSort,jdbcType=INTEGER},
+      parent_value = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=LONGVARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set attr_id = #{attrId,jdbcType=BIGINT},
+      attr_value_name = #{attrValueName,jdbcType=VARCHAR},
+      attr_value_desc = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status_date = #{statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{createStaff,jdbcType=BIGINT},
+      update_staff = #{updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{attrValueSort,jdbcType=INTEGER},
+      parent_value = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.AttrValue">
+    <id column="attr_value_id" jdbcType="BIGINT" property="attrValueId" />
+    <result column="ATTR_ID" jdbcType="BIGINT" property="attrId" />
+    <result column="ATTR_VALUE_NAME" jdbcType="VARCHAR" property="attrValueName" />
+    <result column="ATTR_VALUE_DESC" jdbcType="VARCHAR" property="attrValueDesc" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status_date" jdbcType="TIMESTAMP" property="statusDate" />
+    <result column="ATTR_VALUE" jdbcType="VARCHAR" property="attrValue" />
+    <result column="STATUS_CD" jdbcType="VARCHAR" property="statusCd" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="CREATE_STAFF" jdbcType="BIGINT" property="createStaff" />
+    <result column="UPDATE_STAFF" jdbcType="BIGINT" property="updateStaff" />
+    <result column="ATTR_VALUE_SORT" jdbcType="INTEGER" property="attrValueSort" />
+    <result column="PARENT_VALUE" jdbcType="VARCHAR" property="parentValue" />
+    <result column="attr_value_english_name" jdbcType="VARCHAR" property="attrValueEnglishName" />
+    <result column="attr_value_tw_name" jdbcType="VARCHAR" property="attrValueTwName" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.model.AttrValue">
+    <result column="REMARK" jdbcType="LONGVARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    attr_value_id, ATTR_ID, ATTR_VALUE_NAME, ATTR_VALUE_DESC, create_date, status_date, 
+    ATTR_VALUE, STATUS_CD, UPDATE_DATE, CREATE_STAFF, UPDATE_STAFF, ATTR_VALUE_SORT, 
+    PARENT_VALUE, attr_value_english_name, attr_value_tw_name
+  </sql>
+  <sql id="Blob_Column_List">
+    REMARK
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.zmz.model.AttrValueExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.zmz.model.AttrValueExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.AttrValueExample">
+    delete from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value (attr_value_id, ATTR_ID, ATTR_VALUE_NAME, 
+      ATTR_VALUE_DESC, create_date, status_date, 
+      ATTR_VALUE, STATUS_CD, UPDATE_DATE, 
+      CREATE_STAFF, UPDATE_STAFF, ATTR_VALUE_SORT, 
+      PARENT_VALUE, attr_value_english_name, attr_value_tw_name, 
+      REMARK)
+    values (#{attrValueId,jdbcType=BIGINT}, #{attrId,jdbcType=BIGINT}, #{attrValueName,jdbcType=VARCHAR}, 
+      #{attrValueDesc,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{statusDate,jdbcType=TIMESTAMP}, 
+      #{attrValue,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{createStaff,jdbcType=BIGINT}, #{updateStaff,jdbcType=BIGINT}, #{attrValueSort,jdbcType=INTEGER}, 
+      #{parentValue,jdbcType=VARCHAR}, #{attrValueEnglishName,jdbcType=VARCHAR}, #{attrValueTwName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        attr_value_id,
+      </if>
+      <if test="attrId != null">
+        ATTR_ID,
+      </if>
+      <if test="attrValueName != null">
+        ATTR_VALUE_NAME,
+      </if>
+      <if test="attrValueDesc != null">
+        ATTR_VALUE_DESC,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="statusDate != null">
+        status_date,
+      </if>
+      <if test="attrValue != null">
+        ATTR_VALUE,
+      </if>
+      <if test="statusCd != null">
+        STATUS_CD,
+      </if>
+      <if test="updateDate != null">
+        UPDATE_DATE,
+      </if>
+      <if test="createStaff != null">
+        CREATE_STAFF,
+      </if>
+      <if test="updateStaff != null">
+        UPDATE_STAFF,
+      </if>
+      <if test="attrValueSort != null">
+        ATTR_VALUE_SORT,
+      </if>
+      <if test="parentValue != null">
+        PARENT_VALUE,
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name,
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        #{attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="attrId != null">
+        #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attrValue != null">
+        #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.AttrValueExample" resultType="java.lang.Long">
+    select count(*) from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update attr_value
+    <set>
+      <if test="row.attrValueId != null">
+        attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrId != null">
+        ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueName != null">
+        ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueDesc != null">
+        ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.statusDate != null">
+        status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.attrValue != null">
+        ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateDate != null">
+        UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaff != null">
+        CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaff != null">
+        UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueSort != null">
+        ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.parentValue != null">
+        PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueEnglishName != null">
+        attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueTwName != null">
+        attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.remark != null">
+        REMARK = #{row.remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      REMARK = #{row.remark,jdbcType=LONGVARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    <set>
+      <if test="attrId != null">
+        ATTR_ID = #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        status_date = #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attrValue != null">
+        ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set ATTR_ID = #{attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status_date = #{statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=LONGVARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set ATTR_ID = #{attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status_date = #{statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.AttrValue">
+    <id column="attr_value_id" jdbcType="BIGINT" property="attrValueId" />
+    <result column="attr_id" jdbcType="BIGINT" property="attrId" />
+    <result column="attr_value_name" jdbcType="VARCHAR" property="attrValueName" />
+    <result column="attr_value" jdbcType="VARCHAR" property="attrValue" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="attr_value_desc" jdbcType="VARCHAR" property="attrValueDesc" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status_date" jdbcType="TIMESTAMP" property="statusDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_staff" jdbcType="BIGINT" property="createStaff" />
+    <result column="update_staff" jdbcType="BIGINT" property="updateStaff" />
+    <result column="attr_value_sort" jdbcType="INTEGER" property="attrValueSort" />
+    <result column="parent_value" jdbcType="VARCHAR" property="parentValue" />
+    <result column="attr_value_english_name" jdbcType="VARCHAR" property="attrValueEnglishName" />
+    <result column="attr_value_tw_name" jdbcType="VARCHAR" property="attrValueTwName" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.model.AttrValue">
+    <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    attr_value_id, attr_id, attr_value_name, attr_value, status_cd, attr_value_desc, 
+    create_date, status_date, update_date, create_staff, update_staff, attr_value_sort, 
+    parent_value, attr_value_english_name, attr_value_tw_name
+  </sql>
+  <sql id="Blob_Column_List">
+    remark
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.zmz.model.AttrValueExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.zmz.model.AttrValueExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.AttrValueExample">
+    delete from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value (attr_value_id, attr_id, attr_value_name, 
+      attr_value, status_cd, attr_value_desc, 
+      create_date, status_date, update_date, 
+      create_staff, update_staff, attr_value_sort, 
+      parent_value, attr_value_english_name, attr_value_tw_name, 
+      remark)
+    values (#{attrValueId,jdbcType=BIGINT}, #{attrId,jdbcType=BIGINT}, #{attrValueName,jdbcType=VARCHAR}, 
+      #{attrValue,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, #{attrValueDesc,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{statusDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{createStaff,jdbcType=BIGINT}, #{updateStaff,jdbcType=BIGINT}, #{attrValueSort,jdbcType=INTEGER}, 
+      #{parentValue,jdbcType=VARCHAR}, #{attrValueEnglishName,jdbcType=VARCHAR}, #{attrValueTwName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        attr_value_id,
+      </if>
+      <if test="attrId != null">
+        attr_id,
+      </if>
+      <if test="attrValueName != null">
+        attr_value_name,
+      </if>
+      <if test="attrValue != null">
+        attr_value,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="attrValueDesc != null">
+        attr_value_desc,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="statusDate != null">
+        status_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="createStaff != null">
+        create_staff,
+      </if>
+      <if test="updateStaff != null">
+        update_staff,
+      </if>
+      <if test="attrValueSort != null">
+        attr_value_sort,
+      </if>
+      <if test="parentValue != null">
+        parent_value,
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name,
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        #{attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="attrId != null">
+        #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValue != null">
+        #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.AttrValueExample" resultType="java.lang.Long">
+    select count(*) from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update attr_value
+    <set>
+      <if test="row.attrValueId != null">
+        attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrId != null">
+        attr_id = #{row.attrId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueName != null">
+        attr_value_name = #{row.attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValue != null">
+        attr_value = #{row.attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueDesc != null">
+        attr_value_desc = #{row.attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.statusDate != null">
+        status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updateDate != null">
+        update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaff != null">
+        create_staff = #{row.createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaff != null">
+        update_staff = #{row.updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueSort != null">
+        attr_value_sort = #{row.attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.parentValue != null">
+        parent_value = #{row.parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueEnglishName != null">
+        attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueTwName != null">
+        attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.remark != null">
+        remark = #{row.remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      attr_id = #{row.attrId,jdbcType=BIGINT},
+      attr_value_name = #{row.attrValueName,jdbcType=VARCHAR},
+      attr_value = #{row.attrValue,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      attr_value_desc = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{row.createStaff,jdbcType=BIGINT},
+      update_staff = #{row.updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{row.attrValueSort,jdbcType=INTEGER},
+      parent_value = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      remark = #{row.remark,jdbcType=LONGVARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      attr_id = #{row.attrId,jdbcType=BIGINT},
+      attr_value_name = #{row.attrValueName,jdbcType=VARCHAR},
+      attr_value = #{row.attrValue,jdbcType=VARCHAR},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      attr_value_desc = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{row.createStaff,jdbcType=BIGINT},
+      update_staff = #{row.updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{row.attrValueSort,jdbcType=INTEGER},
+      parent_value = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    <set>
+      <if test="attrId != null">
+        attr_id = #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        attr_value_name = #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValue != null">
+        attr_value = #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        attr_value_desc = #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        status_date = #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        create_staff = #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        update_staff = #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        attr_value_sort = #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        parent_value = #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set attr_id = #{attrId,jdbcType=BIGINT},
+      attr_value_name = #{attrValueName,jdbcType=VARCHAR},
+      attr_value = #{attrValue,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      attr_value_desc = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status_date = #{statusDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{createStaff,jdbcType=BIGINT},
+      update_staff = #{updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{attrValueSort,jdbcType=INTEGER},
+      parent_value = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=LONGVARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set attr_id = #{attrId,jdbcType=BIGINT},
+      attr_value_name = #{attrValueName,jdbcType=VARCHAR},
+      attr_value = #{attrValue,jdbcType=VARCHAR},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      attr_value_desc = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status_date = #{statusDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_staff = #{createStaff,jdbcType=BIGINT},
+      update_staff = #{updateStaff,jdbcType=BIGINT},
+      attr_value_sort = #{attrValueSort,jdbcType=INTEGER},
+      parent_value = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.AttrValue">
+    <id column="attr_value_id" jdbcType="BIGINT" property="attrValueId" />
+    <result column="ATTR_ID" jdbcType="BIGINT" property="attrId" />
+    <result column="ATTR_VALUE_NAME" jdbcType="VARCHAR" property="attrValueName" />
+    <result column="ATTR_VALUE_DESC" jdbcType="VARCHAR" property="attrValueDesc" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status_date" jdbcType="TIMESTAMP" property="statusDate" />
+    <result column="ATTR_VALUE" jdbcType="VARCHAR" property="attrValue" />
+    <result column="STATUS_CD" jdbcType="VARCHAR" property="statusCd" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="CREATE_STAFF" jdbcType="BIGINT" property="createStaff" />
+    <result column="UPDATE_STAFF" jdbcType="BIGINT" property="updateStaff" />
+    <result column="ATTR_VALUE_SORT" jdbcType="INTEGER" property="attrValueSort" />
+    <result column="PARENT_VALUE" jdbcType="VARCHAR" property="parentValue" />
+    <result column="attr_value_english_name" jdbcType="VARCHAR" property="attrValueEnglishName" />
+    <result column="attr_value_tw_name" jdbcType="VARCHAR" property="attrValueTwName" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.model.AttrValue">
+    <result column="REMARK" jdbcType="LONGVARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    attr_value_id, ATTR_ID, ATTR_VALUE_NAME, ATTR_VALUE_DESC, create_date, status_date, 
+    ATTR_VALUE, STATUS_CD, UPDATE_DATE, CREATE_STAFF, UPDATE_STAFF, ATTR_VALUE_SORT, 
+    PARENT_VALUE, attr_value_english_name, attr_value_tw_name
+  </sql>
+  <sql id="Blob_Column_List">
+    REMARK
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.zmz.model.AttrValueExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.zmz.model.AttrValueExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.AttrValueExample">
+    delete from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value (attr_value_id, ATTR_ID, ATTR_VALUE_NAME, 
+      ATTR_VALUE_DESC, create_date, status_date, 
+      ATTR_VALUE, STATUS_CD, UPDATE_DATE, 
+      CREATE_STAFF, UPDATE_STAFF, ATTR_VALUE_SORT, 
+      PARENT_VALUE, attr_value_english_name, attr_value_tw_name, 
+      REMARK)
+    values (#{attrValueId,jdbcType=BIGINT}, #{attrId,jdbcType=BIGINT}, #{attrValueName,jdbcType=VARCHAR}, 
+      #{attrValueDesc,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{statusDate,jdbcType=TIMESTAMP}, 
+      #{attrValue,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{createStaff,jdbcType=BIGINT}, #{updateStaff,jdbcType=BIGINT}, #{attrValueSort,jdbcType=INTEGER}, 
+      #{parentValue,jdbcType=VARCHAR}, #{attrValueEnglishName,jdbcType=VARCHAR}, #{attrValueTwName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        attr_value_id,
+      </if>
+      <if test="attrId != null">
+        ATTR_ID,
+      </if>
+      <if test="attrValueName != null">
+        ATTR_VALUE_NAME,
+      </if>
+      <if test="attrValueDesc != null">
+        ATTR_VALUE_DESC,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="statusDate != null">
+        status_date,
+      </if>
+      <if test="attrValue != null">
+        ATTR_VALUE,
+      </if>
+      <if test="statusCd != null">
+        STATUS_CD,
+      </if>
+      <if test="updateDate != null">
+        UPDATE_DATE,
+      </if>
+      <if test="createStaff != null">
+        CREATE_STAFF,
+      </if>
+      <if test="updateStaff != null">
+        UPDATE_STAFF,
+      </if>
+      <if test="attrValueSort != null">
+        ATTR_VALUE_SORT,
+      </if>
+      <if test="parentValue != null">
+        PARENT_VALUE,
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name,
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        #{attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="attrId != null">
+        #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attrValue != null">
+        #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.AttrValueExample" resultType="java.lang.Long">
+    select count(*) from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update attr_value
+    <set>
+      <if test="row.attrValueId != null">
+        attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrId != null">
+        ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueName != null">
+        ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueDesc != null">
+        ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.statusDate != null">
+        status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.attrValue != null">
+        ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateDate != null">
+        UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaff != null">
+        CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaff != null">
+        UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueSort != null">
+        ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.parentValue != null">
+        PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueEnglishName != null">
+        attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueTwName != null">
+        attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.remark != null">
+        REMARK = #{row.remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      REMARK = #{row.remark,jdbcType=LONGVARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      status_date = #{row.statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    <set>
+      <if test="attrId != null">
+        ATTR_ID = #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        status_date = #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attrValue != null">
+        ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set ATTR_ID = #{attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status_date = #{statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=LONGVARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set ATTR_ID = #{attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status_date = #{statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.AttrValue">
+    <id column="attr_value_id" jdbcType="BIGINT" property="attrValueId" />
+    <result column="ATTR_ID" jdbcType="BIGINT" property="attrId" />
+    <result column="ATTR_VALUE_NAME" jdbcType="VARCHAR" property="attrValueName" />
+    <result column="ATTR_VALUE_DESC" jdbcType="VARCHAR" property="attrValueDesc" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="STATUS_DATE" jdbcType="TIMESTAMP" property="statusDate" />
+    <result column="ATTR_VALUE" jdbcType="VARCHAR" property="attrValue" />
+    <result column="STATUS_CD" jdbcType="VARCHAR" property="statusCd" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="CREATE_STAFF" jdbcType="BIGINT" property="createStaff" />
+    <result column="UPDATE_STAFF" jdbcType="BIGINT" property="updateStaff" />
+    <result column="ATTR_VALUE_SORT" jdbcType="INTEGER" property="attrValueSort" />
+    <result column="PARENT_VALUE" jdbcType="VARCHAR" property="parentValue" />
+    <result column="attr_value_english_name" jdbcType="VARCHAR" property="attrValueEnglishName" />
+    <result column="attr_value_tw_name" jdbcType="VARCHAR" property="attrValueTwName" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.model.AttrValue">
+    <result column="REMARK" jdbcType="LONGVARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    attr_value_id, ATTR_ID, ATTR_VALUE_NAME, ATTR_VALUE_DESC, create_date, STATUS_DATE, 
+    ATTR_VALUE, STATUS_CD, UPDATE_DATE, CREATE_STAFF, UPDATE_STAFF, ATTR_VALUE_SORT, 
+    PARENT_VALUE, attr_value_english_name, attr_value_tw_name
+  </sql>
+  <sql id="Blob_Column_List">
+    REMARK
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.zmz.model.AttrValueExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.zmz.model.AttrValueExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.AttrValueExample">
+    delete from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value (attr_value_id, ATTR_ID, ATTR_VALUE_NAME, 
+      ATTR_VALUE_DESC, create_date, STATUS_DATE, 
+      ATTR_VALUE, STATUS_CD, UPDATE_DATE, 
+      CREATE_STAFF, UPDATE_STAFF, ATTR_VALUE_SORT, 
+      PARENT_VALUE, attr_value_english_name, attr_value_tw_name, 
+      REMARK)
+    values (#{attrValueId,jdbcType=BIGINT}, #{attrId,jdbcType=BIGINT}, #{attrValueName,jdbcType=VARCHAR}, 
+      #{attrValueDesc,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{statusDate,jdbcType=TIMESTAMP}, 
+      #{attrValue,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{createStaff,jdbcType=BIGINT}, #{updateStaff,jdbcType=BIGINT}, #{attrValueSort,jdbcType=INTEGER}, 
+      #{parentValue,jdbcType=VARCHAR}, #{attrValueEnglishName,jdbcType=VARCHAR}, #{attrValueTwName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        attr_value_id,
+      </if>
+      <if test="attrId != null">
+        ATTR_ID,
+      </if>
+      <if test="attrValueName != null">
+        ATTR_VALUE_NAME,
+      </if>
+      <if test="attrValueDesc != null">
+        ATTR_VALUE_DESC,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="statusDate != null">
+        STATUS_DATE,
+      </if>
+      <if test="attrValue != null">
+        ATTR_VALUE,
+      </if>
+      <if test="statusCd != null">
+        STATUS_CD,
+      </if>
+      <if test="updateDate != null">
+        UPDATE_DATE,
+      </if>
+      <if test="createStaff != null">
+        CREATE_STAFF,
+      </if>
+      <if test="updateStaff != null">
+        UPDATE_STAFF,
+      </if>
+      <if test="attrValueSort != null">
+        ATTR_VALUE_SORT,
+      </if>
+      <if test="parentValue != null">
+        PARENT_VALUE,
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name,
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        #{attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="attrId != null">
+        #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attrValue != null">
+        #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.AttrValueExample" resultType="java.lang.Long">
+    select count(*) from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update attr_value
+    <set>
+      <if test="row.attrValueId != null">
+        attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrId != null">
+        ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueName != null">
+        ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueDesc != null">
+        ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.statusDate != null">
+        STATUS_DATE = #{row.statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.attrValue != null">
+        ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateDate != null">
+        UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaff != null">
+        CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaff != null">
+        UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueSort != null">
+        ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.parentValue != null">
+        PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueEnglishName != null">
+        attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueTwName != null">
+        attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.remark != null">
+        REMARK = #{row.remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      STATUS_DATE = #{row.statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      REMARK = #{row.remark,jdbcType=LONGVARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      STATUS_DATE = #{row.statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    <set>
+      <if test="attrId != null">
+        ATTR_ID = #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attrValue != null">
+        ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set ATTR_ID = #{attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=LONGVARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set ATTR_ID = #{attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.AttrValue">
+    <id column="attr_value_id" jdbcType="BIGINT" property="attrValueId" />
+    <result column="ATTR_ID" jdbcType="BIGINT" property="attrId" />
+    <result column="ATTR_VALUE_NAME" jdbcType="VARCHAR" property="attrValueName" />
+    <result column="ATTR_VALUE_DESC" jdbcType="VARCHAR" property="attrValueDesc" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="STATUS_DATE" jdbcType="TIMESTAMP" property="statusDate" />
+    <result column="ATTR_VALUE" jdbcType="VARCHAR" property="attrValue" />
+    <result column="STATUS_CD" jdbcType="VARCHAR" property="statusCd" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="CREATE_STAFF" jdbcType="BIGINT" property="createStaff" />
+    <result column="UPDATE_STAFF" jdbcType="BIGINT" property="updateStaff" />
+    <result column="ATTR_VALUE_SORT" jdbcType="INTEGER" property="attrValueSort" />
+    <result column="PARENT_VALUE" jdbcType="VARCHAR" property="parentValue" />
+    <result column="attr_value_english_name" jdbcType="VARCHAR" property="attrValueEnglishName" />
+    <result column="attr_value_tw_name" jdbcType="VARCHAR" property="attrValueTwName" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.model.AttrValue">
+    <result column="REMARK" jdbcType="LONGVARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    attr_value_id, ATTR_ID, ATTR_VALUE_NAME, ATTR_VALUE_DESC, create_date, STATUS_DATE, 
+    ATTR_VALUE, STATUS_CD, UPDATE_DATE, CREATE_STAFF, UPDATE_STAFF, ATTR_VALUE_SORT, 
+    PARENT_VALUE, attr_value_english_name, attr_value_tw_name
+  </sql>
+  <sql id="Blob_Column_List">
+    REMARK
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.zmz.model.AttrValueExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.zmz.model.AttrValueExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from attr_value
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.AttrValueExample">
+    delete from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value (attr_value_id, ATTR_ID, ATTR_VALUE_NAME, 
+      ATTR_VALUE_DESC, create_date, STATUS_DATE, 
+      ATTR_VALUE, STATUS_CD, UPDATE_DATE, 
+      CREATE_STAFF, UPDATE_STAFF, ATTR_VALUE_SORT, 
+      PARENT_VALUE, attr_value_english_name, attr_value_tw_name, 
+      REMARK)
+    values (#{attrValueId,jdbcType=BIGINT}, #{attrId,jdbcType=BIGINT}, #{attrValueName,jdbcType=VARCHAR}, 
+      #{attrValueDesc,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{statusDate,jdbcType=TIMESTAMP}, 
+      #{attrValue,jdbcType=VARCHAR}, #{statusCd,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{createStaff,jdbcType=BIGINT}, #{updateStaff,jdbcType=BIGINT}, #{attrValueSort,jdbcType=INTEGER}, 
+      #{parentValue,jdbcType=VARCHAR}, #{attrValueEnglishName,jdbcType=VARCHAR}, #{attrValueTwName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.AttrValue">
+    insert into attr_value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        attr_value_id,
+      </if>
+      <if test="attrId != null">
+        ATTR_ID,
+      </if>
+      <if test="attrValueName != null">
+        ATTR_VALUE_NAME,
+      </if>
+      <if test="attrValueDesc != null">
+        ATTR_VALUE_DESC,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="statusDate != null">
+        STATUS_DATE,
+      </if>
+      <if test="attrValue != null">
+        ATTR_VALUE,
+      </if>
+      <if test="statusCd != null">
+        STATUS_CD,
+      </if>
+      <if test="updateDate != null">
+        UPDATE_DATE,
+      </if>
+      <if test="createStaff != null">
+        CREATE_STAFF,
+      </if>
+      <if test="updateStaff != null">
+        UPDATE_STAFF,
+      </if>
+      <if test="attrValueSort != null">
+        ATTR_VALUE_SORT,
+      </if>
+      <if test="parentValue != null">
+        PARENT_VALUE,
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name,
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attrValueId != null">
+        #{attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="attrId != null">
+        #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attrValue != null">
+        #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.AttrValueExample" resultType="java.lang.Long">
+    select count(*) from attr_value
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update attr_value
+    <set>
+      <if test="row.attrValueId != null">
+        attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrId != null">
+        ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueName != null">
+        ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueDesc != null">
+        ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.statusDate != null">
+        STATUS_DATE = #{row.statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.attrValue != null">
+        ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.statusCd != null">
+        STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateDate != null">
+        UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createStaff != null">
+        CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.updateStaff != null">
+        UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="row.attrValueSort != null">
+        ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="row.parentValue != null">
+        PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueEnglishName != null">
+        attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.attrValueTwName != null">
+        attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.remark != null">
+        REMARK = #{row.remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      STATUS_DATE = #{row.statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR},
+      REMARK = #{row.remark,jdbcType=LONGVARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update attr_value
+    set attr_value_id = #{row.attrValueId,jdbcType=BIGINT},
+      ATTR_ID = #{row.attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{row.attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{row.attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      STATUS_DATE = #{row.statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{row.attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{row.statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{row.updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{row.createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{row.updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{row.attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{row.parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{row.attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{row.attrValueTwName,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    <set>
+      <if test="attrId != null">
+        ATTR_ID = #{attrId,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueName != null">
+        ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueDesc != null">
+        ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDate != null">
+        STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attrValue != null">
+        ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCd != null">
+        STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createStaff != null">
+        CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      </if>
+      <if test="updateStaff != null">
+        UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      </if>
+      <if test="attrValueSort != null">
+        ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentValue != null">
+        PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueEnglishName != null">
+        attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrValueTwName != null">
+        attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set ATTR_ID = #{attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=LONGVARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.AttrValue">
+    update attr_value
+    set ATTR_ID = #{attrId,jdbcType=BIGINT},
+      ATTR_VALUE_NAME = #{attrValueName,jdbcType=VARCHAR},
+      ATTR_VALUE_DESC = #{attrValueDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      ATTR_VALUE = #{attrValue,jdbcType=VARCHAR},
+      STATUS_CD = #{statusCd,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      CREATE_STAFF = #{createStaff,jdbcType=BIGINT},
+      UPDATE_STAFF = #{updateStaff,jdbcType=BIGINT},
+      ATTR_VALUE_SORT = #{attrValueSort,jdbcType=INTEGER},
+      PARENT_VALUE = #{parentValue,jdbcType=VARCHAR},
+      attr_value_english_name = #{attrValueEnglishName,jdbcType=VARCHAR},
+      attr_value_tw_name = #{attrValueTwName,jdbcType=VARCHAR}
+    where attr_value_id = #{attrValueId,jdbcType=BIGINT}
+  </update>
+</mapper>
