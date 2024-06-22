@@ -1,6 +1,6 @@
 package org.zmz.security.mapper.dataopen;
 
-import org.zmz.security.model.ObjDataHis;
+import org.zmz.security.model.dataopen.ObjDataHis;
 import org.zmz.security.vo.request.ObjDataHisQo;
 
 import java.util.List;

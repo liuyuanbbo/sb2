@@ -2,7 +2,7 @@ package org.zmz.security.service;
 
 import org.springframework.stereotype.Service;
 import org.zmz.security.mapper.dataopen.ObjInfoMapper;
-import org.zmz.security.model.ObjInfo;
+import org.zmz.security.model.dataopen.ObjInfo;
 import org.zmz.security.vo.request.ObjInfoQueryQo;
 
 import javax.annotation.Resource;

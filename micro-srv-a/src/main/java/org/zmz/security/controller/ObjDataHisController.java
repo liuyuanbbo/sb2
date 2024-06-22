@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zmz.common.R;
-import org.zmz.security.model.ObjDataHis;
+import org.zmz.security.model.dataopen.ObjDataHis;
 import org.zmz.security.service.ObjDataHisService;
 import org.zmz.security.vo.request.ObjDataHisQo;
 

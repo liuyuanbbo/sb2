@@ -1,4 +1,4 @@
-package org.zmz.security.model;
+package org.zmz.security.model.dataopen;
 
 import lombok.Getter;
 import lombok.Setter;

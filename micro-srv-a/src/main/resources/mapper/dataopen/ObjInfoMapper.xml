@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.zmz.security.mapper.dataopen.ObjInfoMapper">
-    <resultMap id="baseMap" type="org.zmz.security.model.ObjInfo">
+    <resultMap id="baseMap" type="org.zmz.security.model.dataopen.ObjInfo">
         <id column="object_id" property="objectId"/>
         <result column="parent_id" property="parentId"/>
         <result column="grp_id" property="grpId"/>

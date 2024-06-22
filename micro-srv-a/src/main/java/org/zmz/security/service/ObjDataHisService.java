@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.zmz.security.mapper.dataopen.ObjDataHisMapper;
 import org.zmz.security.mapper.pgsql.hrdb.PgSQLObjDataHisMapper;
-import org.zmz.security.model.ObjDataHis;
+import org.zmz.security.model.dataopen.ObjDataHis;
 import org.zmz.security.vo.request.ObjDataHisQo;
 
 import javax.annotation.Resource;

@@ -1,7 +1,7 @@
 package org.zmz.security.mapper.pgsql.hrdb;
 
 import org.apache.ibatis.annotations.Param;
-import org.zmz.security.model.ObjDataHis;
+import org.zmz.security.model.dataopen.ObjDataHis;
 
 import java.util.List;
 
