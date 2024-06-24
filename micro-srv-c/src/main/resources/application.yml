@@ -10,6 +10,7 @@ spring:
       - conf/mysql-dev-dataopen.yml
       - conf/mysql-dev-dataportal.yml
       - conf/pgsql-dev.yml
+      - conf/redis-dev.yml
 logging:
   level:
     org.zmz.c: debug
