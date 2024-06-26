@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Configuration
 @Slf4j
 public class RedissonConfig {
@@ -31,6 +33,17 @@ public class RedissonConfig {
         return Redisson.create(redissonSingleConfig);
     }
 
+    @Bean
+    @ConditionalOnProperty(value = "enabled", prefix = "redisson.cluster", havingValue = "true", matchIfMissing = true)
+    public RedissonClient redissonSingleClient(@Autowired RedissonClusterProperties redissonClusterProperties) {
+        log.info("加载 Redisson 集群节点配置: {}", redissonClusterProperties);
+        Config redissonSingleConfig = new Config();
+        redissonSingleConfig.useClusterServers()
+                .addNodeAddress(redissonClusterProperties.getNodes().toArray(new String[0]))
+                .setPassword(redissonClusterProperties.getPassword());
+        return Redisson.create(redissonSingleConfig);
+    }
+
     @Getter
     @Setter
     @ConfigurationProperties(prefix = "redisson.single")
@@ -39,6 +52,20 @@ public class RedissonConfig {
         private String address;
         private String password;
         private int database;
+
+        @Override
+        public String toString() {
+            return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+        }
+    }
+
+    @Getter
+    @Setter
+    @ConfigurationProperties(prefix = "redisson.cluster")
+    @Component
+    public static class RedissonClusterProperties {
+        private List<String> nodes;
+        private String password;
 
         @Override
         public String toString() {

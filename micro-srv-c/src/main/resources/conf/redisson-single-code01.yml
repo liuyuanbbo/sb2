@@ -3,3 +3,5 @@ redisson:
     address: redis://192.168.110.201:6380
     password: '123456'
     database: 0
+  cluster:
+    nodes: redis://192.168.110.201:6380,redis://192.168.110.201:6381,redis://192.168.110.201:6382
