@@ -11,6 +11,7 @@ spring:
       - conf/mysql-dev-dataportal.yml
       - conf/pgsql-dev.yml
       - conf/redis-dev.yml
+      # - conf/http2.yml
 logging:
   level:
     org.zmz.c: debug

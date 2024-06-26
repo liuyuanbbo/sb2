@@ -1,0 +1,9 @@
+server:
+  http2:
+    enabled: off
+  ssl:
+    key-store: classpath:keystore.jks
+    key-store-password: micro-srv-c-3
+    key-store-type: JKS
+    key-alias: micro-srv-c
+    key-password: micro-srv-c-3

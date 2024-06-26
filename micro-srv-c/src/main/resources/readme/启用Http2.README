@@ -1,0 +1,1 @@
+keytool -genkey -keyalg RSA -alias micro-srv-c -keystore keystore.jks -storepass micro-srv-c-3 -validity 4000 -keysize 2048
