@@ -12,6 +12,8 @@ spring:
       - conf/pgsql-dev.yml
       - conf/redis-dev.yml
       # - conf/http2.yml
+      - conf/kafka-code01.yml
+      - conf/redisson-code01.yml
 logging:
   level:
     org.zmz.c: debug

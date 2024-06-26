@@ -1,0 +1,2 @@
+redisson:
+  address: redis://192.168.110.201:6380
