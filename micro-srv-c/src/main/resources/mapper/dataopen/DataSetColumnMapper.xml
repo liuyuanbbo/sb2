@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.DataSetColumnMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.DataSetColumn">
+        <id column="app_detail_id" jdbcType="BIGINT" property="appDetailId"/>
+        <result column="column_id" jdbcType="BIGINT" property="columnId"/>
+        <result column="app_id" jdbcType="BIGINT" property="appId"/>
+        <result column="node_id" jdbcType="BIGINT" property="nodeId"/>
+        <result column="alias" jdbcType="VARCHAR" property="alias"/>
+        <result column="func" jdbcType="VARCHAR" property="func"/>
+        <result column="seq" jdbcType="BIGINT" property="seq"/>
+        <result column="view_id" jdbcType="BIGINT" property="viewId"/>
+        <result column="parent_obj_type" jdbcType="VARCHAR" property="parentObjType"/>
+        <result column="parent_obj_id" jdbcType="BIGINT" property="parentObjId"/>
+        <result column="cond_type" jdbcType="VARCHAR" property="condType"/>
+        <result column="cond_value" jdbcType="VARCHAR" property="condValue"/>
+        <result column="parent_detail_id" jdbcType="BIGINT" property="parentDetailId"/>
+        <result column="output_type" jdbcType="VARCHAR" property="outputType"/>
+        <result column="column_name" jdbcType="VARCHAR" property="columnName"/>
+        <result column="app_type" jdbcType="VARCHAR" property="appType"/>
+        <result column="column_code" jdbcType="VARCHAR" property="columnCode"/>
+        <result column="table_code" jdbcType="VARCHAR" property="tableCode"/>
+        <result column="table_id" jdbcType="BIGINT" property="tableId"/>
+        <result column="dim_index_id" jdbcType="BIGINT" property="dimIndexId"/>
+        <result column="injection_label_id" jdbcType="BIGINT" property="injectionLabelId"/>
+        <result column="datasource_id" jdbcType="BIGINT" property="datasourceId"/>
+        <result column="column_type" jdbcType="VARCHAR" property="columnType"/>
+        <result column="column_length" jdbcType="INTEGER" property="columnLength"/>
+        <result column="column_accuracy" jdbcType="INTEGER" property="columnAccuracy"/>
+        <result column="threshold" jdbcType="INTEGER" property="threshold"/>
+        <result column="object_id" jdbcType="BIGINT" property="objectId"/>
+        <result column="sort_order" jdbcType="VARCHAR" property="sortOrder"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="unique_key" jdbcType="VARCHAR" property="uniqueKey"/>
+        <result column="mod_state" jdbcType="VARCHAR" property="modState"/>
+        <result column="pro_index_id" jdbcType="BIGINT" property="proIndexId"/>
+        <result column="modes" jdbcType="VARCHAR" property="modes"/>
+        <result column="rela_type" jdbcType="VARCHAR" property="relaType"/>
+    </resultMap>
+
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.c.pojo.dataopen.DataSetColumn">
+        <result column="column_expression" jdbcType="LONGVARCHAR" property="columnExpression"/>
+    </resultMap>
+</mapper>

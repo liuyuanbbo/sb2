@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.DataSetAnalysisMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.DataSetAnalysis">
+        <id column="analysis_id" jdbcType="BIGINT" property="analysisId"/>
+        <result column="analysis_name" jdbcType="VARCHAR" property="analysisName"/>
+        <result column="analysis_desc" jdbcType="VARCHAR" property="analysisDesc"/>
+        <result column="grp_id" jdbcType="BIGINT" property="grpId"/>
+        <result column="status_cd" jdbcType="VARCHAR" property="statusCd"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="updator" jdbcType="VARCHAR" property="updator"/>
+        <result column="create_staff_code" jdbcType="VARCHAR" property="createStaffCode"/>
+        <result column="com_acct_id" jdbcType="INTEGER" property="comAcctId"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+    </resultMap>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.DataSetConditionMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.DataSetCondition">
+        <id column="cond_id" jdbcType="BIGINT" property="condId"/>
+        <result column="app_id" jdbcType="BIGINT" property="appId"/>
+        <result column="app_type" jdbcType="VARCHAR" property="appType"/>
+        <result column="cond_type" jdbcType="VARCHAR" property="condType"/>
+        <result column="cond_operator" jdbcType="VARCHAR" property="condOperator"/>
+        <result column="parent_cond_id" jdbcType="BIGINT" property="parentCondId"/>
+        <result column="seq" jdbcType="BIGINT" property="seq"/>
+        <result column="column_id" jdbcType="BIGINT" property="columnId"/>
+        <result column="column_code" jdbcType="VARCHAR" property="columnCode"/>
+        <result column="table_code" jdbcType="VARCHAR" property="tableCode"/>
+        <result column="table_id" jdbcType="BIGINT" property="tableId"/>
+        <result column="dim_index_id" jdbcType="BIGINT" property="dimIndexId"/>
+        <result column="injection_label_id" jdbcType="BIGINT" property="injectionLabelId"/>
+        <result column="datasource_id" jdbcType="BIGINT" property="datasourceId"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="app_column_id" jdbcType="BIGINT" property="appColumnId"/>
+        <result column="obj_id" jdbcType="BIGINT" property="objId"/>
+        <result column="cond_value_desc" jdbcType="VARCHAR" property="condValueDesc"/>
+        <result column="is_acct" jdbcType="VARCHAR" property="isAcct"/>
+        <result column="cycle_type" jdbcType="VARCHAR" property="cycleType"/>
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="mod_state" jdbcType="VARCHAR" property="modState"/>
+        <result column="pro_index_id" jdbcType="BIGINT" property="proIndexId"/>
+        <result column="rela_type" jdbcType="VARCHAR" property="relaType"/>
+    </resultMap>
+
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.c.pojo.dataopen.DataSetCondition">
+        <result column="cond_value" jdbcType="LONGVARCHAR" property="condValue"/>
+    </resultMap>
+</mapper>

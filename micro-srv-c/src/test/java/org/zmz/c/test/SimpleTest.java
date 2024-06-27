@@ -10,10 +10,13 @@ import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class SimpleTest {
@@ -188,6 +191,21 @@ public class SimpleTest {
         log.info("{}", sb);
 
         log.info("=============================================");
+    }
+
+    @Test
+    public void t10() {
+        String sql = "{123}{1213131}{213131g{eqe}}";
+        Pattern pattern = Pattern.compile("\\{([^$][^}]*)\\}");
+        Matcher matcher = pattern.matcher(sql);
+
+        List<String> list = new ArrayList<>();
+        while (matcher.find()) {
+            String s = matcher.group(1);
+            list.add(s);
+        }
+
+        log.info("{}", list);
     }
 
 }

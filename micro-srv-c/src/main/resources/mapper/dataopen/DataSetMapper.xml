@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.DataSetMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.DataSet">
+        <id column="app_id" jdbcType="BIGINT" property="appId"/>
+        <result column="app_code" jdbcType="VARCHAR" property="appCode"/>
+        <result column="app_name" jdbcType="VARCHAR" property="appName"/>
+        <result column="dim_id" jdbcType="VARCHAR" property="dimId"/>
+        <result column="datasource_type" jdbcType="VARCHAR" property="datasourceType"/>
+        <result column="sql_rel_tables" jdbcType="VARCHAR" property="sqlRelTables"/>
+        <result column="app_table_code" jdbcType="VARCHAR" property="appTableCode"/>
+        <result column="merge_plan_id" jdbcType="BIGINT" property="mergePlanId"/>
+        <result column="status_cd" jdbcType="VARCHAR" property="statusCd"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="create_staff_code" jdbcType="VARCHAR" property="createStaffCode"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="updator" jdbcType="VARCHAR" property="updator"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="status_date" jdbcType="TIMESTAMP" property="statusDate"/>
+        <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId"/>
+        <result column="order_no" jdbcType="INTEGER" property="orderNo"/>
+        <result column="datasource_id" jdbcType="BIGINT" property="datasourceId"/>
+        <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode"/>
+        <result column="meta_table_id" jdbcType="VARCHAR" property="metaTableId"/>
+        <result column="app_desc" jdbcType="VARCHAR" property="appDesc"/>
+        <result column="data_catalog_id" jdbcType="BIGINT" property="dataCatalogId"/>
+        <result column="grp_id" jdbcType="BIGINT" property="grpId"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="analysis_id" jdbcType="BIGINT" property="analysisId"/>
+        <result column="app_type" jdbcType="VARCHAR" property="appType"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="field_key" jdbcType="VARCHAR" property="fieldKey"/>
+        <result column="app_logic_sql" jdbcType="LONGVARCHAR" property="appLogicSql"/>
+        <result column="app_instance_sql" jdbcType="LONGVARCHAR" property="appInstanceSql"/>
+        <result column="cond_expression" jdbcType="LONGVARCHAR" property="condExpression"/>
+    </resultMap>
+</mapper>

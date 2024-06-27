@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.mapper.DataSetAnalysisMapper">
+  <resultMap id="BaseResultMap" type="org.zmz.model.DataSetAnalysis">
+    <id column="analysis_id" jdbcType="BIGINT" property="analysisId" />
+    <result column="analysis_name" jdbcType="VARCHAR" property="analysisName" />
+    <result column="analysis_desc" jdbcType="VARCHAR" property="analysisDesc" />
+    <result column="grp_id" jdbcType="BIGINT" property="grpId" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="updator" jdbcType="VARCHAR" property="updator" />
+    <result column="create_staff_code" jdbcType="VARCHAR" property="createStaffCode" />
+    <result column="com_acct_id" jdbcType="INTEGER" property="comAcctId" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    analysis_id, analysis_name, analysis_desc, grp_id, status_cd, create_date, creator, 
+    update_date, updator, create_staff_code, com_acct_id, version
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.DataSetAnalysisExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from app_sql_analysis
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from app_sql_analysis
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from app_sql_analysis
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.DataSetAnalysisExample">
+    delete from app_sql_analysis
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.DataSetAnalysis">
+    insert into app_sql_analysis (analysis_id, analysis_name, analysis_desc, 
+      grp_id, status_cd, create_date, 
+      creator, update_date, updator, 
+      create_staff_code, com_acct_id, version
+      )
+    values (#{analysisId,jdbcType=BIGINT}, #{analysisName,jdbcType=VARCHAR}, #{analysisDesc,jdbcType=VARCHAR}, 
+      #{grpId,jdbcType=BIGINT}, #{statusCd,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{updator,jdbcType=VARCHAR}, 
+      #{createStaffCode,jdbcType=VARCHAR}, #{comAcctId,jdbcType=INTEGER}, #{version,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.DataSetAnalysis">
+    insert into app_sql_analysis
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="analysisId != null">
+        analysis_id,
+      </if>
+      <if test="analysisName != null">
+        analysis_name,
+      </if>
+      <if test="analysisDesc != null">
+        analysis_desc,
+      </if>
+      <if test="grpId != null">
+        grp_id,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="updator != null">
+        updator,
+      </if>
+      <if test="createStaffCode != null">
+        create_staff_code,
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="analysisId != null">
+        #{analysisId,jdbcType=BIGINT},
+      </if>
+      <if test="analysisName != null">
+        #{analysisName,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisDesc != null">
+        #{analysisDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="grpId != null">
+        #{grpId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null">
+        #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffCode != null">
+        #{createStaffCode,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        #{comAcctId,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.DataSetAnalysisExample" resultType="java.lang.Long">
+    select count(*) from app_sql_analysis
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update app_sql_analysis
+    <set>
+      <if test="row.analysisId != null">
+        analysis_id = #{row.analysisId,jdbcType=BIGINT},
+      </if>
+      <if test="row.analysisName != null">
+        analysis_name = #{row.analysisName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.analysisDesc != null">
+        analysis_desc = #{row.analysisDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.grpId != null">
+        grp_id = #{row.grpId,jdbcType=BIGINT},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.creator != null">
+        creator = #{row.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateDate != null">
+        update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updator != null">
+        updator = #{row.updator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffCode != null">
+        create_staff_code = #{row.createStaffCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.comAcctId != null">
+        com_acct_id = #{row.comAcctId,jdbcType=INTEGER},
+      </if>
+      <if test="row.version != null">
+        version = #{row.version,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update app_sql_analysis
+    set analysis_id = #{row.analysisId,jdbcType=BIGINT},
+      analysis_name = #{row.analysisName,jdbcType=VARCHAR},
+      analysis_desc = #{row.analysisDesc,jdbcType=VARCHAR},
+      grp_id = #{row.grpId,jdbcType=BIGINT},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      creator = #{row.creator,jdbcType=VARCHAR},
+      update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      updator = #{row.updator,jdbcType=VARCHAR},
+      create_staff_code = #{row.createStaffCode,jdbcType=VARCHAR},
+      com_acct_id = #{row.comAcctId,jdbcType=INTEGER},
+      version = #{row.version,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.DataSetAnalysis">
+    update app_sql_analysis
+    <set>
+      <if test="analysisName != null">
+        analysis_name = #{analysisName,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisDesc != null">
+        analysis_desc = #{analysisDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="grpId != null">
+        grp_id = #{grpId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null">
+        updator = #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffCode != null">
+        create_staff_code = #{createStaffCode,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id = #{comAcctId,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.DataSetAnalysis">
+    update app_sql_analysis
+    set analysis_name = #{analysisName,jdbcType=VARCHAR},
+      analysis_desc = #{analysisDesc,jdbcType=VARCHAR},
+      grp_id = #{grpId,jdbcType=BIGINT},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=VARCHAR},
+      create_staff_code = #{createStaffCode,jdbcType=VARCHAR},
+      com_acct_id = #{comAcctId,jdbcType=INTEGER},
+      version = #{version,jdbcType=VARCHAR}
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.DataSetAnalysis">
+    <id column="analysis_id" jdbcType="BIGINT" property="analysisId" />
+    <result column="analysis_name" jdbcType="VARCHAR" property="analysisName" />
+    <result column="analysis_desc" jdbcType="VARCHAR" property="analysisDesc" />
+    <result column="grp_id" jdbcType="BIGINT" property="grpId" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="updator" jdbcType="VARCHAR" property="updator" />
+    <result column="create_staff_code" jdbcType="VARCHAR" property="createStaffCode" />
+    <result column="com_acct_id" jdbcType="INTEGER" property="comAcctId" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="download_task_id" jdbcType="BIGINT" property="downloadTaskId" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="out_put_mode" jdbcType="VARCHAR" property="outPutMode" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    analysis_id, analysis_name, analysis_desc, grp_id, status_cd, create_date, creator, 
+    update_date, updator, create_staff_code, com_acct_id, version, download_task_id, 
+    project_id, out_put_mode
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.DataSetAnalysisExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from app_sql_analysis
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from app_sql_analysis
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from app_sql_analysis
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.DataSetAnalysisExample">
+    delete from app_sql_analysis
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.DataSetAnalysis">
+    insert into app_sql_analysis (analysis_id, analysis_name, analysis_desc, 
+      grp_id, status_cd, create_date, 
+      creator, update_date, updator, 
+      create_staff_code, com_acct_id, version, 
+      download_task_id, project_id, out_put_mode
+      )
+    values (#{analysisId,jdbcType=BIGINT}, #{analysisName,jdbcType=VARCHAR}, #{analysisDesc,jdbcType=VARCHAR}, 
+      #{grpId,jdbcType=BIGINT}, #{statusCd,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{updator,jdbcType=VARCHAR}, 
+      #{createStaffCode,jdbcType=VARCHAR}, #{comAcctId,jdbcType=INTEGER}, #{version,jdbcType=VARCHAR}, 
+      #{downloadTaskId,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{outPutMode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.DataSetAnalysis">
+    insert into app_sql_analysis
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="analysisId != null">
+        analysis_id,
+      </if>
+      <if test="analysisName != null">
+        analysis_name,
+      </if>
+      <if test="analysisDesc != null">
+        analysis_desc,
+      </if>
+      <if test="grpId != null">
+        grp_id,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="updator != null">
+        updator,
+      </if>
+      <if test="createStaffCode != null">
+        create_staff_code,
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="downloadTaskId != null">
+        download_task_id,
+      </if>
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="outPutMode != null">
+        out_put_mode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="analysisId != null">
+        #{analysisId,jdbcType=BIGINT},
+      </if>
+      <if test="analysisName != null">
+        #{analysisName,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisDesc != null">
+        #{analysisDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="grpId != null">
+        #{grpId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null">
+        #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffCode != null">
+        #{createStaffCode,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        #{comAcctId,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadTaskId != null">
+        #{downloadTaskId,jdbcType=BIGINT},
+      </if>
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="outPutMode != null">
+        #{outPutMode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.DataSetAnalysisExample" resultType="java.lang.Long">
+    select count(*) from app_sql_analysis
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update app_sql_analysis
+    <set>
+      <if test="row.analysisId != null">
+        analysis_id = #{row.analysisId,jdbcType=BIGINT},
+      </if>
+      <if test="row.analysisName != null">
+        analysis_name = #{row.analysisName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.analysisDesc != null">
+        analysis_desc = #{row.analysisDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.grpId != null">
+        grp_id = #{row.grpId,jdbcType=BIGINT},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.creator != null">
+        creator = #{row.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateDate != null">
+        update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updator != null">
+        updator = #{row.updator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffCode != null">
+        create_staff_code = #{row.createStaffCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.comAcctId != null">
+        com_acct_id = #{row.comAcctId,jdbcType=INTEGER},
+      </if>
+      <if test="row.version != null">
+        version = #{row.version,jdbcType=VARCHAR},
+      </if>
+      <if test="row.downloadTaskId != null">
+        download_task_id = #{row.downloadTaskId,jdbcType=BIGINT},
+      </if>
+      <if test="row.projectId != null">
+        project_id = #{row.projectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.outPutMode != null">
+        out_put_mode = #{row.outPutMode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update app_sql_analysis
+    set analysis_id = #{row.analysisId,jdbcType=BIGINT},
+      analysis_name = #{row.analysisName,jdbcType=VARCHAR},
+      analysis_desc = #{row.analysisDesc,jdbcType=VARCHAR},
+      grp_id = #{row.grpId,jdbcType=BIGINT},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      creator = #{row.creator,jdbcType=VARCHAR},
+      update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      updator = #{row.updator,jdbcType=VARCHAR},
+      create_staff_code = #{row.createStaffCode,jdbcType=VARCHAR},
+      com_acct_id = #{row.comAcctId,jdbcType=INTEGER},
+      version = #{row.version,jdbcType=VARCHAR},
+      download_task_id = #{row.downloadTaskId,jdbcType=BIGINT},
+      project_id = #{row.projectId,jdbcType=BIGINT},
+      out_put_mode = #{row.outPutMode,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.DataSetAnalysis">
+    update app_sql_analysis
+    <set>
+      <if test="analysisName != null">
+        analysis_name = #{analysisName,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisDesc != null">
+        analysis_desc = #{analysisDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="grpId != null">
+        grp_id = #{grpId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null">
+        updator = #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffCode != null">
+        create_staff_code = #{createStaffCode,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id = #{comAcctId,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadTaskId != null">
+        download_task_id = #{downloadTaskId,jdbcType=BIGINT},
+      </if>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="outPutMode != null">
+        out_put_mode = #{outPutMode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.DataSetAnalysis">
+    update app_sql_analysis
+    set analysis_name = #{analysisName,jdbcType=VARCHAR},
+      analysis_desc = #{analysisDesc,jdbcType=VARCHAR},
+      grp_id = #{grpId,jdbcType=BIGINT},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=VARCHAR},
+      create_staff_code = #{createStaffCode,jdbcType=VARCHAR},
+      com_acct_id = #{comAcctId,jdbcType=INTEGER},
+      version = #{version,jdbcType=VARCHAR},
+      download_task_id = #{downloadTaskId,jdbcType=BIGINT},
+      project_id = #{projectId,jdbcType=BIGINT},
+      out_put_mode = #{outPutMode,jdbcType=VARCHAR}
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.DataSetAnalysis">
+    <id column="analysis_id" jdbcType="BIGINT" property="analysisId" />
+    <result column="analysis_name" jdbcType="VARCHAR" property="analysisName" />
+    <result column="analysis_desc" jdbcType="VARCHAR" property="analysisDesc" />
+    <result column="grp_id" jdbcType="BIGINT" property="grpId" />
+    <result column="status_cd" jdbcType="VARCHAR" property="statusCd" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="updator" jdbcType="VARCHAR" property="updator" />
+    <result column="create_staff_code" jdbcType="VARCHAR" property="createStaffCode" />
+    <result column="com_acct_id" jdbcType="INTEGER" property="comAcctId" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    analysis_id, analysis_name, analysis_desc, grp_id, status_cd, create_date, creator, 
+    update_date, updator, create_staff_code, com_acct_id, version
+  </sql>
+  <select id="selectByExample" parameterType="org.zmz.model.DataSetAnalysisExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from app_sql_analysis
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from app_sql_analysis
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from app_sql_analysis
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.DataSetAnalysisExample">
+    delete from app_sql_analysis
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.DataSetAnalysis">
+    insert into app_sql_analysis (analysis_id, analysis_name, analysis_desc, 
+      grp_id, status_cd, create_date, 
+      creator, update_date, updator, 
+      create_staff_code, com_acct_id, version
+      )
+    values (#{analysisId,jdbcType=BIGINT}, #{analysisName,jdbcType=VARCHAR}, #{analysisDesc,jdbcType=VARCHAR}, 
+      #{grpId,jdbcType=BIGINT}, #{statusCd,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{updator,jdbcType=VARCHAR}, 
+      #{createStaffCode,jdbcType=VARCHAR}, #{comAcctId,jdbcType=INTEGER}, #{version,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.DataSetAnalysis">
+    insert into app_sql_analysis
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="analysisId != null">
+        analysis_id,
+      </if>
+      <if test="analysisName != null">
+        analysis_name,
+      </if>
+      <if test="analysisDesc != null">
+        analysis_desc,
+      </if>
+      <if test="grpId != null">
+        grp_id,
+      </if>
+      <if test="statusCd != null">
+        status_cd,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="updator != null">
+        updator,
+      </if>
+      <if test="createStaffCode != null">
+        create_staff_code,
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="analysisId != null">
+        #{analysisId,jdbcType=BIGINT},
+      </if>
+      <if test="analysisName != null">
+        #{analysisName,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisDesc != null">
+        #{analysisDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="grpId != null">
+        #{grpId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCd != null">
+        #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null">
+        #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffCode != null">
+        #{createStaffCode,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        #{comAcctId,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.DataSetAnalysisExample" resultType="java.lang.Long">
+    select count(*) from app_sql_analysis
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update app_sql_analysis
+    <set>
+      <if test="row.analysisId != null">
+        analysis_id = #{row.analysisId,jdbcType=BIGINT},
+      </if>
+      <if test="row.analysisName != null">
+        analysis_name = #{row.analysisName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.analysisDesc != null">
+        analysis_desc = #{row.analysisDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="row.grpId != null">
+        grp_id = #{row.grpId,jdbcType=BIGINT},
+      </if>
+      <if test="row.statusCd != null">
+        status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createDate != null">
+        create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.creator != null">
+        creator = #{row.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.updateDate != null">
+        update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updator != null">
+        updator = #{row.updator,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createStaffCode != null">
+        create_staff_code = #{row.createStaffCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.comAcctId != null">
+        com_acct_id = #{row.comAcctId,jdbcType=INTEGER},
+      </if>
+      <if test="row.version != null">
+        version = #{row.version,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update app_sql_analysis
+    set analysis_id = #{row.analysisId,jdbcType=BIGINT},
+      analysis_name = #{row.analysisName,jdbcType=VARCHAR},
+      analysis_desc = #{row.analysisDesc,jdbcType=VARCHAR},
+      grp_id = #{row.grpId,jdbcType=BIGINT},
+      status_cd = #{row.statusCd,jdbcType=VARCHAR},
+      create_date = #{row.createDate,jdbcType=TIMESTAMP},
+      creator = #{row.creator,jdbcType=VARCHAR},
+      update_date = #{row.updateDate,jdbcType=TIMESTAMP},
+      updator = #{row.updator,jdbcType=VARCHAR},
+      create_staff_code = #{row.createStaffCode,jdbcType=VARCHAR},
+      com_acct_id = #{row.comAcctId,jdbcType=INTEGER},
+      version = #{row.version,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.DataSetAnalysis">
+    update app_sql_analysis
+    <set>
+      <if test="analysisName != null">
+        analysis_name = #{analysisName,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisDesc != null">
+        analysis_desc = #{analysisDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="grpId != null">
+        grp_id = #{grpId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCd != null">
+        status_cd = #{statusCd,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null">
+        updator = #{updator,jdbcType=VARCHAR},
+      </if>
+      <if test="createStaffCode != null">
+        create_staff_code = #{createStaffCode,jdbcType=VARCHAR},
+      </if>
+      <if test="comAcctId != null">
+        com_acct_id = #{comAcctId,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.DataSetAnalysis">
+    update app_sql_analysis
+    set analysis_name = #{analysisName,jdbcType=VARCHAR},
+      analysis_desc = #{analysisDesc,jdbcType=VARCHAR},
+      grp_id = #{grpId,jdbcType=BIGINT},
+      status_cd = #{statusCd,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=VARCHAR},
+      create_staff_code = #{createStaffCode,jdbcType=VARCHAR},
+      com_acct_id = #{comAcctId,jdbcType=INTEGER},
+      version = #{version,jdbcType=VARCHAR}
+    where analysis_id = #{analysisId,jdbcType=BIGINT}
+  </update>
+</mapper>

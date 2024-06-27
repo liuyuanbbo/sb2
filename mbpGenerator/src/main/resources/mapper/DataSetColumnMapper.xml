@@ -1,0 +1,2511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.mapper.DataSetColumnMapper">
+  <resultMap id="BaseResultMap" type="org.zmz.model.DataSetColumn">
+    <id column="app_detail_id" jdbcType="BIGINT" property="appDetailId" />
+    <result column="column_id" jdbcType="BIGINT" property="columnId" />
+    <result column="app_id" jdbcType="BIGINT" property="appId" />
+    <result column="node_id" jdbcType="BIGINT" property="nodeId" />
+    <result column="alias" jdbcType="VARCHAR" property="alias" />
+    <result column="func" jdbcType="VARCHAR" property="func" />
+    <result column="seq" jdbcType="BIGINT" property="seq" />
+    <result column="view_id" jdbcType="BIGINT" property="viewId" />
+    <result column="parent_obj_type" jdbcType="VARCHAR" property="parentObjType" />
+    <result column="parent_obj_id" jdbcType="BIGINT" property="parentObjId" />
+    <result column="cond_type" jdbcType="VARCHAR" property="condType" />
+    <result column="cond_value" jdbcType="VARCHAR" property="condValue" />
+    <result column="parent_detail_id" jdbcType="BIGINT" property="parentDetailId" />
+    <result column="output_type" jdbcType="VARCHAR" property="outputType" />
+    <result column="column_name" jdbcType="VARCHAR" property="columnName" />
+    <result column="app_type" jdbcType="VARCHAR" property="appType" />
+    <result column="column_code" jdbcType="VARCHAR" property="columnCode" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="table_id" jdbcType="BIGINT" property="tableId" />
+    <result column="dim_index_id" jdbcType="BIGINT" property="dimIndexId" />
+    <result column="injection_label_id" jdbcType="BIGINT" property="injectionLabelId" />
+    <result column="datasource_id" jdbcType="BIGINT" property="datasourceId" />
+    <result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    <result column="column_length" jdbcType="INTEGER" property="columnLength" />
+    <result column="column_accuracy" jdbcType="INTEGER" property="columnAccuracy" />
+    <result column="threshold" jdbcType="INTEGER" property="threshold" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
+    <result column="sort_order" jdbcType="VARCHAR" property="sortOrder" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="unique_key" jdbcType="VARCHAR" property="uniqueKey" />
+    <result column="mod_state" jdbcType="VARCHAR" property="modState" />
+    <result column="pro_index_id" jdbcType="BIGINT" property="proIndexId" />
+    <result column="modes" jdbcType="VARCHAR" property="modes" />
+    <result column="rela_type" jdbcType="VARCHAR" property="relaType" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.model.DataSetColumn">
+    <result column="column_expression" jdbcType="LONGVARCHAR" property="columnExpression" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    app_detail_id, column_id, app_id, node_id, alias, func, seq, view_id, parent_obj_type, 
+    parent_obj_id, cond_type, cond_value, parent_detail_id, output_type, column_name, 
+    app_type, column_code, table_code, table_id, dim_index_id, injection_label_id, datasource_id, 
+    column_type, column_length, column_accuracy, threshold, object_id, sort_order, state, 
+    path, unique_key, mod_state, pro_index_id, modes, rela_type
+  </sql>
+  <sql id="Blob_Column_List">
+    column_expression
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.zmz.model.DataSetColumnExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.zmz.model.DataSetColumnExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_sql_column
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from app_sql_column
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.DataSetColumnExample">
+    delete from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.DataSetColumn">
+    insert into app_sql_column (app_detail_id, column_id, app_id, 
+      node_id, alias, func, 
+      seq, view_id, parent_obj_type, 
+      parent_obj_id, cond_type, cond_value, 
+      parent_detail_id, output_type, column_name, 
+      app_type, column_code, table_code, 
+      table_id, dim_index_id, injection_label_id, 
+      datasource_id, column_type, column_length, 
+      column_accuracy, threshold, object_id, 
+      sort_order, state, path, 
+      unique_key, mod_state, pro_index_id, 
+      modes, rela_type, column_expression
+      )
+    values (#{appDetailId,jdbcType=BIGINT}, #{columnId,jdbcType=BIGINT}, #{appId,jdbcType=BIGINT}, 
+      #{nodeId,jdbcType=BIGINT}, #{alias,jdbcType=VARCHAR}, #{func,jdbcType=VARCHAR}, 
+      #{seq,jdbcType=BIGINT}, #{viewId,jdbcType=BIGINT}, #{parentObjType,jdbcType=VARCHAR}, 
+      #{parentObjId,jdbcType=BIGINT}, #{condType,jdbcType=VARCHAR}, #{condValue,jdbcType=VARCHAR}, 
+      #{parentDetailId,jdbcType=BIGINT}, #{outputType,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}, 
+      #{appType,jdbcType=VARCHAR}, #{columnCode,jdbcType=VARCHAR}, #{tableCode,jdbcType=VARCHAR}, 
+      #{tableId,jdbcType=BIGINT}, #{dimIndexId,jdbcType=BIGINT}, #{injectionLabelId,jdbcType=BIGINT}, 
+      #{datasourceId,jdbcType=BIGINT}, #{columnType,jdbcType=VARCHAR}, #{columnLength,jdbcType=INTEGER}, 
+      #{columnAccuracy,jdbcType=INTEGER}, #{threshold,jdbcType=INTEGER}, #{objectId,jdbcType=BIGINT}, 
+      #{sortOrder,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
+      #{uniqueKey,jdbcType=VARCHAR}, #{modState,jdbcType=VARCHAR}, #{proIndexId,jdbcType=BIGINT}, 
+      #{modes,jdbcType=VARCHAR}, #{relaType,jdbcType=VARCHAR}, #{columnExpression,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.DataSetColumn">
+    insert into app_sql_column
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="appDetailId != null">
+        app_detail_id,
+      </if>
+      <if test="columnId != null">
+        column_id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="nodeId != null">
+        node_id,
+      </if>
+      <if test="alias != null">
+        alias,
+      </if>
+      <if test="func != null">
+        func,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+      <if test="viewId != null">
+        view_id,
+      </if>
+      <if test="parentObjType != null">
+        parent_obj_type,
+      </if>
+      <if test="parentObjId != null">
+        parent_obj_id,
+      </if>
+      <if test="condType != null">
+        cond_type,
+      </if>
+      <if test="condValue != null">
+        cond_value,
+      </if>
+      <if test="parentDetailId != null">
+        parent_detail_id,
+      </if>
+      <if test="outputType != null">
+        output_type,
+      </if>
+      <if test="columnName != null">
+        column_name,
+      </if>
+      <if test="appType != null">
+        app_type,
+      </if>
+      <if test="columnCode != null">
+        column_code,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="tableId != null">
+        table_id,
+      </if>
+      <if test="dimIndexId != null">
+        dim_index_id,
+      </if>
+      <if test="injectionLabelId != null">
+        injection_label_id,
+      </if>
+      <if test="datasourceId != null">
+        datasource_id,
+      </if>
+      <if test="columnType != null">
+        column_type,
+      </if>
+      <if test="columnLength != null">
+        column_length,
+      </if>
+      <if test="columnAccuracy != null">
+        column_accuracy,
+      </if>
+      <if test="threshold != null">
+        threshold,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="sortOrder != null">
+        sort_order,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="uniqueKey != null">
+        unique_key,
+      </if>
+      <if test="modState != null">
+        mod_state,
+      </if>
+      <if test="proIndexId != null">
+        pro_index_id,
+      </if>
+      <if test="modes != null">
+        modes,
+      </if>
+      <if test="relaType != null">
+        rela_type,
+      </if>
+      <if test="columnExpression != null">
+        column_expression,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="appDetailId != null">
+        #{appDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=BIGINT},
+      </if>
+      <if test="nodeId != null">
+        #{nodeId,jdbcType=BIGINT},
+      </if>
+      <if test="alias != null">
+        #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="func != null">
+        #{func,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=BIGINT},
+      </if>
+      <if test="viewId != null">
+        #{viewId,jdbcType=BIGINT},
+      </if>
+      <if test="parentObjType != null">
+        #{parentObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentObjId != null">
+        #{parentObjId,jdbcType=BIGINT},
+      </if>
+      <if test="condType != null">
+        #{condType,jdbcType=VARCHAR},
+      </if>
+      <if test="condValue != null">
+        #{condValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parentDetailId != null">
+        #{parentDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="outputType != null">
+        #{outputType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        #{appType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnCode != null">
+        #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableId != null">
+        #{tableId,jdbcType=BIGINT},
+      </if>
+      <if test="dimIndexId != null">
+        #{dimIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="injectionLabelId != null">
+        #{injectionLabelId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="columnType != null">
+        #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnLength != null">
+        #{columnLength,jdbcType=INTEGER},
+      </if>
+      <if test="columnAccuracy != null">
+        #{columnAccuracy,jdbcType=INTEGER},
+      </if>
+      <if test="threshold != null">
+        #{threshold,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="sortOrder != null">
+        #{sortOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="uniqueKey != null">
+        #{uniqueKey,jdbcType=VARCHAR},
+      </if>
+      <if test="modState != null">
+        #{modState,jdbcType=VARCHAR},
+      </if>
+      <if test="proIndexId != null">
+        #{proIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="modes != null">
+        #{modes,jdbcType=VARCHAR},
+      </if>
+      <if test="relaType != null">
+        #{relaType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnExpression != null">
+        #{columnExpression,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.DataSetColumnExample" resultType="java.lang.Long">
+    select count(*) from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update app_sql_column
+    <set>
+      <if test="row.appDetailId != null">
+        app_detail_id = #{row.appDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnId != null">
+        column_id = #{row.columnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.appId != null">
+        app_id = #{row.appId,jdbcType=BIGINT},
+      </if>
+      <if test="row.nodeId != null">
+        node_id = #{row.nodeId,jdbcType=BIGINT},
+      </if>
+      <if test="row.alias != null">
+        alias = #{row.alias,jdbcType=VARCHAR},
+      </if>
+      <if test="row.func != null">
+        func = #{row.func,jdbcType=VARCHAR},
+      </if>
+      <if test="row.seq != null">
+        seq = #{row.seq,jdbcType=BIGINT},
+      </if>
+      <if test="row.viewId != null">
+        view_id = #{row.viewId,jdbcType=BIGINT},
+      </if>
+      <if test="row.parentObjType != null">
+        parent_obj_type = #{row.parentObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.parentObjId != null">
+        parent_obj_id = #{row.parentObjId,jdbcType=BIGINT},
+      </if>
+      <if test="row.condType != null">
+        cond_type = #{row.condType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.condValue != null">
+        cond_value = #{row.condValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.parentDetailId != null">
+        parent_detail_id = #{row.parentDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="row.outputType != null">
+        output_type = #{row.outputType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnName != null">
+        column_name = #{row.columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.appType != null">
+        app_type = #{row.appType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnCode != null">
+        column_code = #{row.columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableCode != null">
+        table_code = #{row.tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableId != null">
+        table_id = #{row.tableId,jdbcType=BIGINT},
+      </if>
+      <if test="row.dimIndexId != null">
+        dim_index_id = #{row.dimIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="row.injectionLabelId != null">
+        injection_label_id = #{row.injectionLabelId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceId != null">
+        datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnType != null">
+        column_type = #{row.columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnLength != null">
+        column_length = #{row.columnLength,jdbcType=INTEGER},
+      </if>
+      <if test="row.columnAccuracy != null">
+        column_accuracy = #{row.columnAccuracy,jdbcType=INTEGER},
+      </if>
+      <if test="row.threshold != null">
+        threshold = #{row.threshold,jdbcType=INTEGER},
+      </if>
+      <if test="row.objectId != null">
+        object_id = #{row.objectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.sortOrder != null">
+        sort_order = #{row.sortOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=VARCHAR},
+      </if>
+      <if test="row.path != null">
+        path = #{row.path,jdbcType=VARCHAR},
+      </if>
+      <if test="row.uniqueKey != null">
+        unique_key = #{row.uniqueKey,jdbcType=VARCHAR},
+      </if>
+      <if test="row.modState != null">
+        mod_state = #{row.modState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.proIndexId != null">
+        pro_index_id = #{row.proIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="row.modes != null">
+        modes = #{row.modes,jdbcType=VARCHAR},
+      </if>
+      <if test="row.relaType != null">
+        rela_type = #{row.relaType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnExpression != null">
+        column_expression = #{row.columnExpression,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update app_sql_column
+    set app_detail_id = #{row.appDetailId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      app_id = #{row.appId,jdbcType=BIGINT},
+      node_id = #{row.nodeId,jdbcType=BIGINT},
+      alias = #{row.alias,jdbcType=VARCHAR},
+      func = #{row.func,jdbcType=VARCHAR},
+      seq = #{row.seq,jdbcType=BIGINT},
+      view_id = #{row.viewId,jdbcType=BIGINT},
+      parent_obj_type = #{row.parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{row.parentObjId,jdbcType=BIGINT},
+      cond_type = #{row.condType,jdbcType=VARCHAR},
+      cond_value = #{row.condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{row.parentDetailId,jdbcType=BIGINT},
+      output_type = #{row.outputType,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      app_type = #{row.appType,jdbcType=VARCHAR},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      table_id = #{row.tableId,jdbcType=BIGINT},
+      dim_index_id = #{row.dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{row.injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      column_length = #{row.columnLength,jdbcType=INTEGER},
+      column_accuracy = #{row.columnAccuracy,jdbcType=INTEGER},
+      threshold = #{row.threshold,jdbcType=INTEGER},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      sort_order = #{row.sortOrder,jdbcType=VARCHAR},
+      state = #{row.state,jdbcType=VARCHAR},
+      path = #{row.path,jdbcType=VARCHAR},
+      unique_key = #{row.uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{row.modState,jdbcType=VARCHAR},
+      pro_index_id = #{row.proIndexId,jdbcType=BIGINT},
+      modes = #{row.modes,jdbcType=VARCHAR},
+      rela_type = #{row.relaType,jdbcType=VARCHAR},
+      column_expression = #{row.columnExpression,jdbcType=LONGVARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update app_sql_column
+    set app_detail_id = #{row.appDetailId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      app_id = #{row.appId,jdbcType=BIGINT},
+      node_id = #{row.nodeId,jdbcType=BIGINT},
+      alias = #{row.alias,jdbcType=VARCHAR},
+      func = #{row.func,jdbcType=VARCHAR},
+      seq = #{row.seq,jdbcType=BIGINT},
+      view_id = #{row.viewId,jdbcType=BIGINT},
+      parent_obj_type = #{row.parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{row.parentObjId,jdbcType=BIGINT},
+      cond_type = #{row.condType,jdbcType=VARCHAR},
+      cond_value = #{row.condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{row.parentDetailId,jdbcType=BIGINT},
+      output_type = #{row.outputType,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      app_type = #{row.appType,jdbcType=VARCHAR},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      table_id = #{row.tableId,jdbcType=BIGINT},
+      dim_index_id = #{row.dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{row.injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      column_length = #{row.columnLength,jdbcType=INTEGER},
+      column_accuracy = #{row.columnAccuracy,jdbcType=INTEGER},
+      threshold = #{row.threshold,jdbcType=INTEGER},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      sort_order = #{row.sortOrder,jdbcType=VARCHAR},
+      state = #{row.state,jdbcType=VARCHAR},
+      path = #{row.path,jdbcType=VARCHAR},
+      unique_key = #{row.uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{row.modState,jdbcType=VARCHAR},
+      pro_index_id = #{row.proIndexId,jdbcType=BIGINT},
+      modes = #{row.modes,jdbcType=VARCHAR},
+      rela_type = #{row.relaType,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.DataSetColumn">
+    update app_sql_column
+    <set>
+      <if test="columnId != null">
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=BIGINT},
+      </if>
+      <if test="nodeId != null">
+        node_id = #{nodeId,jdbcType=BIGINT},
+      </if>
+      <if test="alias != null">
+        alias = #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="func != null">
+        func = #{func,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=BIGINT},
+      </if>
+      <if test="viewId != null">
+        view_id = #{viewId,jdbcType=BIGINT},
+      </if>
+      <if test="parentObjType != null">
+        parent_obj_type = #{parentObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentObjId != null">
+        parent_obj_id = #{parentObjId,jdbcType=BIGINT},
+      </if>
+      <if test="condType != null">
+        cond_type = #{condType,jdbcType=VARCHAR},
+      </if>
+      <if test="condValue != null">
+        cond_value = #{condValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parentDetailId != null">
+        parent_detail_id = #{parentDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="outputType != null">
+        output_type = #{outputType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        app_type = #{appType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnCode != null">
+        column_code = #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableId != null">
+        table_id = #{tableId,jdbcType=BIGINT},
+      </if>
+      <if test="dimIndexId != null">
+        dim_index_id = #{dimIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="injectionLabelId != null">
+        injection_label_id = #{injectionLabelId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        datasource_id = #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="columnType != null">
+        column_type = #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnLength != null">
+        column_length = #{columnLength,jdbcType=INTEGER},
+      </if>
+      <if test="columnAccuracy != null">
+        column_accuracy = #{columnAccuracy,jdbcType=INTEGER},
+      </if>
+      <if test="threshold != null">
+        threshold = #{threshold,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="sortOrder != null">
+        sort_order = #{sortOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="uniqueKey != null">
+        unique_key = #{uniqueKey,jdbcType=VARCHAR},
+      </if>
+      <if test="modState != null">
+        mod_state = #{modState,jdbcType=VARCHAR},
+      </if>
+      <if test="proIndexId != null">
+        pro_index_id = #{proIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="modes != null">
+        modes = #{modes,jdbcType=VARCHAR},
+      </if>
+      <if test="relaType != null">
+        rela_type = #{relaType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnExpression != null">
+        column_expression = #{columnExpression,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.zmz.model.DataSetColumn">
+    update app_sql_column
+    set column_id = #{columnId,jdbcType=BIGINT},
+      app_id = #{appId,jdbcType=BIGINT},
+      node_id = #{nodeId,jdbcType=BIGINT},
+      alias = #{alias,jdbcType=VARCHAR},
+      func = #{func,jdbcType=VARCHAR},
+      seq = #{seq,jdbcType=BIGINT},
+      view_id = #{viewId,jdbcType=BIGINT},
+      parent_obj_type = #{parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{parentObjId,jdbcType=BIGINT},
+      cond_type = #{condType,jdbcType=VARCHAR},
+      cond_value = #{condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{parentDetailId,jdbcType=BIGINT},
+      output_type = #{outputType,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      app_type = #{appType,jdbcType=VARCHAR},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      table_id = #{tableId,jdbcType=BIGINT},
+      dim_index_id = #{dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      column_length = #{columnLength,jdbcType=INTEGER},
+      column_accuracy = #{columnAccuracy,jdbcType=INTEGER},
+      threshold = #{threshold,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=BIGINT},
+      sort_order = #{sortOrder,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      unique_key = #{uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{modState,jdbcType=VARCHAR},
+      pro_index_id = #{proIndexId,jdbcType=BIGINT},
+      modes = #{modes,jdbcType=VARCHAR},
+      rela_type = #{relaType,jdbcType=VARCHAR},
+      column_expression = #{columnExpression,jdbcType=LONGVARCHAR}
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.DataSetColumn">
+    update app_sql_column
+    set column_id = #{columnId,jdbcType=BIGINT},
+      app_id = #{appId,jdbcType=BIGINT},
+      node_id = #{nodeId,jdbcType=BIGINT},
+      alias = #{alias,jdbcType=VARCHAR},
+      func = #{func,jdbcType=VARCHAR},
+      seq = #{seq,jdbcType=BIGINT},
+      view_id = #{viewId,jdbcType=BIGINT},
+      parent_obj_type = #{parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{parentObjId,jdbcType=BIGINT},
+      cond_type = #{condType,jdbcType=VARCHAR},
+      cond_value = #{condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{parentDetailId,jdbcType=BIGINT},
+      output_type = #{outputType,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      app_type = #{appType,jdbcType=VARCHAR},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      table_id = #{tableId,jdbcType=BIGINT},
+      dim_index_id = #{dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      column_length = #{columnLength,jdbcType=INTEGER},
+      column_accuracy = #{columnAccuracy,jdbcType=INTEGER},
+      threshold = #{threshold,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=BIGINT},
+      sort_order = #{sortOrder,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      unique_key = #{uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{modState,jdbcType=VARCHAR},
+      pro_index_id = #{proIndexId,jdbcType=BIGINT},
+      modes = #{modes,jdbcType=VARCHAR},
+      rela_type = #{relaType,jdbcType=VARCHAR}
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.DataSetColumn">
+    <id column="app_detail_id" jdbcType="BIGINT" property="appDetailId" />
+    <result column="column_id" jdbcType="BIGINT" property="columnId" />
+    <result column="app_id" jdbcType="BIGINT" property="appId" />
+    <result column="node_id" jdbcType="BIGINT" property="nodeId" />
+    <result column="alias" jdbcType="VARCHAR" property="alias" />
+    <result column="func" jdbcType="VARCHAR" property="func" />
+    <result column="seq" jdbcType="BIGINT" property="seq" />
+    <result column="view_id" jdbcType="BIGINT" property="viewId" />
+    <result column="parent_obj_type" jdbcType="VARCHAR" property="parentObjType" />
+    <result column="parent_obj_id" jdbcType="BIGINT" property="parentObjId" />
+    <result column="cond_type" jdbcType="VARCHAR" property="condType" />
+    <result column="cond_value" jdbcType="VARCHAR" property="condValue" />
+    <result column="parent_detail_id" jdbcType="BIGINT" property="parentDetailId" />
+    <result column="output_type" jdbcType="VARCHAR" property="outputType" />
+    <result column="column_name" jdbcType="VARCHAR" property="columnName" />
+    <result column="app_type" jdbcType="VARCHAR" property="appType" />
+    <result column="column_code" jdbcType="VARCHAR" property="columnCode" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="table_id" jdbcType="BIGINT" property="tableId" />
+    <result column="dim_index_id" jdbcType="BIGINT" property="dimIndexId" />
+    <result column="injection_label_id" jdbcType="BIGINT" property="injectionLabelId" />
+    <result column="datasource_id" jdbcType="BIGINT" property="datasourceId" />
+    <result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    <result column="column_length" jdbcType="INTEGER" property="columnLength" />
+    <result column="column_accuracy" jdbcType="INTEGER" property="columnAccuracy" />
+    <result column="threshold" jdbcType="INTEGER" property="threshold" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
+    <result column="sort_order" jdbcType="VARCHAR" property="sortOrder" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="unique_key" jdbcType="VARCHAR" property="uniqueKey" />
+    <result column="mod_state" jdbcType="VARCHAR" property="modState" />
+    <result column="pro_index_id" jdbcType="BIGINT" property="proIndexId" />
+    <result column="modes" jdbcType="VARCHAR" property="modes" />
+    <result column="rela_type" jdbcType="VARCHAR" property="relaType" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="display" jdbcType="VARCHAR" property="display" />
+    <result column="auto_level_group" jdbcType="VARCHAR" property="autoLevelGroup" />
+    <result column="dimension_type" jdbcType="VARCHAR" property="dimensionType" />
+    <result column="term_code" jdbcType="VARCHAR" property="termCode" />
+    <result column="mode" jdbcType="VARCHAR" property="mode" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.model.DataSetColumn">
+    <result column="column_expression" jdbcType="LONGVARCHAR" property="columnExpression" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    app_detail_id, column_id, app_id, node_id, alias, func, seq, view_id, parent_obj_type, 
+    parent_obj_id, cond_type, cond_value, parent_detail_id, output_type, column_name, 
+    app_type, column_code, table_code, table_id, dim_index_id, injection_label_id, datasource_id, 
+    column_type, column_length, column_accuracy, threshold, object_id, sort_order, state, 
+    path, unique_key, mod_state, pro_index_id, modes, rela_type, group_id, display, auto_level_group, 
+    dimension_type, term_code, mode
+  </sql>
+  <sql id="Blob_Column_List">
+    column_expression
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.zmz.model.DataSetColumnExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.zmz.model.DataSetColumnExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_sql_column
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from app_sql_column
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.DataSetColumnExample">
+    delete from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.DataSetColumn">
+    insert into app_sql_column (app_detail_id, column_id, app_id, 
+      node_id, alias, func, 
+      seq, view_id, parent_obj_type, 
+      parent_obj_id, cond_type, cond_value, 
+      parent_detail_id, output_type, column_name, 
+      app_type, column_code, table_code, 
+      table_id, dim_index_id, injection_label_id, 
+      datasource_id, column_type, column_length, 
+      column_accuracy, threshold, object_id, 
+      sort_order, state, path, 
+      unique_key, mod_state, pro_index_id, 
+      modes, rela_type, group_id, 
+      display, auto_level_group, dimension_type, 
+      term_code, mode, column_expression
+      )
+    values (#{appDetailId,jdbcType=BIGINT}, #{columnId,jdbcType=BIGINT}, #{appId,jdbcType=BIGINT}, 
+      #{nodeId,jdbcType=BIGINT}, #{alias,jdbcType=VARCHAR}, #{func,jdbcType=VARCHAR}, 
+      #{seq,jdbcType=BIGINT}, #{viewId,jdbcType=BIGINT}, #{parentObjType,jdbcType=VARCHAR}, 
+      #{parentObjId,jdbcType=BIGINT}, #{condType,jdbcType=VARCHAR}, #{condValue,jdbcType=VARCHAR}, 
+      #{parentDetailId,jdbcType=BIGINT}, #{outputType,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}, 
+      #{appType,jdbcType=VARCHAR}, #{columnCode,jdbcType=VARCHAR}, #{tableCode,jdbcType=VARCHAR}, 
+      #{tableId,jdbcType=BIGINT}, #{dimIndexId,jdbcType=BIGINT}, #{injectionLabelId,jdbcType=BIGINT}, 
+      #{datasourceId,jdbcType=BIGINT}, #{columnType,jdbcType=VARCHAR}, #{columnLength,jdbcType=INTEGER}, 
+      #{columnAccuracy,jdbcType=INTEGER}, #{threshold,jdbcType=INTEGER}, #{objectId,jdbcType=BIGINT}, 
+      #{sortOrder,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
+      #{uniqueKey,jdbcType=VARCHAR}, #{modState,jdbcType=VARCHAR}, #{proIndexId,jdbcType=BIGINT}, 
+      #{modes,jdbcType=VARCHAR}, #{relaType,jdbcType=VARCHAR}, #{groupId,jdbcType=BIGINT}, 
+      #{display,jdbcType=VARCHAR}, #{autoLevelGroup,jdbcType=VARCHAR}, #{dimensionType,jdbcType=VARCHAR}, 
+      #{termCode,jdbcType=VARCHAR}, #{mode,jdbcType=VARCHAR}, #{columnExpression,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.DataSetColumn">
+    insert into app_sql_column
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="appDetailId != null">
+        app_detail_id,
+      </if>
+      <if test="columnId != null">
+        column_id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="nodeId != null">
+        node_id,
+      </if>
+      <if test="alias != null">
+        alias,
+      </if>
+      <if test="func != null">
+        func,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+      <if test="viewId != null">
+        view_id,
+      </if>
+      <if test="parentObjType != null">
+        parent_obj_type,
+      </if>
+      <if test="parentObjId != null">
+        parent_obj_id,
+      </if>
+      <if test="condType != null">
+        cond_type,
+      </if>
+      <if test="condValue != null">
+        cond_value,
+      </if>
+      <if test="parentDetailId != null">
+        parent_detail_id,
+      </if>
+      <if test="outputType != null">
+        output_type,
+      </if>
+      <if test="columnName != null">
+        column_name,
+      </if>
+      <if test="appType != null">
+        app_type,
+      </if>
+      <if test="columnCode != null">
+        column_code,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="tableId != null">
+        table_id,
+      </if>
+      <if test="dimIndexId != null">
+        dim_index_id,
+      </if>
+      <if test="injectionLabelId != null">
+        injection_label_id,
+      </if>
+      <if test="datasourceId != null">
+        datasource_id,
+      </if>
+      <if test="columnType != null">
+        column_type,
+      </if>
+      <if test="columnLength != null">
+        column_length,
+      </if>
+      <if test="columnAccuracy != null">
+        column_accuracy,
+      </if>
+      <if test="threshold != null">
+        threshold,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="sortOrder != null">
+        sort_order,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="uniqueKey != null">
+        unique_key,
+      </if>
+      <if test="modState != null">
+        mod_state,
+      </if>
+      <if test="proIndexId != null">
+        pro_index_id,
+      </if>
+      <if test="modes != null">
+        modes,
+      </if>
+      <if test="relaType != null">
+        rela_type,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="display != null">
+        display,
+      </if>
+      <if test="autoLevelGroup != null">
+        auto_level_group,
+      </if>
+      <if test="dimensionType != null">
+        dimension_type,
+      </if>
+      <if test="termCode != null">
+        term_code,
+      </if>
+      <if test="mode != null">
+        mode,
+      </if>
+      <if test="columnExpression != null">
+        column_expression,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="appDetailId != null">
+        #{appDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=BIGINT},
+      </if>
+      <if test="nodeId != null">
+        #{nodeId,jdbcType=BIGINT},
+      </if>
+      <if test="alias != null">
+        #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="func != null">
+        #{func,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=BIGINT},
+      </if>
+      <if test="viewId != null">
+        #{viewId,jdbcType=BIGINT},
+      </if>
+      <if test="parentObjType != null">
+        #{parentObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentObjId != null">
+        #{parentObjId,jdbcType=BIGINT},
+      </if>
+      <if test="condType != null">
+        #{condType,jdbcType=VARCHAR},
+      </if>
+      <if test="condValue != null">
+        #{condValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parentDetailId != null">
+        #{parentDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="outputType != null">
+        #{outputType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        #{appType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnCode != null">
+        #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableId != null">
+        #{tableId,jdbcType=BIGINT},
+      </if>
+      <if test="dimIndexId != null">
+        #{dimIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="injectionLabelId != null">
+        #{injectionLabelId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="columnType != null">
+        #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnLength != null">
+        #{columnLength,jdbcType=INTEGER},
+      </if>
+      <if test="columnAccuracy != null">
+        #{columnAccuracy,jdbcType=INTEGER},
+      </if>
+      <if test="threshold != null">
+        #{threshold,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="sortOrder != null">
+        #{sortOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="uniqueKey != null">
+        #{uniqueKey,jdbcType=VARCHAR},
+      </if>
+      <if test="modState != null">
+        #{modState,jdbcType=VARCHAR},
+      </if>
+      <if test="proIndexId != null">
+        #{proIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="modes != null">
+        #{modes,jdbcType=VARCHAR},
+      </if>
+      <if test="relaType != null">
+        #{relaType,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="display != null">
+        #{display,jdbcType=VARCHAR},
+      </if>
+      <if test="autoLevelGroup != null">
+        #{autoLevelGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensionType != null">
+        #{dimensionType,jdbcType=VARCHAR},
+      </if>
+      <if test="termCode != null">
+        #{termCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null">
+        #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnExpression != null">
+        #{columnExpression,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.DataSetColumnExample" resultType="java.lang.Long">
+    select count(*) from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update app_sql_column
+    <set>
+      <if test="row.appDetailId != null">
+        app_detail_id = #{row.appDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnId != null">
+        column_id = #{row.columnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.appId != null">
+        app_id = #{row.appId,jdbcType=BIGINT},
+      </if>
+      <if test="row.nodeId != null">
+        node_id = #{row.nodeId,jdbcType=BIGINT},
+      </if>
+      <if test="row.alias != null">
+        alias = #{row.alias,jdbcType=VARCHAR},
+      </if>
+      <if test="row.func != null">
+        func = #{row.func,jdbcType=VARCHAR},
+      </if>
+      <if test="row.seq != null">
+        seq = #{row.seq,jdbcType=BIGINT},
+      </if>
+      <if test="row.viewId != null">
+        view_id = #{row.viewId,jdbcType=BIGINT},
+      </if>
+      <if test="row.parentObjType != null">
+        parent_obj_type = #{row.parentObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.parentObjId != null">
+        parent_obj_id = #{row.parentObjId,jdbcType=BIGINT},
+      </if>
+      <if test="row.condType != null">
+        cond_type = #{row.condType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.condValue != null">
+        cond_value = #{row.condValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.parentDetailId != null">
+        parent_detail_id = #{row.parentDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="row.outputType != null">
+        output_type = #{row.outputType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnName != null">
+        column_name = #{row.columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.appType != null">
+        app_type = #{row.appType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnCode != null">
+        column_code = #{row.columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableCode != null">
+        table_code = #{row.tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableId != null">
+        table_id = #{row.tableId,jdbcType=BIGINT},
+      </if>
+      <if test="row.dimIndexId != null">
+        dim_index_id = #{row.dimIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="row.injectionLabelId != null">
+        injection_label_id = #{row.injectionLabelId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceId != null">
+        datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnType != null">
+        column_type = #{row.columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnLength != null">
+        column_length = #{row.columnLength,jdbcType=INTEGER},
+      </if>
+      <if test="row.columnAccuracy != null">
+        column_accuracy = #{row.columnAccuracy,jdbcType=INTEGER},
+      </if>
+      <if test="row.threshold != null">
+        threshold = #{row.threshold,jdbcType=INTEGER},
+      </if>
+      <if test="row.objectId != null">
+        object_id = #{row.objectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.sortOrder != null">
+        sort_order = #{row.sortOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=VARCHAR},
+      </if>
+      <if test="row.path != null">
+        path = #{row.path,jdbcType=VARCHAR},
+      </if>
+      <if test="row.uniqueKey != null">
+        unique_key = #{row.uniqueKey,jdbcType=VARCHAR},
+      </if>
+      <if test="row.modState != null">
+        mod_state = #{row.modState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.proIndexId != null">
+        pro_index_id = #{row.proIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="row.modes != null">
+        modes = #{row.modes,jdbcType=VARCHAR},
+      </if>
+      <if test="row.relaType != null">
+        rela_type = #{row.relaType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.groupId != null">
+        group_id = #{row.groupId,jdbcType=BIGINT},
+      </if>
+      <if test="row.display != null">
+        display = #{row.display,jdbcType=VARCHAR},
+      </if>
+      <if test="row.autoLevelGroup != null">
+        auto_level_group = #{row.autoLevelGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="row.dimensionType != null">
+        dimension_type = #{row.dimensionType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.termCode != null">
+        term_code = #{row.termCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.mode != null">
+        mode = #{row.mode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnExpression != null">
+        column_expression = #{row.columnExpression,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update app_sql_column
+    set app_detail_id = #{row.appDetailId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      app_id = #{row.appId,jdbcType=BIGINT},
+      node_id = #{row.nodeId,jdbcType=BIGINT},
+      alias = #{row.alias,jdbcType=VARCHAR},
+      func = #{row.func,jdbcType=VARCHAR},
+      seq = #{row.seq,jdbcType=BIGINT},
+      view_id = #{row.viewId,jdbcType=BIGINT},
+      parent_obj_type = #{row.parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{row.parentObjId,jdbcType=BIGINT},
+      cond_type = #{row.condType,jdbcType=VARCHAR},
+      cond_value = #{row.condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{row.parentDetailId,jdbcType=BIGINT},
+      output_type = #{row.outputType,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      app_type = #{row.appType,jdbcType=VARCHAR},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      table_id = #{row.tableId,jdbcType=BIGINT},
+      dim_index_id = #{row.dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{row.injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      column_length = #{row.columnLength,jdbcType=INTEGER},
+      column_accuracy = #{row.columnAccuracy,jdbcType=INTEGER},
+      threshold = #{row.threshold,jdbcType=INTEGER},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      sort_order = #{row.sortOrder,jdbcType=VARCHAR},
+      state = #{row.state,jdbcType=VARCHAR},
+      path = #{row.path,jdbcType=VARCHAR},
+      unique_key = #{row.uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{row.modState,jdbcType=VARCHAR},
+      pro_index_id = #{row.proIndexId,jdbcType=BIGINT},
+      modes = #{row.modes,jdbcType=VARCHAR},
+      rela_type = #{row.relaType,jdbcType=VARCHAR},
+      group_id = #{row.groupId,jdbcType=BIGINT},
+      display = #{row.display,jdbcType=VARCHAR},
+      auto_level_group = #{row.autoLevelGroup,jdbcType=VARCHAR},
+      dimension_type = #{row.dimensionType,jdbcType=VARCHAR},
+      term_code = #{row.termCode,jdbcType=VARCHAR},
+      mode = #{row.mode,jdbcType=VARCHAR},
+      column_expression = #{row.columnExpression,jdbcType=LONGVARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update app_sql_column
+    set app_detail_id = #{row.appDetailId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      app_id = #{row.appId,jdbcType=BIGINT},
+      node_id = #{row.nodeId,jdbcType=BIGINT},
+      alias = #{row.alias,jdbcType=VARCHAR},
+      func = #{row.func,jdbcType=VARCHAR},
+      seq = #{row.seq,jdbcType=BIGINT},
+      view_id = #{row.viewId,jdbcType=BIGINT},
+      parent_obj_type = #{row.parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{row.parentObjId,jdbcType=BIGINT},
+      cond_type = #{row.condType,jdbcType=VARCHAR},
+      cond_value = #{row.condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{row.parentDetailId,jdbcType=BIGINT},
+      output_type = #{row.outputType,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      app_type = #{row.appType,jdbcType=VARCHAR},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      table_id = #{row.tableId,jdbcType=BIGINT},
+      dim_index_id = #{row.dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{row.injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      column_length = #{row.columnLength,jdbcType=INTEGER},
+      column_accuracy = #{row.columnAccuracy,jdbcType=INTEGER},
+      threshold = #{row.threshold,jdbcType=INTEGER},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      sort_order = #{row.sortOrder,jdbcType=VARCHAR},
+      state = #{row.state,jdbcType=VARCHAR},
+      path = #{row.path,jdbcType=VARCHAR},
+      unique_key = #{row.uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{row.modState,jdbcType=VARCHAR},
+      pro_index_id = #{row.proIndexId,jdbcType=BIGINT},
+      modes = #{row.modes,jdbcType=VARCHAR},
+      rela_type = #{row.relaType,jdbcType=VARCHAR},
+      group_id = #{row.groupId,jdbcType=BIGINT},
+      display = #{row.display,jdbcType=VARCHAR},
+      auto_level_group = #{row.autoLevelGroup,jdbcType=VARCHAR},
+      dimension_type = #{row.dimensionType,jdbcType=VARCHAR},
+      term_code = #{row.termCode,jdbcType=VARCHAR},
+      mode = #{row.mode,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.DataSetColumn">
+    update app_sql_column
+    <set>
+      <if test="columnId != null">
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=BIGINT},
+      </if>
+      <if test="nodeId != null">
+        node_id = #{nodeId,jdbcType=BIGINT},
+      </if>
+      <if test="alias != null">
+        alias = #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="func != null">
+        func = #{func,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=BIGINT},
+      </if>
+      <if test="viewId != null">
+        view_id = #{viewId,jdbcType=BIGINT},
+      </if>
+      <if test="parentObjType != null">
+        parent_obj_type = #{parentObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentObjId != null">
+        parent_obj_id = #{parentObjId,jdbcType=BIGINT},
+      </if>
+      <if test="condType != null">
+        cond_type = #{condType,jdbcType=VARCHAR},
+      </if>
+      <if test="condValue != null">
+        cond_value = #{condValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parentDetailId != null">
+        parent_detail_id = #{parentDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="outputType != null">
+        output_type = #{outputType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        app_type = #{appType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnCode != null">
+        column_code = #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableId != null">
+        table_id = #{tableId,jdbcType=BIGINT},
+      </if>
+      <if test="dimIndexId != null">
+        dim_index_id = #{dimIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="injectionLabelId != null">
+        injection_label_id = #{injectionLabelId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        datasource_id = #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="columnType != null">
+        column_type = #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnLength != null">
+        column_length = #{columnLength,jdbcType=INTEGER},
+      </if>
+      <if test="columnAccuracy != null">
+        column_accuracy = #{columnAccuracy,jdbcType=INTEGER},
+      </if>
+      <if test="threshold != null">
+        threshold = #{threshold,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="sortOrder != null">
+        sort_order = #{sortOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="uniqueKey != null">
+        unique_key = #{uniqueKey,jdbcType=VARCHAR},
+      </if>
+      <if test="modState != null">
+        mod_state = #{modState,jdbcType=VARCHAR},
+      </if>
+      <if test="proIndexId != null">
+        pro_index_id = #{proIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="modes != null">
+        modes = #{modes,jdbcType=VARCHAR},
+      </if>
+      <if test="relaType != null">
+        rela_type = #{relaType,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="display != null">
+        display = #{display,jdbcType=VARCHAR},
+      </if>
+      <if test="autoLevelGroup != null">
+        auto_level_group = #{autoLevelGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensionType != null">
+        dimension_type = #{dimensionType,jdbcType=VARCHAR},
+      </if>
+      <if test="termCode != null">
+        term_code = #{termCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null">
+        mode = #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="columnExpression != null">
+        column_expression = #{columnExpression,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.zmz.model.DataSetColumn">
+    update app_sql_column
+    set column_id = #{columnId,jdbcType=BIGINT},
+      app_id = #{appId,jdbcType=BIGINT},
+      node_id = #{nodeId,jdbcType=BIGINT},
+      alias = #{alias,jdbcType=VARCHAR},
+      func = #{func,jdbcType=VARCHAR},
+      seq = #{seq,jdbcType=BIGINT},
+      view_id = #{viewId,jdbcType=BIGINT},
+      parent_obj_type = #{parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{parentObjId,jdbcType=BIGINT},
+      cond_type = #{condType,jdbcType=VARCHAR},
+      cond_value = #{condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{parentDetailId,jdbcType=BIGINT},
+      output_type = #{outputType,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      app_type = #{appType,jdbcType=VARCHAR},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      table_id = #{tableId,jdbcType=BIGINT},
+      dim_index_id = #{dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      column_length = #{columnLength,jdbcType=INTEGER},
+      column_accuracy = #{columnAccuracy,jdbcType=INTEGER},
+      threshold = #{threshold,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=BIGINT},
+      sort_order = #{sortOrder,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      unique_key = #{uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{modState,jdbcType=VARCHAR},
+      pro_index_id = #{proIndexId,jdbcType=BIGINT},
+      modes = #{modes,jdbcType=VARCHAR},
+      rela_type = #{relaType,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=BIGINT},
+      display = #{display,jdbcType=VARCHAR},
+      auto_level_group = #{autoLevelGroup,jdbcType=VARCHAR},
+      dimension_type = #{dimensionType,jdbcType=VARCHAR},
+      term_code = #{termCode,jdbcType=VARCHAR},
+      mode = #{mode,jdbcType=VARCHAR},
+      column_expression = #{columnExpression,jdbcType=LONGVARCHAR}
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.DataSetColumn">
+    update app_sql_column
+    set column_id = #{columnId,jdbcType=BIGINT},
+      app_id = #{appId,jdbcType=BIGINT},
+      node_id = #{nodeId,jdbcType=BIGINT},
+      alias = #{alias,jdbcType=VARCHAR},
+      func = #{func,jdbcType=VARCHAR},
+      seq = #{seq,jdbcType=BIGINT},
+      view_id = #{viewId,jdbcType=BIGINT},
+      parent_obj_type = #{parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{parentObjId,jdbcType=BIGINT},
+      cond_type = #{condType,jdbcType=VARCHAR},
+      cond_value = #{condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{parentDetailId,jdbcType=BIGINT},
+      output_type = #{outputType,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      app_type = #{appType,jdbcType=VARCHAR},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      table_id = #{tableId,jdbcType=BIGINT},
+      dim_index_id = #{dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      column_length = #{columnLength,jdbcType=INTEGER},
+      column_accuracy = #{columnAccuracy,jdbcType=INTEGER},
+      threshold = #{threshold,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=BIGINT},
+      sort_order = #{sortOrder,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      unique_key = #{uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{modState,jdbcType=VARCHAR},
+      pro_index_id = #{proIndexId,jdbcType=BIGINT},
+      modes = #{modes,jdbcType=VARCHAR},
+      rela_type = #{relaType,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=BIGINT},
+      display = #{display,jdbcType=VARCHAR},
+      auto_level_group = #{autoLevelGroup,jdbcType=VARCHAR},
+      dimension_type = #{dimensionType,jdbcType=VARCHAR},
+      term_code = #{termCode,jdbcType=VARCHAR},
+      mode = #{mode,jdbcType=VARCHAR}
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="org.zmz.model.DataSetColumn">
+    <id column="app_detail_id" jdbcType="BIGINT" property="appDetailId" />
+    <result column="column_id" jdbcType="BIGINT" property="columnId" />
+    <result column="app_id" jdbcType="BIGINT" property="appId" />
+    <result column="node_id" jdbcType="BIGINT" property="nodeId" />
+    <result column="alias" jdbcType="VARCHAR" property="alias" />
+    <result column="func" jdbcType="VARCHAR" property="func" />
+    <result column="seq" jdbcType="BIGINT" property="seq" />
+    <result column="view_id" jdbcType="BIGINT" property="viewId" />
+    <result column="parent_obj_type" jdbcType="VARCHAR" property="parentObjType" />
+    <result column="parent_obj_id" jdbcType="BIGINT" property="parentObjId" />
+    <result column="cond_type" jdbcType="VARCHAR" property="condType" />
+    <result column="cond_value" jdbcType="VARCHAR" property="condValue" />
+    <result column="parent_detail_id" jdbcType="BIGINT" property="parentDetailId" />
+    <result column="output_type" jdbcType="VARCHAR" property="outputType" />
+    <result column="column_name" jdbcType="VARCHAR" property="columnName" />
+    <result column="app_type" jdbcType="VARCHAR" property="appType" />
+    <result column="column_code" jdbcType="VARCHAR" property="columnCode" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="table_id" jdbcType="BIGINT" property="tableId" />
+    <result column="dim_index_id" jdbcType="BIGINT" property="dimIndexId" />
+    <result column="injection_label_id" jdbcType="BIGINT" property="injectionLabelId" />
+    <result column="datasource_id" jdbcType="BIGINT" property="datasourceId" />
+    <result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    <result column="column_length" jdbcType="INTEGER" property="columnLength" />
+    <result column="column_accuracy" jdbcType="INTEGER" property="columnAccuracy" />
+    <result column="threshold" jdbcType="INTEGER" property="threshold" />
+    <result column="object_id" jdbcType="BIGINT" property="objectId" />
+    <result column="sort_order" jdbcType="VARCHAR" property="sortOrder" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="unique_key" jdbcType="VARCHAR" property="uniqueKey" />
+    <result column="mod_state" jdbcType="VARCHAR" property="modState" />
+    <result column="pro_index_id" jdbcType="BIGINT" property="proIndexId" />
+    <result column="modes" jdbcType="VARCHAR" property="modes" />
+    <result column="rela_type" jdbcType="VARCHAR" property="relaType" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.model.DataSetColumn">
+    <result column="column_expression" jdbcType="LONGVARCHAR" property="columnExpression" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    app_detail_id, column_id, app_id, node_id, alias, func, seq, view_id, parent_obj_type, 
+    parent_obj_id, cond_type, cond_value, parent_detail_id, output_type, column_name, 
+    app_type, column_code, table_code, table_id, dim_index_id, injection_label_id, datasource_id, 
+    column_type, column_length, column_accuracy, threshold, object_id, sort_order, state, 
+    path, unique_key, mod_state, pro_index_id, modes, rela_type
+  </sql>
+  <sql id="Blob_Column_List">
+    column_expression
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="org.zmz.model.DataSetColumnExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="org.zmz.model.DataSetColumnExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_sql_column
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from app_sql_column
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.zmz.model.DataSetColumnExample">
+    delete from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.zmz.model.DataSetColumn">
+    insert into app_sql_column (app_detail_id, column_id, app_id, 
+      node_id, alias, func, 
+      seq, view_id, parent_obj_type, 
+      parent_obj_id, cond_type, cond_value, 
+      parent_detail_id, output_type, column_name, 
+      app_type, column_code, table_code, 
+      table_id, dim_index_id, injection_label_id, 
+      datasource_id, column_type, column_length, 
+      column_accuracy, threshold, object_id, 
+      sort_order, state, path, 
+      unique_key, mod_state, pro_index_id, 
+      modes, rela_type, column_expression
+      )
+    values (#{appDetailId,jdbcType=BIGINT}, #{columnId,jdbcType=BIGINT}, #{appId,jdbcType=BIGINT}, 
+      #{nodeId,jdbcType=BIGINT}, #{alias,jdbcType=VARCHAR}, #{func,jdbcType=VARCHAR}, 
+      #{seq,jdbcType=BIGINT}, #{viewId,jdbcType=BIGINT}, #{parentObjType,jdbcType=VARCHAR}, 
+      #{parentObjId,jdbcType=BIGINT}, #{condType,jdbcType=VARCHAR}, #{condValue,jdbcType=VARCHAR}, 
+      #{parentDetailId,jdbcType=BIGINT}, #{outputType,jdbcType=VARCHAR}, #{columnName,jdbcType=VARCHAR}, 
+      #{appType,jdbcType=VARCHAR}, #{columnCode,jdbcType=VARCHAR}, #{tableCode,jdbcType=VARCHAR}, 
+      #{tableId,jdbcType=BIGINT}, #{dimIndexId,jdbcType=BIGINT}, #{injectionLabelId,jdbcType=BIGINT}, 
+      #{datasourceId,jdbcType=BIGINT}, #{columnType,jdbcType=VARCHAR}, #{columnLength,jdbcType=INTEGER}, 
+      #{columnAccuracy,jdbcType=INTEGER}, #{threshold,jdbcType=INTEGER}, #{objectId,jdbcType=BIGINT}, 
+      #{sortOrder,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
+      #{uniqueKey,jdbcType=VARCHAR}, #{modState,jdbcType=VARCHAR}, #{proIndexId,jdbcType=BIGINT}, 
+      #{modes,jdbcType=VARCHAR}, #{relaType,jdbcType=VARCHAR}, #{columnExpression,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.zmz.model.DataSetColumn">
+    insert into app_sql_column
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="appDetailId != null">
+        app_detail_id,
+      </if>
+      <if test="columnId != null">
+        column_id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="nodeId != null">
+        node_id,
+      </if>
+      <if test="alias != null">
+        alias,
+      </if>
+      <if test="func != null">
+        func,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+      <if test="viewId != null">
+        view_id,
+      </if>
+      <if test="parentObjType != null">
+        parent_obj_type,
+      </if>
+      <if test="parentObjId != null">
+        parent_obj_id,
+      </if>
+      <if test="condType != null">
+        cond_type,
+      </if>
+      <if test="condValue != null">
+        cond_value,
+      </if>
+      <if test="parentDetailId != null">
+        parent_detail_id,
+      </if>
+      <if test="outputType != null">
+        output_type,
+      </if>
+      <if test="columnName != null">
+        column_name,
+      </if>
+      <if test="appType != null">
+        app_type,
+      </if>
+      <if test="columnCode != null">
+        column_code,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="tableId != null">
+        table_id,
+      </if>
+      <if test="dimIndexId != null">
+        dim_index_id,
+      </if>
+      <if test="injectionLabelId != null">
+        injection_label_id,
+      </if>
+      <if test="datasourceId != null">
+        datasource_id,
+      </if>
+      <if test="columnType != null">
+        column_type,
+      </if>
+      <if test="columnLength != null">
+        column_length,
+      </if>
+      <if test="columnAccuracy != null">
+        column_accuracy,
+      </if>
+      <if test="threshold != null">
+        threshold,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="sortOrder != null">
+        sort_order,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="uniqueKey != null">
+        unique_key,
+      </if>
+      <if test="modState != null">
+        mod_state,
+      </if>
+      <if test="proIndexId != null">
+        pro_index_id,
+      </if>
+      <if test="modes != null">
+        modes,
+      </if>
+      <if test="relaType != null">
+        rela_type,
+      </if>
+      <if test="columnExpression != null">
+        column_expression,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="appDetailId != null">
+        #{appDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="columnId != null">
+        #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=BIGINT},
+      </if>
+      <if test="nodeId != null">
+        #{nodeId,jdbcType=BIGINT},
+      </if>
+      <if test="alias != null">
+        #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="func != null">
+        #{func,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=BIGINT},
+      </if>
+      <if test="viewId != null">
+        #{viewId,jdbcType=BIGINT},
+      </if>
+      <if test="parentObjType != null">
+        #{parentObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentObjId != null">
+        #{parentObjId,jdbcType=BIGINT},
+      </if>
+      <if test="condType != null">
+        #{condType,jdbcType=VARCHAR},
+      </if>
+      <if test="condValue != null">
+        #{condValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parentDetailId != null">
+        #{parentDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="outputType != null">
+        #{outputType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        #{appType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnCode != null">
+        #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableId != null">
+        #{tableId,jdbcType=BIGINT},
+      </if>
+      <if test="dimIndexId != null">
+        #{dimIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="injectionLabelId != null">
+        #{injectionLabelId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="columnType != null">
+        #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnLength != null">
+        #{columnLength,jdbcType=INTEGER},
+      </if>
+      <if test="columnAccuracy != null">
+        #{columnAccuracy,jdbcType=INTEGER},
+      </if>
+      <if test="threshold != null">
+        #{threshold,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="sortOrder != null">
+        #{sortOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="uniqueKey != null">
+        #{uniqueKey,jdbcType=VARCHAR},
+      </if>
+      <if test="modState != null">
+        #{modState,jdbcType=VARCHAR},
+      </if>
+      <if test="proIndexId != null">
+        #{proIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="modes != null">
+        #{modes,jdbcType=VARCHAR},
+      </if>
+      <if test="relaType != null">
+        #{relaType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnExpression != null">
+        #{columnExpression,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.zmz.model.DataSetColumnExample" resultType="java.lang.Long">
+    select count(*) from app_sql_column
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update app_sql_column
+    <set>
+      <if test="row.appDetailId != null">
+        app_detail_id = #{row.appDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnId != null">
+        column_id = #{row.columnId,jdbcType=BIGINT},
+      </if>
+      <if test="row.appId != null">
+        app_id = #{row.appId,jdbcType=BIGINT},
+      </if>
+      <if test="row.nodeId != null">
+        node_id = #{row.nodeId,jdbcType=BIGINT},
+      </if>
+      <if test="row.alias != null">
+        alias = #{row.alias,jdbcType=VARCHAR},
+      </if>
+      <if test="row.func != null">
+        func = #{row.func,jdbcType=VARCHAR},
+      </if>
+      <if test="row.seq != null">
+        seq = #{row.seq,jdbcType=BIGINT},
+      </if>
+      <if test="row.viewId != null">
+        view_id = #{row.viewId,jdbcType=BIGINT},
+      </if>
+      <if test="row.parentObjType != null">
+        parent_obj_type = #{row.parentObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.parentObjId != null">
+        parent_obj_id = #{row.parentObjId,jdbcType=BIGINT},
+      </if>
+      <if test="row.condType != null">
+        cond_type = #{row.condType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.condValue != null">
+        cond_value = #{row.condValue,jdbcType=VARCHAR},
+      </if>
+      <if test="row.parentDetailId != null">
+        parent_detail_id = #{row.parentDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="row.outputType != null">
+        output_type = #{row.outputType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnName != null">
+        column_name = #{row.columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="row.appType != null">
+        app_type = #{row.appType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnCode != null">
+        column_code = #{row.columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableCode != null">
+        table_code = #{row.tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="row.tableId != null">
+        table_id = #{row.tableId,jdbcType=BIGINT},
+      </if>
+      <if test="row.dimIndexId != null">
+        dim_index_id = #{row.dimIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="row.injectionLabelId != null">
+        injection_label_id = #{row.injectionLabelId,jdbcType=BIGINT},
+      </if>
+      <if test="row.datasourceId != null">
+        datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="row.columnType != null">
+        column_type = #{row.columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnLength != null">
+        column_length = #{row.columnLength,jdbcType=INTEGER},
+      </if>
+      <if test="row.columnAccuracy != null">
+        column_accuracy = #{row.columnAccuracy,jdbcType=INTEGER},
+      </if>
+      <if test="row.threshold != null">
+        threshold = #{row.threshold,jdbcType=INTEGER},
+      </if>
+      <if test="row.objectId != null">
+        object_id = #{row.objectId,jdbcType=BIGINT},
+      </if>
+      <if test="row.sortOrder != null">
+        sort_order = #{row.sortOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="row.state != null">
+        state = #{row.state,jdbcType=VARCHAR},
+      </if>
+      <if test="row.path != null">
+        path = #{row.path,jdbcType=VARCHAR},
+      </if>
+      <if test="row.uniqueKey != null">
+        unique_key = #{row.uniqueKey,jdbcType=VARCHAR},
+      </if>
+      <if test="row.modState != null">
+        mod_state = #{row.modState,jdbcType=VARCHAR},
+      </if>
+      <if test="row.proIndexId != null">
+        pro_index_id = #{row.proIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="row.modes != null">
+        modes = #{row.modes,jdbcType=VARCHAR},
+      </if>
+      <if test="row.relaType != null">
+        rela_type = #{row.relaType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.columnExpression != null">
+        column_expression = #{row.columnExpression,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update app_sql_column
+    set app_detail_id = #{row.appDetailId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      app_id = #{row.appId,jdbcType=BIGINT},
+      node_id = #{row.nodeId,jdbcType=BIGINT},
+      alias = #{row.alias,jdbcType=VARCHAR},
+      func = #{row.func,jdbcType=VARCHAR},
+      seq = #{row.seq,jdbcType=BIGINT},
+      view_id = #{row.viewId,jdbcType=BIGINT},
+      parent_obj_type = #{row.parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{row.parentObjId,jdbcType=BIGINT},
+      cond_type = #{row.condType,jdbcType=VARCHAR},
+      cond_value = #{row.condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{row.parentDetailId,jdbcType=BIGINT},
+      output_type = #{row.outputType,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      app_type = #{row.appType,jdbcType=VARCHAR},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      table_id = #{row.tableId,jdbcType=BIGINT},
+      dim_index_id = #{row.dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{row.injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      column_length = #{row.columnLength,jdbcType=INTEGER},
+      column_accuracy = #{row.columnAccuracy,jdbcType=INTEGER},
+      threshold = #{row.threshold,jdbcType=INTEGER},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      sort_order = #{row.sortOrder,jdbcType=VARCHAR},
+      state = #{row.state,jdbcType=VARCHAR},
+      path = #{row.path,jdbcType=VARCHAR},
+      unique_key = #{row.uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{row.modState,jdbcType=VARCHAR},
+      pro_index_id = #{row.proIndexId,jdbcType=BIGINT},
+      modes = #{row.modes,jdbcType=VARCHAR},
+      rela_type = #{row.relaType,jdbcType=VARCHAR},
+      column_expression = #{row.columnExpression,jdbcType=LONGVARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update app_sql_column
+    set app_detail_id = #{row.appDetailId,jdbcType=BIGINT},
+      column_id = #{row.columnId,jdbcType=BIGINT},
+      app_id = #{row.appId,jdbcType=BIGINT},
+      node_id = #{row.nodeId,jdbcType=BIGINT},
+      alias = #{row.alias,jdbcType=VARCHAR},
+      func = #{row.func,jdbcType=VARCHAR},
+      seq = #{row.seq,jdbcType=BIGINT},
+      view_id = #{row.viewId,jdbcType=BIGINT},
+      parent_obj_type = #{row.parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{row.parentObjId,jdbcType=BIGINT},
+      cond_type = #{row.condType,jdbcType=VARCHAR},
+      cond_value = #{row.condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{row.parentDetailId,jdbcType=BIGINT},
+      output_type = #{row.outputType,jdbcType=VARCHAR},
+      column_name = #{row.columnName,jdbcType=VARCHAR},
+      app_type = #{row.appType,jdbcType=VARCHAR},
+      column_code = #{row.columnCode,jdbcType=VARCHAR},
+      table_code = #{row.tableCode,jdbcType=VARCHAR},
+      table_id = #{row.tableId,jdbcType=BIGINT},
+      dim_index_id = #{row.dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{row.injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{row.datasourceId,jdbcType=BIGINT},
+      column_type = #{row.columnType,jdbcType=VARCHAR},
+      column_length = #{row.columnLength,jdbcType=INTEGER},
+      column_accuracy = #{row.columnAccuracy,jdbcType=INTEGER},
+      threshold = #{row.threshold,jdbcType=INTEGER},
+      object_id = #{row.objectId,jdbcType=BIGINT},
+      sort_order = #{row.sortOrder,jdbcType=VARCHAR},
+      state = #{row.state,jdbcType=VARCHAR},
+      path = #{row.path,jdbcType=VARCHAR},
+      unique_key = #{row.uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{row.modState,jdbcType=VARCHAR},
+      pro_index_id = #{row.proIndexId,jdbcType=BIGINT},
+      modes = #{row.modes,jdbcType=VARCHAR},
+      rela_type = #{row.relaType,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.zmz.model.DataSetColumn">
+    update app_sql_column
+    <set>
+      <if test="columnId != null">
+        column_id = #{columnId,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=BIGINT},
+      </if>
+      <if test="nodeId != null">
+        node_id = #{nodeId,jdbcType=BIGINT},
+      </if>
+      <if test="alias != null">
+        alias = #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="func != null">
+        func = #{func,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=BIGINT},
+      </if>
+      <if test="viewId != null">
+        view_id = #{viewId,jdbcType=BIGINT},
+      </if>
+      <if test="parentObjType != null">
+        parent_obj_type = #{parentObjType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentObjId != null">
+        parent_obj_id = #{parentObjId,jdbcType=BIGINT},
+      </if>
+      <if test="condType != null">
+        cond_type = #{condType,jdbcType=VARCHAR},
+      </if>
+      <if test="condValue != null">
+        cond_value = #{condValue,jdbcType=VARCHAR},
+      </if>
+      <if test="parentDetailId != null">
+        parent_detail_id = #{parentDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="outputType != null">
+        output_type = #{outputType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null">
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        app_type = #{appType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnCode != null">
+        column_code = #{columnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableId != null">
+        table_id = #{tableId,jdbcType=BIGINT},
+      </if>
+      <if test="dimIndexId != null">
+        dim_index_id = #{dimIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="injectionLabelId != null">
+        injection_label_id = #{injectionLabelId,jdbcType=BIGINT},
+      </if>
+      <if test="datasourceId != null">
+        datasource_id = #{datasourceId,jdbcType=BIGINT},
+      </if>
+      <if test="columnType != null">
+        column_type = #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnLength != null">
+        column_length = #{columnLength,jdbcType=INTEGER},
+      </if>
+      <if test="columnAccuracy != null">
+        column_accuracy = #{columnAccuracy,jdbcType=INTEGER},
+      </if>
+      <if test="threshold != null">
+        threshold = #{threshold,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=BIGINT},
+      </if>
+      <if test="sortOrder != null">
+        sort_order = #{sortOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="uniqueKey != null">
+        unique_key = #{uniqueKey,jdbcType=VARCHAR},
+      </if>
+      <if test="modState != null">
+        mod_state = #{modState,jdbcType=VARCHAR},
+      </if>
+      <if test="proIndexId != null">
+        pro_index_id = #{proIndexId,jdbcType=BIGINT},
+      </if>
+      <if test="modes != null">
+        modes = #{modes,jdbcType=VARCHAR},
+      </if>
+      <if test="relaType != null">
+        rela_type = #{relaType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnExpression != null">
+        column_expression = #{columnExpression,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.zmz.model.DataSetColumn">
+    update app_sql_column
+    set column_id = #{columnId,jdbcType=BIGINT},
+      app_id = #{appId,jdbcType=BIGINT},
+      node_id = #{nodeId,jdbcType=BIGINT},
+      alias = #{alias,jdbcType=VARCHAR},
+      func = #{func,jdbcType=VARCHAR},
+      seq = #{seq,jdbcType=BIGINT},
+      view_id = #{viewId,jdbcType=BIGINT},
+      parent_obj_type = #{parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{parentObjId,jdbcType=BIGINT},
+      cond_type = #{condType,jdbcType=VARCHAR},
+      cond_value = #{condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{parentDetailId,jdbcType=BIGINT},
+      output_type = #{outputType,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      app_type = #{appType,jdbcType=VARCHAR},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      table_id = #{tableId,jdbcType=BIGINT},
+      dim_index_id = #{dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      column_length = #{columnLength,jdbcType=INTEGER},
+      column_accuracy = #{columnAccuracy,jdbcType=INTEGER},
+      threshold = #{threshold,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=BIGINT},
+      sort_order = #{sortOrder,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      unique_key = #{uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{modState,jdbcType=VARCHAR},
+      pro_index_id = #{proIndexId,jdbcType=BIGINT},
+      modes = #{modes,jdbcType=VARCHAR},
+      rela_type = #{relaType,jdbcType=VARCHAR},
+      column_expression = #{columnExpression,jdbcType=LONGVARCHAR}
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.zmz.model.DataSetColumn">
+    update app_sql_column
+    set column_id = #{columnId,jdbcType=BIGINT},
+      app_id = #{appId,jdbcType=BIGINT},
+      node_id = #{nodeId,jdbcType=BIGINT},
+      alias = #{alias,jdbcType=VARCHAR},
+      func = #{func,jdbcType=VARCHAR},
+      seq = #{seq,jdbcType=BIGINT},
+      view_id = #{viewId,jdbcType=BIGINT},
+      parent_obj_type = #{parentObjType,jdbcType=VARCHAR},
+      parent_obj_id = #{parentObjId,jdbcType=BIGINT},
+      cond_type = #{condType,jdbcType=VARCHAR},
+      cond_value = #{condValue,jdbcType=VARCHAR},
+      parent_detail_id = #{parentDetailId,jdbcType=BIGINT},
+      output_type = #{outputType,jdbcType=VARCHAR},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      app_type = #{appType,jdbcType=VARCHAR},
+      column_code = #{columnCode,jdbcType=VARCHAR},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      table_id = #{tableId,jdbcType=BIGINT},
+      dim_index_id = #{dimIndexId,jdbcType=BIGINT},
+      injection_label_id = #{injectionLabelId,jdbcType=BIGINT},
+      datasource_id = #{datasourceId,jdbcType=BIGINT},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      column_length = #{columnLength,jdbcType=INTEGER},
+      column_accuracy = #{columnAccuracy,jdbcType=INTEGER},
+      threshold = #{threshold,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=BIGINT},
+      sort_order = #{sortOrder,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      unique_key = #{uniqueKey,jdbcType=VARCHAR},
+      mod_state = #{modState,jdbcType=VARCHAR},
+      pro_index_id = #{proIndexId,jdbcType=BIGINT},
+      modes = #{modes,jdbcType=VARCHAR},
+      rela_type = #{relaType,jdbcType=VARCHAR}
+    where app_detail_id = #{appDetailId,jdbcType=BIGINT}
+  </update>
+</mapper>
