@@ -3,13 +3,15 @@ package org.zmz.c.test;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Maps;
 import org.junit.jupiter.api.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -39,11 +41,7 @@ public class SimpleTest {
     @Test
     public void t3() {
         String s = null;
-        try {
-            s = URLEncoder.encode("用户不存在", "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log.error("不支持的编码", e);
-        }
+        s = URLEncoder.encode("用户不存在", StandardCharsets.UTF_8);
         log.info("{}", s);
     }
 
@@ -122,7 +120,7 @@ public class SimpleTest {
         String json = """
                 {"success":true,"code":0,"msg":"http://135.32.120.118/mydiskdx/applyDownload.html#nodeIds=2c9a31a88f22c248018fec50a95a0403&token=97583a6c69dc2512640e973f1a55697a","data":null}
                 """;
-        Map map = fromJson(json, Map.class);
+        Map<?, ?> map = fromJson(json, Map.class);
         log.info("{}", map);
         String success = getStringValue(map, "success");
         String code = getStringValue(map, "code");
@@ -206,6 +204,14 @@ public class SimpleTest {
         }
 
         log.info("{}", list);
+    }
+
+    @Test
+    public void t11() {
+        String step = "1";
+        Map<String, Object> map = Maps.newHashMap("k1", "v1");
+        String jsonString = JSON.toJSONString(map);
+        log.info("{} {}", step, jsonString);
     }
 
 }
