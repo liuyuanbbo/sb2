@@ -17,4 +17,199 @@
         <result column="refer_type" jdbcType="VARCHAR" property="referType"/>
         <result column="src_rela_id" jdbcType="BIGINT" property="srcRelaId"/>
     </resultMap>
+
+    <resultMap id="ObjKeyTableRelaVoResultMap" extends="BaseResultMap"
+               type="org.zmz.c.qo.dataopen.ObjKeyTableRelaVo">
+        <result column="object_name" property="objectName"/>
+        <result column="rela_object_name" property="relaObjectName"/>
+        <result column="rela_object_code" property="relaObjectCode"/>
+        <result column="rela_table_code" property="relaTableCode"/>
+        <collection property="keyColumnRelas"
+                    ofType="org.zmz.c.qo.dataopen.ObjKeyColumnRelaVo">
+            <id column="rela_col_id" property="relaId"/>
+            <result column="parent_rela_id" property="parentRelaId"/>
+            <result column="column_id" property="columnId"/>
+            <result column="column_code" property="columnCode"/>
+            <result column="column_name" property="columnName"/>
+            <result column="rela_column_id" property="relaColumnId"/>
+            <result column="rela_column_code" property="relaColumnCode"/>
+            <result column="rela_column_name" property="relaColumnName"/>
+            <result column="func" property="func"/>
+            <result column="rela_func" property="relaFunc"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="ObjDimRelaVoMap" type="org.zmz.c.qo.dataopen.ObjDimRelaVo"
+               extends="ObjKeyTableRelaVoResultMap">
+        <result column="DIM_INDEX_NAME" property="dimIndexName"/>
+        <result column="INDEX_CODE" property="indexCode"/>
+        <result column="index_id" property="indexId"/>
+        <result column="pro_index_name" property="proIndexName"/>
+        <result column="pro_index_code" property="proIndexCode"/>
+    </resultMap>
+
+    <sql id="Key_Table_List">
+        a.rela_id,a.object_id, a.meta_data_id, a.table_code, a.datasource_code, a.rela_key_object_id, a.rela_type, a.rela_table_id, a.refer_type
+    </sql>
+
+    <sql id="Key_Column_List">
+        b.rela_id,rela_col_id,b.parent_rela_id, b.column_id,b.column_code,b.rela_column_id,b.rela_column_code, b.func, b.rela_func
+    </sql>
+
+    <!--当前个人用户有项目时按项目过滤，否则保持原有逻辑-->
+    <sql id="getAuthObjIdsByUser">
+        SELECT auth_obj_id FROM dop_obj_auth a
+        WHERE auth_obj_type=#{authObjType} AND state='00A'
+        AND (
+        <choose>
+            <when test="projectId != null and projectId != ''">
+                ( a.object_type='PROJECT' AND a.object_id = #{projectId} )
+            </when>
+            <otherwise>
+                a.object_type = 'ALL'
+            </otherwise>
+        </choose>
+        OR ( a.object_type ='ACCOUNT' AND a.object_id = #{createStaff} )
+        <if test="roleIds != null and roleIds.size > 0">
+            OR ( a.object_type='ROLE' AND a.object_id IN
+            <foreach collection="roleIds" open="(" item="item" close=")" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="regionPathCode != null and regionPathCode != '' ">
+            OR ( a.object_type = 'REGION' AND auth_type = '1' AND a.path_code = #{regionPathCode} )
+            <choose>
+                <when test="_databaseId == 'postgresql'">
+                    OR ( a.object_type = 'REGION' AND auth_type in ('2','4') AND
+                    STRPOS(concat(concat('.',#{regionPathCode}),'.'),concat(concat('.',a.path_code),'.'))>0)
+                    OR ( a.object_type = 'REGION' AND auth_type in ('3','4') AND
+                    STRPOS(concat(concat('.',a.path_code),'.'),concat(concat('.',#{regionPathCode}),'.'))>0 )
+                </when>
+                <otherwise>
+                    OR ( a.object_type = 'REGION' AND auth_type in ('2','4') AND
+                    instr(concat(concat('.',#{regionPathCode}),'.'),concat(concat('.',a.path_code),'.'))>0)
+                    OR ( a.object_type = 'REGION' AND auth_type in ('3','4') AND
+                    instr(concat(concat('.',a.path_code),'.'),concat(concat('.',#{regionPathCode}),'.'))>0 )
+                </otherwise>
+            </choose>
+        </if>
+        <if test="orgPathCode != null and orgPathCode != '' ">
+            OR ( a.object_type = 'ORGANIZATION' AND auth_type = '1' AND a.path_code = #{orgPathCode} )
+            <choose>
+                <when test="_databaseId == 'postgresql'">
+                    OR ( a.object_type = 'ORGANIZATION' AND auth_type in ('2','4') AND
+                    STRPOS(concat(concat('.',#{orgPathCode}),'.'),concat(concat('.',a.path_code),'.'))>0)
+                    OR ( a.object_type = 'ORGANIZATION' AND auth_type in ('3','4') AND
+                    STRPOS(concat(concat('.',a.path_code),'.'),concat(concat('.',#{orgPathCode}),'.'))>0 )
+                </when>
+                <otherwise>
+                    OR ( a.object_type = 'ORGANIZATION' AND auth_type in ('2','4') AND
+                    instr(concat(concat('.',#{orgPathCode}),'.'),concat(concat('.',a.path_code),'.'))>0)
+                    OR ( a.object_type = 'ORGANIZATION' AND auth_type in ('3','4') AND
+                    instr(concat(concat('.',a.path_code),'.'),concat(concat('.',#{orgPathCode}),'.'))>0 )
+                </otherwise>
+            </choose>
+        </if>
+        )
+        <if test="authObjIds != null and authObjIds.size > 0">
+            AND a.auth_obj_id IN
+            <foreach collection="authObjIds" open="(" item="item" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="authObjId != null and authObjId != ''">
+            AND a.auth_obj_id = #{authObjId}
+        </if>
+        <if test="privType != null and privType != ''">
+            AND a.priv_type = #{privType}
+        </if>
+    </sql>
+
+    <!-- 个人用户查询权限-->
+    <sql id="objInfoAuthQuery">
+        <if test="createStaff != null and createStaff !=''">
+            AND ( oi.oper_id = #{createStaff}
+            <if test="projectId != null and projectId!='' ">
+                or oi.project_id = #{projectId}
+            </if>
+            OR oi.object_id IN
+            (
+            <include
+                    refid="org.zmz.c.mapper.dataopen.ObjKeyTableRelaMapper.getAuthObjIdsByUser"/>
+            )
+            )
+        </if>
+    </sql>
+
+    <sql id="relaCommonQuery">
+        <if test="objectIds != null and objectIds.size() > 0">
+            AND a.object_id IN
+            <foreach collection="objectIds" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="objectId != null and objectId !=''">
+            AND a.object_id = #{objectId}
+        </if>
+        <if test="metaDataId != null and metaDataId !=''">
+            AND a.meta_data_id = #{metaDataId}
+        </if>
+        <if test="relaKeyObjectIds != null and relaKeyObjectIds.size() > 0">
+            AND a.rela_key_object_id IN
+            <foreach collection="relaKeyObjectIds" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="relaKeyObjectId != null and relaKeyObjectId !=''">
+            AND a.rela_key_object_id = #{relaKeyObjectId}
+        </if>
+        <!--个人用户-->
+        <if test="authObjIds != null and authObjIds.size() > 0">
+            and (a.object_id in
+            <foreach collection="authObjIds" item="objectId" open="(" separator="," close=")">
+                #{objectId}
+            </foreach>
+            and a.rela_key_object_id in
+            <foreach collection="authObjIds" item="objectId" open="(" separator="," close=")">
+                #{objectId}
+            </foreach>
+            )
+        </if>
+        <if test="relaType != null and relaType !=''">
+            AND a.rela_type = #{relaType}
+        </if>
+        <if test="referType != null and referType !=''">
+            AND a.refer_type = #{referType}
+        </if>
+        <if test="relaId != null and relaId !=''">
+            AND a.rela_id = #{relaId}
+        </if>
+        <if test="comAcctId != null and comAcctId !=''">
+            AND oi.com_acct_id = #{comAcctId}
+        </if>
+        <include
+                refid="org.zmz.c.mapper.dataopen.ObjKeyTableRelaMapper.objInfoAuthQuery"/>
+    </sql>
+
+    <!-- 虚拟对象的表关联跟字段关联不需要object_id关联条件  -->
+    <select id="selectKeyRelaByQo" resultMap="ObjKeyTableRelaVoResultMap">
+        select
+        <include refid="Key_Table_List"/>,
+        <include refid="Key_Column_List"/>,
+        oi.object_name rela_object_name,oi.object_code rela_object_code,cr.table_code rela_table_code,
+        c.column_name, cr.column_name rela_column_name
+        from obj_key_table_rela a
+        left join obj_key_column_rela b on a.rela_id=b.parent_rela_id
+        left join obj_info oi on a.rela_key_object_id=oi.object_id
+        LEFT JOIN obj_column_rela c ON b.column_id=c.column_id and a.meta_data_id = c.src_table_id and
+        a.object_id=c.object_id and c.status_cd='00A'
+        LEFT JOIN obj_column_rela cr ON a.rela_table_id = cr.src_table_id and cr.status_cd='00A'
+        and((b.rela_column_id=cr.column_id and a.rela_key_object_id=cr.object_id) or (b.rela_column_id is null and
+        b.rela_column_code=cr.column_code))
+        <where>
+            <include refid="relaCommonQuery">
+            </include>
+        </where>
+    </select>
 </mapper>

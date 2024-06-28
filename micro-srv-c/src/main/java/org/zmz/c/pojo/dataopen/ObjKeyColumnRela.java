@@ -27,4 +27,14 @@ public class ObjKeyColumnRela {
     private Long relaColumnId;
 
     private String relaColumnCode;
+
+    /**
+     * N端字段的加工函数
+     */
+    public String func;
+
+    /**
+     * 1端字段的加工函数
+     */
+    public String relaFunc;
 }

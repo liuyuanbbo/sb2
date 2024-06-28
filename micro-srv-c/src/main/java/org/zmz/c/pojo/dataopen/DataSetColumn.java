@@ -84,6 +84,11 @@ public class DataSetColumn {
 
     private String relaType;
 
+    /**
+     * 关联术语
+     */
+    public String termCode;
+
     private String columnExpression;
 
 }

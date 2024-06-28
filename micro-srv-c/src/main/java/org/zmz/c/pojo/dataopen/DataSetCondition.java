@@ -46,7 +46,7 @@ public class DataSetCondition {
 
     private Long appColumnId;
 
-    private Long objId;
+    public Long objId;
 
     private String condValueDesc;
 
@@ -63,5 +63,10 @@ public class DataSetCondition {
     private String relaType;
 
     private String condValue;
+
+    /**
+     * 关联术语
+     */
+    public String termCode;
 
 }
