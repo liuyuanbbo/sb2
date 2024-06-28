@@ -20,7 +20,7 @@ public class DatasetParamsBuildService {
         DataPrivCtrlVo firstDataPrivctrl = null;
         for (DatasetColumnAndConditionQo groupQo : params.getGroups()) {
             groupQo.setFirstDataPrivCtrlInfo(firstDataPrivctrl);
-            this.paramsBuild(groupQo);
+            //this.paramsBuild(groupQo);
             // 多路径的组织字段以第一分组的为准
             if (firstDataPrivctrl == null && groupQo.getDataPrivCtrlInfo() != null) {
                 firstDataPrivctrl = groupQo.getDataPrivCtrlInfo();
