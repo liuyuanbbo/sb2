@@ -1,5 +1,7 @@
 package org.zmz.c.service.dataopen.dataset;
 
+import org.zmz.c.utils.SqlUtils;
+
 public class SqlComponent {
 
     public StringBuilder field = new StringBuilder();
