@@ -1,0 +1,18 @@
+{
+  "795": [
+    {
+      "alias": false,
+      "metaDataId": 795,
+      "orgIdColumnCode": "area_id",
+      "orgLevel": "2",
+      "orgNameColumnCode": "area_name"
+    },
+    {
+      "alias": false,
+      "metaDataId": 795,
+      "orgIdColumnCode": "sum_area_id",
+      "orgLevel": "1",
+      "orgNameColumnCode": "sum_area_name"
+    }
+  ]
+}

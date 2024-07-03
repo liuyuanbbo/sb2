@@ -24,7 +24,7 @@ public class ObjDimRelaVo extends ObjKeyTableRela {
     private String proIndexCode;
 
     // 分析对象
-    private String objectId;
+    //private String objectId;
 
     /**
      * 关联维度，统计粒度

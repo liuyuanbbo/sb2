@@ -91,4 +91,13 @@ public class DataSetColumn {
 
     private String columnExpression;
 
+    /**
+     * 层级字段是否向上汇总 是/1,否/0
+     */
+    public String autoLevelGroup;
+
+    /**
+     * 度量相对维度视图 默认维度(main),包含维度(include),排除维度(exclude),固定独立维度(fix)
+     */
+    public String dimensionType = "main";
 }

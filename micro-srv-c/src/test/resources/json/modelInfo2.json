@@ -1,0 +1,162 @@
+{
+  "bussinessAttr": {
+    "businessKey": "area_id",
+    "businessKeyList": [
+      "area_id"
+    ],
+    "isOrgDimension": 1,
+    "isTimeDimension": 0,
+    "orgDimensionList": [
+      {
+        "alias": false,
+        "orgIdColumnCode": "area_id",
+        "orgLevel": "2",
+        "orgNameColumnCode": "area_name"
+      },
+      {
+        "alias": false,
+        "orgIdColumnCode": "sum_area_id",
+        "orgLevel": "1",
+        "orgNameColumnCode": "sum_area_name"
+      }
+    ]
+  },
+  "columnList": [
+    {
+      "businessKey": "0",
+      "columnClassify": "2",
+      "columnCode": "area_code",
+      "columnId": 8375,
+      "columnLength": 18,
+      "columnName": "area_code",
+      "columnSort": 0,
+      "columnType": "VARCHAR",
+      "comAcctId": 874,
+      "dataColumnId": 32,
+      "isPartition": "0",
+      "metaDataId": 795,
+      "orgField": "0",
+      "period": "0",
+      "tableCode": "dim_org"
+    },
+    {
+      "businessKey": "1",
+      "columnClassify": "2",
+      "columnCode": "area_id",
+      "columnId": 8376,
+      "columnLength": 255,
+      "columnName": "area_id",
+      "columnSort": 0,
+      "columnType": "VARCHAR",
+      "comAcctId": 874,
+      "dataColumnId": 2036,
+      "isPartition": "0",
+      "metaDataId": 795,
+      "orgField": "0",
+      "period": "0",
+      "tableCode": "dim_org"
+    },
+    {
+      "businessKey": "0",
+      "columnClassify": "2",
+      "columnCode": "area_name",
+      "columnId": 8377,
+      "columnLength": 255,
+      "columnName": "area_name",
+      "columnSort": 0,
+      "columnType": "VARCHAR",
+      "comAcctId": 874,
+      "dataColumnId": 2043,
+      "isPartition": "0",
+      "metaDataId": 795,
+      "orgField": "0",
+      "period": "0",
+      "tableCode": "dim_org"
+    },
+    {
+      "businessKey": "0",
+      "columnClassify": "2",
+      "columnCode": "branch_level",
+      "columnId": 8378,
+      "columnName": "branch_level",
+      "columnSort": 0,
+      "columnType": "INTEGER",
+      "comAcctId": 874,
+      "dataColumnId": 2452,
+      "isPartition": "0",
+      "metaDataId": 795,
+      "orgField": "0",
+      "period": "0",
+      "tableCode": "dim_org"
+    },
+    {
+      "businessKey": "0",
+      "columnClassify": "2",
+      "columnCode": "sum_area_id",
+      "columnId": 8379,
+      "columnLength": 255,
+      "columnName": "sum_area_id",
+      "columnSort": 0,
+      "columnType": "VARCHAR",
+      "comAcctId": 874,
+      "dataColumnId": 2453,
+      "isPartition": "0",
+      "metaDataId": 795,
+      "orgField": "0",
+      "period": "0",
+      "tableCode": "dim_org"
+    },
+    {
+      "businessKey": "0",
+      "columnClassify": "2",
+      "columnCode": "sum_area_name",
+      "columnId": 8380,
+      "columnLength": 255,
+      "columnName": "sum_area_name",
+      "columnSort": 0,
+      "columnType": "VARCHAR",
+      "comAcctId": 874,
+      "dataColumnId": 2454,
+      "isPartition": "0",
+      "metaDataId": 795,
+      "orgField": "0",
+      "period": "0",
+      "tableCode": "dim_org"
+    },
+    {
+      "businessKey": "0",
+      "columnClassify": "2",
+      "columnCode": "path_code",
+      "columnId": 8381,
+      "columnName": "path_code",
+      "columnSort": 0,
+      "columnType": "TEXT",
+      "comAcctId": 874,
+      "dataColumnId": 73,
+      "isPartition": "0",
+      "metaDataId": 795,
+      "orgField": "0",
+      "period": "0",
+      "tableCode": "dim_org"
+    }
+  ],
+  "metaDataInfo": {
+    "catalogId": 23860,
+    "database": "test_bl",
+    "datasourceCode": "gp165_test_bl",
+    "distributeType": "DISTRIBUTED BY(area_id)",
+    "domainId": "6176",
+    "layerId": "6173",
+    "metaDataCode": "dim_org",
+    "metaDataId": 795,
+    "metaDataName": "区域",
+    "objectType": "table",
+    "schemaCode": "test_bl",
+    "schemaId": 19128,
+    "tableType": "gp",
+    "uuid": "0f29b88c072b4c678cdf1d6005beadc9",
+    "versionId": "1"
+  },
+  "orgDimension": true,
+  "source": "datafusion"
+}

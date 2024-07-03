@@ -1,0 +1,880 @@
+{
+  "isGroupBy": true,
+  "isSingle": true,
+  "mergeSqls": [],
+  "metricsGroup": {
+    "800": [
+      {
+        "alias": "nm_sum_fee_1694",
+        "appType": "metrics",
+        "columnAccuracy": 2,
+        "columnCode": "nm_sum_fee_1694",
+        "columnDesc": "区域nm支出求和",
+        "columnId": 8456,
+        "columnLength": 20,
+        "columnType": "DECIMAL",
+        "cycleType": "M",
+        "dataId": 4262,
+        "dataName": "区域nm支出求和",
+        "dataType": "index",
+        "datasourceCode": "gp165_test_bl",
+        "datasourceId": 19128,
+        "dimIndexId": 4262,
+        "dimensionType": "main",
+        "func": "SUM",
+        "hide": false,
+        "isAcct": "0",
+        "isOrgDimension": 1,
+        "isPartition": "0",
+        "isPrimary": "0",
+        "isValid": "1",
+        "mainTableId": 795,
+        "objectId": 2342,
+        "optTermRelaColumns": [],
+        "orgDimensionCol": false,
+        "orgInfoPathsMap": {},
+        "path": "-0,800",
+        "paths": [
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          }
+        ],
+        "pathsMap": {
+          "-0,800,795": [
+            {
+              "$ref": "$.metricsGroup.800[0].paths[0]"
+            }
+          ]
+        },
+        "relaType": "0",
+        "seq": 5,
+        "srcColumnType": "DECIMAL",
+        "tableCode": "fct_wid_index",
+        "tableId": 800,
+        "termRelaColumns": [],
+        "unitName": "无",
+        "virtualObjColumnMap": {}
+      },
+      {
+        "alias": "nm_sum_fee_1694_pp",
+        "appType": "metrics",
+        "columnAccuracy": 2,
+        "columnCode": "nm_sum_fee_1694",
+        "columnDesc": "区域nm支出求和",
+        "columnId": 8456,
+        "columnLength": 20,
+        "columnType": "DECIMAL",
+        "cycleType": "M",
+        "dataId": 4262,
+        "dataName": "区域nm支出求和",
+        "dataType": "index",
+        "datasourceCode": "gp165_test_bl",
+        "datasourceId": 19128,
+        "dimIndexId": 4262,
+        "dimensionType": "main",
+        "func": "pp",
+        "hide": false,
+        "isAcct": "0",
+        "isOrgDimension": 1,
+        "isPartition": "0",
+        "isPrimary": "0",
+        "isValid": "1",
+        "mainTableId": 795,
+        "objectId": 2342,
+        "optTermRelaColumns": [],
+        "orgDimensionCol": false,
+        "orgInfoPathsMap": {},
+        "path": "-0,800",
+        "paths": [
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          }
+        ],
+        "pathsMap": {
+          "-0,800,795": [
+            {
+              "$ref": "$.metricsGroup.800[1].paths[0]"
+            }
+          ]
+        },
+        "relaType": "0",
+        "seq": 6,
+        "srcColumnType": "DECIMAL",
+        "tableCode": "fct_wid_index",
+        "tableId": 800,
+        "termRelaColumns": [],
+        "unitName": "无",
+        "virtualObjColumnMap": {}
+      },
+      {
+        "alias": "nm_sum_fee_1694_momGrowth",
+        "appType": "metrics",
+        "columnAccuracy": 2,
+        "columnCode": "nm_sum_fee_1694",
+        "columnDesc": "区域nm支出求和",
+        "columnId": 8456,
+        "columnLength": 20,
+        "columnType": "DECIMAL",
+        "cycleType": "M",
+        "dataId": 4262,
+        "dataName": "区域nm支出求和",
+        "dataType": "index",
+        "datasourceCode": "gp165_test_bl",
+        "datasourceId": 19128,
+        "dimIndexId": 4262,
+        "dimensionType": "main",
+        "func": "momGrowth",
+        "hide": false,
+        "isAcct": "0",
+        "isOrgDimension": 1,
+        "isPartition": "0",
+        "isPrimary": "0",
+        "isValid": "1",
+        "mainTableId": 795,
+        "objectId": 2342,
+        "optTermRelaColumns": [],
+        "orgDimensionCol": false,
+        "orgInfoPathsMap": {},
+        "path": "-0,800",
+        "paths": [
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          }
+        ],
+        "pathsMap": {
+          "-0,800,795": [
+            {
+              "$ref": "$.metricsGroup.800[2].paths[0]"
+            }
+          ]
+        },
+        "relaType": "0",
+        "seq": 7,
+        "srcColumnType": "DECIMAL",
+        "tableCode": "fct_wid_index",
+        "tableId": 800,
+        "termRelaColumns": [],
+        "unitName": "无",
+        "virtualObjColumnMap": {}
+      },
+      {
+        "alias": "nm_sum_fee_1694_yoy",
+        "appType": "metrics",
+        "columnAccuracy": 2,
+        "columnCode": "nm_sum_fee_1694",
+        "columnDesc": "区域nm支出求和",
+        "columnId": 8456,
+        "columnLength": 20,
+        "columnType": "DECIMAL",
+        "cycleType": "M",
+        "dataId": 4262,
+        "dataName": "区域nm支出求和",
+        "dataType": "index",
+        "datasourceCode": "gp165_test_bl",
+        "datasourceId": 19128,
+        "dimIndexId": 4262,
+        "dimensionType": "main",
+        "func": "yoy",
+        "hide": false,
+        "isAcct": "0",
+        "isOrgDimension": 1,
+        "isPartition": "0",
+        "isPrimary": "0",
+        "isValid": "1",
+        "mainTableId": 795,
+        "objectId": 2342,
+        "optTermRelaColumns": [],
+        "orgDimensionCol": false,
+        "orgInfoPathsMap": {},
+        "path": "-0,800",
+        "paths": [
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          }
+        ],
+        "pathsMap": {
+          "-0,800,795": [
+            {
+              "$ref": "$.metricsGroup.800[3].paths[0]"
+            }
+          ]
+        },
+        "relaType": "0",
+        "seq": 8,
+        "srcColumnType": "DECIMAL",
+        "tableCode": "fct_wid_index",
+        "tableId": 800,
+        "termRelaColumns": [],
+        "unitName": "无",
+        "virtualObjColumnMap": {}
+      },
+      {
+        "alias": "nm_sum_fee_1694_yoyGrowth",
+        "appType": "metrics",
+        "columnAccuracy": 2,
+        "columnCode": "nm_sum_fee_1694",
+        "columnDesc": "区域nm支出求和",
+        "columnId": 8456,
+        "columnLength": 20,
+        "columnType": "DECIMAL",
+        "cycleType": "M",
+        "dataId": 4262,
+        "dataName": "区域nm支出求和",
+        "dataType": "index",
+        "datasourceCode": "gp165_test_bl",
+        "datasourceId": 19128,
+        "dimIndexId": 4262,
+        "dimensionType": "main",
+        "func": "yoyGrowth",
+        "hide": false,
+        "isAcct": "0",
+        "isOrgDimension": 1,
+        "isPartition": "0",
+        "isPrimary": "0",
+        "isValid": "1",
+        "mainTableId": 795,
+        "objectId": 2342,
+        "optTermRelaColumns": [],
+        "orgDimensionCol": false,
+        "orgInfoPathsMap": {},
+        "path": "-0,800",
+        "paths": [
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          }
+        ],
+        "pathsMap": {
+          "-0,800,795": [
+            {
+              "$ref": "$.metricsGroup.800[4].paths[0]"
+            }
+          ]
+        },
+        "relaType": "0",
+        "seq": 9,
+        "srcColumnType": "DECIMAL",
+        "tableCode": "fct_wid_index",
+        "tableId": 800,
+        "termRelaColumns": [],
+        "unitName": "无",
+        "virtualObjColumnMap": {}
+      },
+      {
+        "alias": "nm_sum_fee_1694_yearEnd",
+        "appType": "metrics",
+        "columnAccuracy": 2,
+        "columnCode": "nm_sum_fee_1694",
+        "columnDesc": "区域nm支出求和",
+        "columnId": 8456,
+        "columnLength": 20,
+        "columnType": "DECIMAL",
+        "cycleType": "M",
+        "dataId": 4262,
+        "dataName": "区域nm支出求和",
+        "dataType": "index",
+        "datasourceCode": "gp165_test_bl",
+        "datasourceId": 19128,
+        "dimIndexId": 4262,
+        "dimensionType": "main",
+        "func": "yearEnd",
+        "hide": false,
+        "isAcct": "0",
+        "isOrgDimension": 1,
+        "isPartition": "0",
+        "isPrimary": "0",
+        "isValid": "1",
+        "mainTableId": 795,
+        "objectId": 2342,
+        "optTermRelaColumns": [],
+        "orgDimensionCol": false,
+        "orgInfoPathsMap": {},
+        "path": "-0,800",
+        "paths": [
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          }
+        ],
+        "pathsMap": {
+          "-0,800,795": [
+            {
+              "$ref": "$.metricsGroup.800[5].paths[0]"
+            }
+          ]
+        },
+        "relaType": "0",
+        "seq": 10,
+        "srcColumnType": "DECIMAL",
+        "tableCode": "fct_wid_index",
+        "tableId": 800,
+        "termRelaColumns": [],
+        "unitName": "无",
+        "virtualObjColumnMap": {}
+      },
+      {
+        "alias": "nm_sum_fee_1694_yearEndGrowth",
+        "appType": "metrics",
+        "columnAccuracy": 2,
+        "columnCode": "nm_sum_fee_1694",
+        "columnDesc": "区域nm支出求和",
+        "columnId": 8456,
+        "columnLength": 20,
+        "columnType": "DECIMAL",
+        "cycleType": "M",
+        "dataId": 4262,
+        "dataName": "区域nm支出求和",
+        "dataType": "index",
+        "datasourceCode": "gp165_test_bl",
+        "datasourceId": 19128,
+        "dimIndexId": 4262,
+        "dimensionType": "main",
+        "func": "yearEndGrowth",
+        "hide": false,
+        "isAcct": "0",
+        "isOrgDimension": 1,
+        "isPartition": "0",
+        "isPrimary": "0",
+        "isValid": "1",
+        "mainTableId": 795,
+        "objectId": 2342,
+        "optTermRelaColumns": [],
+        "orgDimensionCol": false,
+        "orgInfoPathsMap": {},
+        "path": "-0,800",
+        "paths": [
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          },
+          {
+            "keyColumnRelas": [
+              {
+                "columnCode": "area_id",
+                "columnId": 8455,
+                "relaColumnCode": "area_id",
+                "relaColumnId": 8376
+              }
+            ],
+            "metricsInnerPath": "1",
+            "multiColumns": [],
+            "relaColumns": [],
+            "srcObjectId": 2342,
+            "srcTableCode": "fct_wid_index",
+            "srcTableId": 800,
+            "tgtObjectId": 2342,
+            "tgtTableCode": "dim_org",
+            "tgtTableId": 795
+          }
+        ],
+        "pathsMap": {
+          "-0,800,795": [
+            {
+              "$ref": "$.metricsGroup.800[6].paths[0]"
+            }
+          ]
+        },
+        "relaType": "0",
+        "seq": 11,
+        "srcColumnType": "DECIMAL",
+        "tableCode": "fct_wid_index",
+        "tableId": 800,
+        "termRelaColumns": [],
+        "unitName": "无",
+        "virtualObjColumnMap": {}
+      }
+    ]
+  },
+  "sqlLists": [],
+  "tmpTableNames": {},
+  "tmpTableSql": {}
+}
