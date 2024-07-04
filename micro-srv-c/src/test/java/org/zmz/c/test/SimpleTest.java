@@ -6,6 +6,11 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Maps;
 import org.junit.jupiter.api.Test;
@@ -212,6 +217,54 @@ public class SimpleTest {
         Map<String, Object> map = Maps.newHashMap("k1", "v1");
         String jsonString = JSON.toJSONString(map);
         log.info("{} {}", step, jsonString);
+    }
+
+
+    @Getter
+    @Setter
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class $_A {
+        private String id;
+        private String name;
+
+        public $_A(String id) {
+            this.id = id;
+        }
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    static class $_B {
+        List<$_A> as;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    static class $_C {
+        $_B b;
+    }
+
+    @Test
+    public void t12() {
+        $_C c = new $_C();
+
+        $_B b = new $_B();
+
+        List<$_A> as = List.of(new $_A("1"), new $_A("2"), new $_A("3"));
+
+        b.setAs(as);
+
+        c.setB(b);
+
+        // 更改 as 里面的属性
+        as.forEach(e -> e.setName(e.getId() + "_name_" + e.getId()));
+
+        log.info("t12()");
+        log.info("{}", c);
     }
 
 }
