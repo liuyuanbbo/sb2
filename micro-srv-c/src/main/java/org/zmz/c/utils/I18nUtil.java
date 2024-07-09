@@ -59,10 +59,6 @@ public final class I18nUtil {
 
     /**
      * 根据locale获取baseName（application.properties配置的）的properties的key的值
-     *
-     * @param baseName
-     * @param key
-     * @param locale
      */
     public static String get(String baseName, String key, Locale locale) {
         return ResourceBundle.getBundle(baseName, locale).getString(key);
@@ -145,8 +141,6 @@ public final class I18nUtil {
 
     /**
      * 获取语言配置
-     *
-     * @return String
      */
     public static String getLanguage() {
         Locale locale = getLocale();
@@ -178,8 +172,6 @@ public final class I18nUtil {
 
     /**
      * 获取地区环境
-     *
-     * @return Locale
      */
     public static Locale getLocale() {
         return LocaleContextHolder.getLocale();
@@ -187,8 +179,6 @@ public final class I18nUtil {
 
     /**
      * 从redis缓存中获取语言
-     *
-     * @return String
      */
     private static String getLanguageFromCache() {
         //String key = RedisUtil.getDcsysParamRedisKey("LOCALE");

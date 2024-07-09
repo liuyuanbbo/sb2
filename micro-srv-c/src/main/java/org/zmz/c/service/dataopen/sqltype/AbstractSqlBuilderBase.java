@@ -1162,7 +1162,7 @@ public abstract class AbstractSqlBuilderBase {
             }
             if (!CollectionUtils.isEmpty(metric.getCondList())) {
                 List<DatasetConditionQo> collect = metric.getCondList().stream()
-                        .filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct())).collect(Collectors.toList());
+                        .filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct())).toList();
                 if (!collect.isEmpty()) {
                     DatasetConditionQo conditionQo = collect.get(0);
                     PeriodExpression exp = new PeriodExpression();
