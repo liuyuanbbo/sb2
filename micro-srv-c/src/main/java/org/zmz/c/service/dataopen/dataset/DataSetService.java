@@ -54,7 +54,6 @@ public class DataSetService {
                 .filter(columnQo -> CollUtil.isNotEmpty(columnQo.getPaths()))
                 .findFirst()
                 .orElse(null);
-
         if (columnQos == null) {
             // sql拼接前的参数构建
             datasetParamsBuildService.paramsBuild(params);
@@ -101,7 +100,8 @@ public class DataSetService {
             params.setScheduleType(acctSqlService.getDataCycle(modelInfoMap.values()));
         }
 
-        log.info("预览sql入参：{}", JSONObject.toJSONString(params));
+        log.info("预览sql入参: {}", JSONObject.toJSONString(params));
+        log.info("模型Map入参: {}", JSONObject.toJSONString(modelInfoMap));
         String sql = SqlBuilderFactory.getSqlParse(params, modelInfoMap);
         // 将数据库带有NBSP格式的空替换为普通的空格
         sql = sql.replaceAll("\\u00A0+", " ").replaceAll(" +", " ");

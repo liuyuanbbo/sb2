@@ -54,7 +54,7 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
     /**
      * 同/环比或者月/年累计的子查询
      */
-    protected void subSqlGrowthOrTotal(List<SubQuerySqlQo> subSqlList, boolean singleSql,
+    protected void subSqlGrowthOrTotal(List<SubQuerySqlQo> subSqlList,
                                        List<DatasetColumnQo> metricList, String dimensionType, List<DatasetColumnQo> dimensionList,
                                        List<DatasetConditionQo> condList, boolean needAppendPeriod, OrgDimension replaceLevelColumn,
                                        String scheduleType) {
@@ -98,12 +98,12 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
             }
         }
 
-        this.appendOutField(singleSql, metricList, dimensionType, dimensionList, alias, component.field,
+        this.appendOutField(false, metricList, dimensionType, dimensionList, alias, component.field,
                 replaceLevelColumn, funcEnum, joinTimeSql);
 
         if (SqlBuilderHelper.isGrowthOrTotal(funcEnum)) {
             // 同比、环比
-            this.appendWhere(singleSql, component.where, metricList, dimensionType, condList, alias, null, null,
+            this.appendWhere(false, component.where, metricList, dimensionType, condList, alias, null, null,
                     funcEnum);
         }
 
@@ -117,9 +117,14 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
     }
 
     @Override
-    protected void subScheduleGrowthOrTotal(List<SubQuerySqlQo> subSqlList, boolean singleSql,
-                                            List<DatasetColumnQo> metricList, String dimensionType, List<DatasetColumnQo> dimensionList,
-                                            List<DatasetConditionQo> condList, ResultSql result, Map<String, List<MetricsDimensionPathVo>> cacheTempPath,
+    protected void subScheduleGrowthOrTotal(List<SubQuerySqlQo> subSqlList,
+                                            boolean singleSql,
+                                            List<DatasetColumnQo> metricList,
+                                            String dimensionType,
+                                            List<DatasetColumnQo> dimensionList,
+                                            List<DatasetConditionQo> condList,
+                                            ResultSql result,
+                                            Map<String, List<MetricsDimensionPathVo>> cacheTempPath,
                                             OrgDimension replaceLevelColumn) {
         Map<String, Map<String, String>> mainTbPathAlias = new HashMap<>();
         Map<String, String> tempTbPathAlias = new HashMap<>();

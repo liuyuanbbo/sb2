@@ -162,8 +162,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
             // 单表的层级字段、没有度量 一般不会有这样的配置
             List<OrgDimension> orgDimensions = iteratorColumnMap.get(currLevelColumn.getTableId());
             result.isSingle = result.isSingle && orgDimensions.size() == 1;
-            orgDimensions.forEach(t -> appendRelativeMetric(result, params.getCustomMetrics(), params.getColumnList(), params.getCondList(),
-                    t));
+            orgDimensions.forEach(t -> appendRelativeMetric(result, params.getCustomMetrics(), params.getColumnList(), params.getCondList(), t));
             return;
         }
 
@@ -186,8 +185,8 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
      */
     private String scheduleSql(ResultSql result) {
         if (result.mergeSqls.isEmpty() && result.sqlLists.isEmpty()) {
-            log.error("子查询为空");
-            throw new RuntimeException("子查询为空");
+            log.error("result.mergeSqls 或者 result.sqlLists 子查询为空");
+            throw new IllegalStateException("子查询为空");
         }
         List<String> sqlArr = new ArrayList<>(16);
         String tbName = "t1";
@@ -268,8 +267,8 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
      */
     private String previewSql(ResultSql result) {
         if (result.sqlLists.isEmpty()) {
-            log.error("子查询为空");
-            throw new IllegalArgumentException("子查询为空");
+            log.error("result.sqlLists 子查询为空");
+            throw new IllegalStateException("子查询为空");
         }
 
         // 关联时间维度表
@@ -555,44 +554,46 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
         Map<Long, String> periodMaps = getPeriodFromPathsAndCondList(entry.getValue());
         for (MetricsDimensionPathVo path : entry.getValue()) {
             // 过滤掉度量已经关联过的表、关联度量到维度之间的表
-            if (StringUtils.isNoneBlank(tableAlias.get(String.valueOf(path.getSrcTableId())))
-                    && StringUtils.isNoneBlank(tableAlias.get(String.valueOf(path.getTgtTableId())))) {
+            Long srcTableId = path.getSrcTableId();
+            Long tgtTableId = path.getTgtTableId();
+            if (
+                    StringUtils.isNoneBlank(tableAlias.get(String.valueOf(srcTableId))) &&
+                            StringUtils.isNoneBlank(tableAlias.get(String.valueOf(tgtTableId)))) {
                 continue;
             }
-            String srcSchemaCode = this.getSchemaCodeByTableId(path.getSrcTableId());
+            String srcSchemaCode = this.getSchemaCodeByTableId(srcTableId);
             // 首次拼接sql主表别名为空
-            if (ObjectUtils.isEmpty(tableAlias.get(String.valueOf(path.getSrcTableId())))) {
+            if (ObjectUtils.isEmpty(tableAlias.get(String.valueOf(srcTableId)))) {
                 String srcName = tbPrefix.concat(String.valueOf(getIncrementTbIndex()));
-                tableAlias.put(String.valueOf(path.getSrcTableId()), srcName);
+                tableAlias.put(String.valueOf(srcTableId), srcName);
                 // 只有一张主表
-                if (entry.getValue().size() == 1 && (null == path.getTgtTableId() || null == path.getTgtTableCode())) {
+                if (entry.getValue().size() == 1 &&
+                        (tgtTableId == null || path.getTgtTableCode() == null)
+                ) {
                     component.join.append(srcSchemaCode).append(SqlUtils.STR_POINT).append(path.getSrcTableCode())
                             .append(SqlUtils.STR_BLANK).append(srcName);
                     // 数据过滤拼接lanId
                     if (checkLan()) {
                         // 添加where条件
-                        ModelInfo table = this.modelInfoMap.get(path.getSrcTableId());
+                        ModelInfo table = this.modelInfoMap.get(srcTableId);
                         appendLan(true, table, component.join, component.where, srcName);
                     }
                     // 数据过滤拼接provinceId
                     if (checkProvince()) {
                         // 添加where条件
-                        ModelInfo table = this.modelInfoMap.get(path.getSrcTableId());
+                        ModelInfo table = this.modelInfoMap.get(srcTableId);
                         appendProvince(true, table, component.join, component.where, srcName);
                     }
                     // 权限控制拼接组织明细表
-                    if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
-                        appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
-                    }
                 } else {
-                    if (path.getTgtTableId() == null) {
+                    if (tgtTableId == null) {
                         continue;
                     }
-                    String tgtSchemaCode = this.getSchemaCodeByTableId(path.getTgtTableId());
-                    String tgtName = tableAlias.get(String.valueOf(path.getTgtTableId()));
+                    String tgtSchemaCode = this.getSchemaCodeByTableId(tgtTableId);
+                    String tgtName = tableAlias.get(String.valueOf(tgtTableId));
                     if (StringUtils.isBlank(tgtName)) {
                         tgtName = tbPrefix.concat(String.valueOf(getIncrementTbIndex()));
-                        tableAlias.put(String.valueOf(path.getTgtTableId()), tgtName);
+                        tableAlias.put(String.valueOf(tgtTableId), tgtName);
                     }
                     // schemaCode.表1 ta1 left join schemaCode.表2 tb2 on ta1.字段=ta2.字段
                     if (!CollectionUtils.isEmpty(path.getMultiColumns())) {
@@ -621,60 +622,56 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                     // 数据过滤拼接lanId
                     if (checkLan()) {
                         // 添加where条件
-                        ModelInfo srcTable = this.modelInfoMap.get(path.getSrcTableId());
+                        ModelInfo srcTable = this.modelInfoMap.get(srcTableId);
                         appendLan(true, srcTable, component.join, component.where, srcName);
-                        ModelInfo tgtTable = this.modelInfoMap.get(path.getTgtTableId());
+                        ModelInfo tgtTable = this.modelInfoMap.get(tgtTableId);
                         appendLan(false, tgtTable, component.join, component.where, tgtName);
                     }
                     // 数据过滤拼接provinceId
                     if (checkProvince()) {
                         // 添加where条件
-                        ModelInfo srcTable = this.modelInfoMap.get(path.getSrcTableId());
+                        ModelInfo srcTable = this.modelInfoMap.get(srcTableId);
                         appendProvince(true, srcTable, component.join, component.where, srcName);
-                        ModelInfo tgtTable = this.modelInfoMap.get(path.getTgtTableId());
+                        ModelInfo tgtTable = this.modelInfoMap.get(tgtTableId);
                         appendProvince(false, tgtTable, component.join, component.where, tgtName);
                     }
                     // 权限控制拼接组织明细表
-                    if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
-                        appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
-                    }
                 }
             } else {
-                // 拼接从表
-                // 表别名缓存
-                if (null == path.getTgtTableId()) {
+                // 拼接从表 表别名缓存
+                if (null == tgtTableId) {
                     continue;
                 }
-                String tgtSchemaCode = this.getSchemaCodeByTableId(path.getTgtTableId());
-                String tgtName = tableAlias.get(String.valueOf(path.getTgtTableId()));
+                String tgtName = tableAlias.get(String.valueOf(tgtTableId));
                 if (StringUtils.isBlank(tgtName)) {
                     tgtName = tbPrefix.concat(String.valueOf(getIncrementTbIndex()));
-                    tableAlias.put(String.valueOf(path.getTgtTableId()), tgtName);
+                    tableAlias.put(String.valueOf(tgtTableId), tgtName);
                 }
+                String tgtSchemaCode = this.getSchemaCodeByTableId(tgtTableId);
 
                 // left join schemaCode.表3 tb3 on ta2.字段=ta3.字段
                 component.join.append(SqlUtils.SQL_INNER_JOIN).append(tgtSchemaCode).append(SqlUtils.STR_POINT)
                         .append(path.getTgtTableCode()).append(SqlUtils.STR_BLANK).append(tgtName).append(SqlUtils.SQL_ON);
                 this.appendKeyColumns(path.getKeyColumnRelas(), component.join,
-                        tableAlias.get(String.valueOf(path.getSrcTableId())), tgtName);
+                        tableAlias.get(String.valueOf(srcTableId)), tgtName);
 
                 // 关联两表的账期字段
                 this.appendPeriodCond(component.join, tableAlias, path, periodMaps, needAppendPeriod);
 
                 // 数据过滤拼接lanId
                 if (checkLan()) {
-                    ModelInfo tgtTable = this.modelInfoMap.get(path.getTgtTableId());
+                    ModelInfo tgtTable = this.modelInfoMap.get(tgtTableId);
                     appendLan(false, tgtTable, component.join, component.where, tgtName);
                 }
                 // 数据过滤拼接provinceId
                 if (checkProvince()) {
-                    ModelInfo tgtTable = this.modelInfoMap.get(path.getTgtTableId());
+                    ModelInfo tgtTable = this.modelInfoMap.get(tgtTableId);
                     appendProvince(false, tgtTable, component.join, component.where, tgtName);
                 }
                 // 权限控制拼接组织明细表
-                if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
-                    appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
-                }
+            }
+            if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
+                appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
             }
         }
 
@@ -690,70 +687,76 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
         return this.dataPrivCtrlInfo.getOrgDimensionModelInfo();
     }
 
-    @Override
-    public void appendOrgDetailsTable(boolean hasOrgTable, SqlComponent component, Map<String, String> map,
-                                      Map<Long, String> hasAppend, String tbPrefix, MetricsDimensionPathVo path, boolean isPriv) {
-        // 划小架构表
-        ModelInfo orgDimensionTable = getOrgDimensionTable();
-        // 主表获取组织明细表
-        MetricsDimensionPathVo orgDetailsSrc = getOrgDetails(path.getSrcTableId());
-        if (!ObjectUtils.isEmpty(orgDetailsSrc) && StringUtils.isBlank(hasAppend.get(path.getSrcTableId()))) {
-            String orgName = null;
-            if (hasOrgTable && path.getSrcTableId().equals(orgDimensionTable.getMetaDataInfo().getMetaDataId())
-                    && isPriv) {
-                orgName = joinOrgDetails(component.join, map, tbPrefix, orgDetailsSrc);
-                // 输出字段添加path_code
-                component.field.append(orgName).append(SqlUtils.STR_POINT).append(getOrgDetailsPathCode())
-                        .append(SqlUtils.SQL_AS).append(CUSTOM_PATH_CODE_ALIAS).append(SqlUtils.STR_DOT);
-                component.group.append(orgName).append(SqlUtils.STR_POINT).append(getOrgDetailsPathCode())
-                        .append(SqlUtils.STR_DOT);
-            }
-
-            if (needAppendPathCode(path.getSrcTableId())) {
-                if (null == orgName) {
-                    orgName = joinOrgDetails(component.join, map, tbPrefix, orgDetailsSrc);
-                }
-                if (!component.where.isEmpty()) {
-                    component.where.append(SqlUtils.SQL_AND);
-                }
-                component.where.append(orgName).append(SqlUtils.STR_POINT).append(getOrgDetailsPathCode())
-                        .append(" like '%").append(Constants.ORG_ID).append("%'");
-                hasAppend.put(path.getSrcTableId(), orgName);
-            }
-
-            hasAppend.put(path.getSrcTableId(), orgName);
-        }
-
+    public void appendOrgDetailsTable(Long tableId,
+                                      ModelInfo orgDimensionTable,
+                                      boolean hasOrgTable,
+                                      Map<Long, String> hasAppend,
+                                      String tbPrefix,
+                                      Map<String, String> map,
+                                      boolean isSrcTableId,
+                                      SqlComponent component,
+                                      boolean isPriv) {
         // 从表获取组织明细
-        MetricsDimensionPathVo orgDetailsTgt = getOrgDetails(path.getTgtTableId());
-        // 从表-->划小表
-        if (!ObjectUtils.isEmpty(orgDetailsTgt) && StringUtils.isBlank(hasAppend.get(path.getTgtTableId()))) {
-            // 拼接组织明细表
+        MetricsDimensionPathVo orgDetailsTgt = getOrgDetails(tableId);
+        if (
+                !ObjectUtils.isEmpty(orgDetailsTgt) &&
+                        StringUtils.isBlank(hasAppend.get(tableId))
+        ) {
             String orgName = null;
-            // 从表是划小表
-            if (hasOrgTable && path.getTgtTableId().equals(orgDimensionTable.getMetaDataInfo().getMetaDataId())
+            if (hasOrgTable && tableId.equals(orgDimensionTable.getMetaDataInfo().getMetaDataId())
                     && isPriv) {
                 orgName = joinOrgDetails(component.join, map, tbPrefix, orgDetailsTgt);
                 // 输出字段添加path_code
-                component.field.append(orgName).append(SqlUtils.STR_POINT).append(getOrgDetailsPathCode())
-                        .append(SqlUtils.SQL_AS).append(CUSTOM_PATH_CODE_ALIAS).append(SqlUtils.STR_DOT);
-                // 添加到分组条件中
-                component.group.append(orgName).append(SqlUtils.STR_POINT).append(getOrgDetailsPathCode())
+                component.field.append(orgName)
+                        .append(SqlUtils.STR_POINT)
+                        .append(getOrgDetailsPathCode())
+                        .append(SqlUtils.SQL_AS)
+                        .append(CUSTOM_PATH_CODE_ALIAS)
+                        .append(SqlUtils.STR_DOT);
+                component.group.append(orgName)
+                        .append(SqlUtils.STR_POINT)
+                        .append(getOrgDetailsPathCode())
                         .append(SqlUtils.STR_DOT);
             }
 
-            if (needAppendPathCode(path.getTgtTableId())) {
+            if (needAppendPathCode(tableId)) {
                 if (null == orgName) {
                     orgName = joinOrgDetails(component.join, map, tbPrefix, orgDetailsTgt);
                 }
                 if (!component.where.isEmpty()) {
                     component.where.append(SqlUtils.SQL_AND);
                 }
-                component.where.append(orgName).append(SqlUtils.STR_POINT).append(getOrgDetailsPathCode())
-                        .append(" like '%").append(Constants.ORG_ID).append("%'");
+                component.where.append(orgName)
+                        .append(SqlUtils.STR_POINT)
+                        .append(getOrgDetailsPathCode())
+                        .append(" like '%")
+                        .append(Constants.ORG_ID)
+                        .append("%'");
             }
-            hasAppend.put(path.getTgtTableId(), orgName);
+            hasAppend.put(tableId, orgName);
+            if (isSrcTableId) {
+                hasAppend.put(tableId, orgName);
+            }
         }
+    }
+
+    // 将组织明细表添加到sql中
+    @Override
+    public void appendOrgDetailsTable(boolean hasOrgTable,
+                                      SqlComponent component,
+                                      Map<String, String> map,
+                                      Map<Long, String> hasAppend,
+                                      String tbPrefix,
+                                      MetricsDimensionPathVo path,
+                                      boolean isPriv) {
+        // 划小架构表
+        ModelInfo orgDimensionTable = getOrgDimensionTable();
+
+        Long srcTableId = path.getSrcTableId();
+        appendOrgDetailsTable(srcTableId, orgDimensionTable, hasOrgTable, hasAppend, tbPrefix, map, true, component, isPriv);
+
+        Long tgtTableId = path.getTgtTableId();
+        appendOrgDetailsTable(tgtTableId, orgDimensionTable, hasOrgTable, hasAppend, tbPrefix, map, false, component, isPriv);
     }
 
     private String joinOrgDetails(StringBuilder joinSql, Map<String, String> map, String tbPrefix,
@@ -986,12 +989,12 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
 
         if (Constants.SQL_TASK.equals(sqlMode)) {
             String flag = staticDataService.getDcSystemParamByCache("DATA_CONSUMPTION_SUB_QUERY_TMP_TABLE");
-            subQueryToTmTab = StringUtils.isEmpty(flag) || Boolean.parseBoolean(flag);
+            this.subQueryToTmTab = StringUtils.isEmpty(flag) || Boolean.parseBoolean(flag);
         }
         // 配置数据源schemaCode
         for (Map.Entry<Long, ModelInfo> entry : modelInfoMap.entrySet()) {
-            this.schemaMap.put(entry.getValue().getMetaDataInfo().getMetaDataId(),
-                    entry.getValue().getMetaDataInfo().getSchemaCode());
+            MetaDataInfo metaDataInfo = entry.getValue().getMetaDataInfo();
+            this.schemaMap.put(metaDataInfo.getMetaDataId(), metaDataInfo.getSchemaCode());
         }
 
         List<DatasetColumnQo> columns = params.getColumnList();
@@ -1002,7 +1005,8 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                 } else {
                     isCal = true;
                 }
-            } else if (Constants.APP_TYPE_DIMENSION.equals(column.getAppType())) {
+            }
+            if (Constants.APP_TYPE_DIMENSION.equals(column.getAppType())) {
                 dimensions.add(column);
             }
         }
@@ -1032,6 +1036,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
     }
 
     public AbstractSqlBuilder(DatasetColumnAndConditionQo params, Map<Long, ModelInfo> modelInfoMap) {
+        // 初始化参数
         initParseParams(params, modelInfoMap);
     }
 

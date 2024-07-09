@@ -559,10 +559,10 @@ public abstract class AbstractSqlBuilderBase {
         DatasetColumnQo orgDimColumn = SqlBuilderHelper.getOrgDimensionMinColumn(getDataPrivCtrlInfo());
         boolean hasOrgId = false;
         if (!ObjectUtils.isEmpty(orgDimColumn)) {
-            List<DatasetColumnQo> collectDim = this.params.getColumnList().stream().filter(obj -> {
-                return !Constants.APP_TYPE_METRICS.equals(obj.getAppType())
-                        && !KeyValues.YES_VALUE_1.equals(obj.getIsAcct()) && dimPath.equals(obj.getPath());
-            }).collect(Collectors.toList());
+            List<DatasetColumnQo> collectDim = this.params.getColumnList().stream()
+                    .filter(obj -> !Constants.APP_TYPE_METRICS.equals(obj.getAppType())
+                    && !KeyValues.YES_VALUE_1.equals(obj.getIsAcct()) && dimPath.equals(obj.getPath()))
+                    .toList();
             if (!CollectionUtils.isEmpty(collectDim)) {
                 for (DatasetColumnQo columnQo : collectDim) {
                     if (orgDimColumn.getColumnId().equals(columnQo.getColumnId())) {
@@ -661,24 +661,17 @@ public abstract class AbstractSqlBuilderBase {
                 if (!appendCols.contains(orgDimension.getOrgIdColumnCode())) {
                     field.append(tempAlias.get(String.valueOf(orgDimension.getMetaDataId()))).append(SqlUtils.STR_POINT)
                             .append(orgDimension.getOrgIdColumnCode()).append(SqlUtils.STR_DOT);
-                    Column column = this.modelInfoMap.get(orgDimension.getMetaDataId()).getColumnList().stream()
-                            .filter(c -> orgDimension.getOrgIdColumnCode().equalsIgnoreCase(c.getColumnCode())).findFirst()
-                            .orElse(null);
-                    if (column != null) {
-                        hasAppend.put(column.getColumnId(),
-                                tempAlias.get(String.valueOf(orgDimension.getMetaDataId())));
-                    }
+                    this.modelInfoMap.get(orgDimension.getMetaDataId()).getColumnList().stream()
+                            .filter(c -> orgDimension.getOrgIdColumnCode().equalsIgnoreCase(c.getColumnCode())).findFirst().ifPresent(column -> hasAppend.put(column.getColumnId(),
+                                    tempAlias.get(String.valueOf(orgDimension.getMetaDataId()))));
                 }
                 if (!appendCols.contains(orgDimension.getOrgNameColumnCode())) {
                     field.append(tempAlias.get(String.valueOf(orgDimension.getMetaDataId()))).append(SqlUtils.STR_POINT)
                             .append(orgDimension.getOrgNameColumnCode()).append(SqlUtils.STR_DOT);
-                    Column column = this.modelInfoMap.get(orgDimension.getMetaDataId()).getColumnList().stream()
+                    this.modelInfoMap.get(orgDimension.getMetaDataId()).getColumnList().stream()
                             .filter(c -> orgDimension.getOrgNameColumnCode().equalsIgnoreCase(c.getColumnCode()))
-                            .findFirst().orElse(null);
-                    if (column != null) {
-                        hasAppend.put(column.getColumnId(),
-                                tempAlias.get(String.valueOf(orgDimension.getMetaDataId())));
-                    }
+                            .findFirst().ifPresent(column -> hasAppend.put(column.getColumnId(),
+                                    tempAlias.get(String.valueOf(orgDimension.getMetaDataId()))));
                 }
             });
         }
@@ -747,7 +740,7 @@ public abstract class AbstractSqlBuilderBase {
         }
 
         // 删除逗号
-        if (field.length() > 0) {
+        if (!field.isEmpty()) {
             field.deleteCharAt(field.length() - 1);
         }
     }
@@ -826,11 +819,11 @@ public abstract class AbstractSqlBuilderBase {
             } else if (Constants.APP_TYPE_METRICS.equals(dimension.getAppType())
                     && dimensionType.equalsIgnoreCase(dimension.getDimensionType())
                     && CollectionUtils.isEmpty(dimension.getColumnGroup())) {
-                List<String> funs = metrics.stream().map(DatasetColumnQo::getFunc).collect(Collectors.toList());
-                List<Long> columnIds = metrics.stream().map(DatasetColumnQo::getColumnId).collect(Collectors.toList());
+                List<String> funs = metrics.stream().map(DatasetColumnQo::getFunc).toList();
+                List<Long> columnIds = metrics.stream().map(DatasetColumnQo::getColumnId).toList();
                 List<String> columnCodes = metrics.stream().map(DatasetColumnQo::getColumnCode)
-                        .collect(Collectors.toList());
-                List<Long> tablesIds = metrics.stream().map(DatasetColumnQo::getTableId).collect(Collectors.toList());
+                        .toList();
+                List<Long> tablesIds = metrics.stream().map(DatasetColumnQo::getTableId).toList();
                 // 度量字段，没有的用0输出
                 if (funs.contains(dimension.getFunc()) && columnIds.contains(dimension.getColumnId())
                         && columnCodes.contains(dimension.getColumnCode()) && tablesIds.contains(dimension.getTableId())) {
@@ -859,7 +852,7 @@ public abstract class AbstractSqlBuilderBase {
             expMap.put(dimension.getAlias(), dimExp);
         }
         // hive的账期维度放后面
-        if (hivePeriodDim.length() > 0) {
+        if (!hivePeriodDim.isEmpty()) {
             fieldSql.append(hivePeriodDim);
         }
         // 权限控制
@@ -890,12 +883,7 @@ public abstract class AbstractSqlBuilderBase {
 
                     if (!haveOrgId) {
                         StringBuilder orgStr = new StringBuilder();
-                        /*
-                         * String tbName = SqlBuilderHelper.getAliasFromMetricPath(null, orgDimColumn, aliasMetric); if
-                         * (StringUtils.isBlank(tbName)) { for (Map.Entry<String, String> entry :
-                         * temTableAlias.entrySet()) { if (entry.getKey().endsWith(privPathKey)) { tbName =
-                         * entry.getValue(); } } }
-                         */
+
                         orgStr.append(aliasName).append(SqlUtils.STR_POINT).append(CUSTOM_ORG_ID_ALIAS)
                                 .append(SqlUtils.STR_DOT);
                         fieldSql.insert(0, orgStr);
@@ -1227,7 +1215,7 @@ public abstract class AbstractSqlBuilderBase {
             // 度量上面有账期条件
             if (!CollectionUtils.isEmpty(metricCond)) {
                 List<DatasetConditionQo> collect = metricCond.stream()
-                        .filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct())).collect(Collectors.toList());
+                        .filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct())).toList();
                 if (!CollectionUtils.isEmpty(collect)) {
                     return false;
                 }
@@ -1268,9 +1256,6 @@ public abstract class AbstractSqlBuilderBase {
 
     /**
      * 字段关联条件on
-     *
-     * @param srcTableAlias
-     * @param tgtTableAlias
      */
     protected void appendKeyColumns(List<ObjKeyColumnRelaVo> relaColumns, StringBuilder exp, String srcTableAlias,
                                     String tgtTableAlias) {
