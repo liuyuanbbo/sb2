@@ -69,4 +69,9 @@ public class DataSetCondition {
      */
     public String termCode;
 
+    /**
+     * 是否为动态sql
+     */
+    public String isDynamic;
+
 }

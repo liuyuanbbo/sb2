@@ -112,12 +112,52 @@ public interface Constants {
         }
     };
 
+    /**
+     * sql生成模式: preview:预览sql; task:任务sql; check: 校验sql
+     */
+    String SQL_PREVIEW = "preview";
+
+    String NEW_LINE_STR = System.lineSeparator();
+    /**
+     * 默认账期+分区字段 日
+     */
+    String ACCT_CODE_D = "day_id";
+
+    /**
+     * 默认账期+分区字段 日
+     */
+    String ACCT_CODE_M = "month_id";
+
+    String ACCT_CODE_Y = "year_id";
+
+    String ACCT_CODE_H = "hour_id";
+
+    String ACCT_CODE_F = "minute_id";
+
+    String DATA_PRIV_ORG_FIELD_CODE = "consume_org_id";
+
+    String DATA_PRIV_PATH_CODE = "consume_path_code";
+
+    /**
+     * 字段关联类型，1-一端；n-N端；0-主分析对象；2-拥有共同一端维度的对象（没有直接关系）v-虚拟对象
+     */
+    String OBJ_TREE_RELA_TYPE_1 = "1";
+
+    String OBJ_TREE_RELA_TYPE_0 = "0";
+
+    String OBJ_TREE_RELA_TYPE_N = "n";
+
+    String OBJ_TREE_RELA_TYPE_2 = "2";
+
+    String OBJ_TREE_RELA_TYPE_V = "v";
+
+
     class DimensionType {
 
-        public static final String TYPE_MAIN = "main";
+        String TYPE_MAIN = "main";
 
-        public static final String TYPE_INCLUDE = "include";
+        String TYPE_INCLUDE = "include";
 
-        public static final String TYPE_EXCLUDE = "exclude";
+        String TYPE_EXCLUDE = "exclude";
     }
 }

@@ -1,10 +1,14 @@
 package org.zmz.c.utils;
 
+import cn.hutool.core.collection.CollUtil;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.OutPutMode;
-import org.zmz.c.service.dataopen.dataset.SqlBuilderHelper;
+import org.zmz.c.vo.dataopen.dataset.CycleInfo;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AcctTimeUtil {
@@ -77,5 +81,36 @@ public class AcctTimeUtil {
         }
 
         return acctValMap.getOrDefault(scheduleType, Constants.ACCT_CODE_EXP);
+    }
+
+    public static Map<String, CycleInfo> getCycleInfo() {
+        Map<String, CycleInfo> cycleInfoMap = new HashMap<>();
+        // 国际化
+        cycleInfoMap.put("Y", new CycleInfo("Y", I18nUtil.get("Y"), Constants.ACCT_CODE_Y, "yyyy"));
+        cycleInfoMap.put("M", new CycleInfo("M", I18nUtil.get("M"), Constants.ACCT_CODE_M, "yyyyMM"));
+        cycleInfoMap.put("D", new CycleInfo("D", I18nUtil.get("D"), Constants.ACCT_CODE_D, "yyyyMMdd"));
+        cycleInfoMap.put("H",
+                new CycleInfo("H", I18nUtil.get("H"), Constants.ACCT_CODE_H, "yyyyMMddHH"));
+        cycleInfoMap.put("F",
+                new CycleInfo("F", I18nUtil.get("F"), Constants.ACCT_CODE_F, "yyyyMMddHHmm"));
+        cycleInfoMap.put("O", new CycleInfo("O", I18nUtil.get("O"), "", ""));
+        return cycleInfoMap;
+    }
+
+    /**
+     * 多个周期获取最细的周期类型，默认日
+     */
+    public static String getCycleType(Collection<String> dataCycles) {
+        List<String> allCycle = Arrays.asList(Constants.SCHEDULE_LOOP_TYPE_F, Constants.SCHEDULE_LOOP_TYPE_H,
+                Constants.SCHEDULE_LOOP_TYPE_D, Constants.SCHEDULE_LOOP_TYPE_M);
+        if (CollUtil.isNotEmpty(dataCycles)) {
+            for (String cycle : allCycle) {
+                if (!dataCycles.contains(cycle)) {
+                    return cycle;
+                }
+            }
+        }
+        return Constants.SCHEDULE_LOOP_TYPE_D;
+
     }
 }

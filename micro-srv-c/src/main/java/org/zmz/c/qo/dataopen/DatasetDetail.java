@@ -112,6 +112,16 @@ public class DatasetDetail extends DatasetConfig {
     private String isValid = "1";
 
     /**
+     * 菜单类型
+     */
+    public String operType;
+
+    /**
+     * 明细表ID
+     */
+    private Long detailTableId;
+
+    /**
      * 公共属性拷贝
      */
     public void setDatasetDetailExt(DatasetDetail datasetDetail) {

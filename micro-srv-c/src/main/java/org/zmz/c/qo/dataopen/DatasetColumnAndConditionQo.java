@@ -74,6 +74,16 @@ public class DatasetColumnAndConditionQo extends DatasetConfig {
     private Map<String, List<MetricsDimensionPathVo>> datasetTermRelaMap = new HashMap<>();
 
     /**
+     * 菜单类型
+     */
+    public String operType;
+
+    /**
+     * 明细表ID
+     */
+    private Long detailTableId;
+
+    /**
      * 获取维度字段
      */
     public List<DatasetColumnQo> getDimensionColumns() {
