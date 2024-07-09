@@ -1,6 +1,7 @@
 package org.zmz.c.service.dataopen.dataset;
 
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,6 @@ import org.zmz.c.qo.dataopen.ModelInfo;
 import org.zmz.c.service.dataopen.sql.AbstractSqlParser;
 import org.zmz.c.service.dataopen.sql.SqlParserFactory;
 import org.zmz.c.service.dataopen.sqlfunc.SqlBuilderFactory;
-import org.zmz.c.utils.JsonUtil;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -54,6 +54,7 @@ public class DataSetService {
                 .filter(columnQo -> CollUtil.isNotEmpty(columnQo.getPaths()))
                 .findFirst()
                 .orElse(null);
+
         if (columnQos == null) {
             // sql拼接前的参数构建
             datasetParamsBuildService.paramsBuild(params);
@@ -100,7 +101,7 @@ public class DataSetService {
             params.setScheduleType(acctSqlService.getDataCycle(modelInfoMap.values()));
         }
 
-        log.info("预览sql入参：{}", JsonUtil.toJson(params));
+        log.info("预览sql入参：{}", JSONObject.toJSONString(params));
         String sql = SqlBuilderFactory.getSqlParse(params, modelInfoMap);
         // 将数据库带有NBSP格式的空替换为普通的空格
         sql = sql.replaceAll("\\u00A0+", " ").replaceAll(" +", " ");

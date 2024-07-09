@@ -36,13 +36,15 @@ public class ObjKeyPathService {
     @Resource
     DatasetCacheService datasetCacheService;
 
+    //@Resource
+    //AccountUtil accountUtil;
+
     /**
      * 对象两两之间关系
      */
     public Map<String, Set<List<Long>>> getDatasetObjPathMap() {
-        //TODO AccountUtil 获取 企管账号
-        //Long comAcctId = AccountUtil.getComAcctId();
-        long comAcctId = 20290L;
+        //Long comAcctId = accountUtil.getComAcctId();
+        long comAcctId = 1021L;
         String datasetObjPathMapRedisKey = DATASET_OBJ_PATH_MAP + "_" + comAcctId;
         ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
         String cacheDatasetObjPathMap = stringValueOperations.get(datasetObjPathMapRedisKey);
@@ -89,13 +91,12 @@ public class ObjKeyPathService {
         }
 
         for (Map.Entry<String, Set<List<Long>>> entry : pathsMap.entrySet()) {
-            log.info(
-                    JsonUtil.toJson(entry.getKey()) + " : " + JsonUtil.toJson(entry.getValue()) + System.lineSeparator()
+            log.info("{} : {}",
+                    JsonUtil.toJson(entry.getKey()), JsonUtil.toJson(entry.getValue()) + System.lineSeparator()
             );
         }
-        //TODO AccountUtil 获取 企管账号
-        //Long comAcctId = AccountUtil.getComAcctId();
-        long comAcctId = 20290L;
+        //Long comAcctId = accountUtil.getComAcctId();
+        long comAcctId = 1021L;
         String datasetObjPathMapRedisKey = DATASET_OBJ_PATH_MAP + "_" + comAcctId;
         String jsonString = JSON.toJSONString(pathsMap);
         stringRedisTemplate.opsForValue().set(datasetObjPathMapRedisKey, jsonString, TIMEOUT, TimeUnit.MILLISECONDS);

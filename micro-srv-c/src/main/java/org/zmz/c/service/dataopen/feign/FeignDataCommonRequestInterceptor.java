@@ -36,7 +36,7 @@ public class FeignDataCommonRequestInterceptor implements RequestInterceptor {
 //            template.header("accountCode", shareBfmUser.getUserCode());
 //            template.header("accountPasswd", shareBfmUser.getPwd());
 //        }
-        template.header("accountCode", "O3_gx");
-        template.header("accountPasswd", "77a15f1e7bba8509416939ac337c4891");
+        template.header("accountCode", "lyd_test");
+        template.header("accountPasswd", "cf8fed38bb111ab210b2009905de17da");
     }
 }

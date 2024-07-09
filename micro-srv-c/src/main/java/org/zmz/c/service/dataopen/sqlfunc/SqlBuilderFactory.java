@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class SqlBuilderFactory {
 
-    private static final Map<SqlFuncEnum, AbstractFuncParser> COMPONETS = new HashMap<SqlFuncEnum, AbstractFuncParser>();
+    private static final Map<SqlFuncEnum, AbstractFuncParser> COMPONENTS = new HashMap<>();
 
     public SqlBuilderFactory() {
     }
@@ -41,7 +41,7 @@ public class SqlBuilderFactory {
         if (funcEnum == null) {
             funcEnum = SqlFuncEnum.nullFunc;
         }
-        AbstractFuncParser componet = COMPONETS.get(funcEnum);
+        AbstractFuncParser componet = COMPONENTS.get(funcEnum);
         if (null != componet) {
             return componet;
         }
@@ -84,7 +84,7 @@ public class SqlBuilderFactory {
             default:
                 break;
         }
-        COMPONETS.put(funcEnum, componet);
+        COMPONENTS.put(funcEnum, componet);
         return componet;
     }
 
@@ -95,7 +95,7 @@ public class SqlBuilderFactory {
             throw new IllegalArgumentException("缺少必要参数");
         }
         String type = getDataSourceType(modelInfoMap);
-        AbstractSqlBuilder abs = switch (type) {
+        return switch (type) {
             case KeyValues.DS_ORACLE -> new OracleSqlBuilder(params, modelInfoMap);
             case KeyValues.DS_GBASE -> new GbaseSqlBuilder(params, modelInfoMap);
             case KeyValues.DS_HIVE -> new HiveSqlBuilder(params, modelInfoMap);
@@ -104,7 +104,6 @@ public class SqlBuilderFactory {
             case KeyValues.DS_WHALEHOUSE -> new WhalehouseSqlBuilder(params, modelInfoMap);
             default -> new GreenplumSqlBuilder(params, modelInfoMap);
         };
-        return abs;
     }
 
     public static String getSqlParse(DatasetColumnAndConditionQo params, Map<Long, ModelInfo> modelInfoMap) {

@@ -14,6 +14,7 @@ import org.zmz.c.qo.dataopen.DatasetConditionQo;
 import org.zmz.c.qo.dataopen.DatasetDetail;
 import org.zmz.c.qo.dataopen.DatasetObjColumnVo;
 import org.zmz.c.qo.dataopen.ObjKeyTableRelaVo;
+import org.zmz.c.utils.AccountUtil;
 
 import javax.annotation.Resource;
 import java.util.Comparator;
@@ -33,6 +34,9 @@ public class DatasetTermService {
     @Resource
     DatasetCacheService datasetCacheService;
 
+    @Resource
+    AccountUtil accountUtil;
+
     /**
      * 预览数据，需要重新构建入参，将术语替换成字段，找到最优路径
      */
@@ -40,9 +44,8 @@ public class DatasetTermService {
         // 所有对象关系
         Map<String, Set<List<Long>>> pathMap = objKeyPathService.getDatasetObjPathMap();
         // 先从redis查询派生指标的统计粒度
-        //TODO AccountUtil 获取 企管账号
-        //Long comAcctId = AccountUtil.getComAcctId();
-        long comAcctId = 20290L;
+        //Long comAcctId = accountUtil.getComAcctId();
+        long comAcctId = 1021L;
         Map<Long, List<ObjKeyTableRelaVo>> objDimRelaMap = datasetCacheService.getObjDimRelaMapInRedis(comAcctId);
         for (DatasetColumnAndConditionQo group : datasetDetail.getGroups()) {
             this.buildDatasetColumns(group, pathMap, objDimRelaMap);

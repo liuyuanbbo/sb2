@@ -53,7 +53,7 @@
     </sql>
 
     <sql id="Key_Column_List">
-        b.rela_id,rela_col_id,b.parent_rela_id, b.column_id,b.column_code,b.rela_column_id,b.rela_column_code, b.func, b.rela_func
+        b.rela_id rela_col_id,b.parent_rela_id, b.column_id,b.column_code,b.rela_column_id,b.rela_column_code, b.func, b.rela_func
     </sql>
 
     <!--当前个人用户有项目时按项目过滤，否则保持原有逻辑-->

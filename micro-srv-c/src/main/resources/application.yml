@@ -7,7 +7,8 @@ spring:
     import:
       - conf/maria-local.yml
       - conf/pgsql-local.yml
-      - conf/mysql-dev-dataopen.yml
+      #- conf/mysql-dev-dataopen-154.yml
+      - conf/mysql-dev-dataopen-156.yml
       - conf/mysql-dev-dataportal.yml
       - conf/pgsql-dev.yml
       # - conf/redis-dev-154.yml
@@ -15,6 +16,7 @@ spring:
       # - conf/http2.yml
       - conf/kafka-code01.yml
       - conf/redisson-single-code01.yml
+      - conf/spring-session.yml
 logging:
   level:
     org.zmz.c: debug

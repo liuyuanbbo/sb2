@@ -1,0 +1,8 @@
+spring:
+  session:
+    redis:
+      namespace: common_namespace
+  servlet:
+    session:
+      cookie:
+        name: SESSION
