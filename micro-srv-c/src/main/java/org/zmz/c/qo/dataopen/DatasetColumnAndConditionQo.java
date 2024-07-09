@@ -90,7 +90,9 @@ public class DatasetColumnAndConditionQo extends DatasetConfig {
         if (CollectionUtils.isEmpty(this.columnList)) {
             return Collections.emptyList();
         }
-        return this.columnList.stream().filter(columnQo -> Constants.APP_TYPE_DIMENSION.equals(columnQo.getAppType()) && columnQo.getColumnId() != null).collect(Collectors.toList());
+        return this.columnList.stream()
+                .filter(columnQo -> Constants.APP_TYPE_DIMENSION.equals(columnQo.getAppType()) && columnQo.getColumnId() != null)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -100,7 +102,9 @@ public class DatasetColumnAndConditionQo extends DatasetConfig {
         if (CollectionUtils.isEmpty(this.columnList)) {
             return Collections.emptyList();
         }
-        return this.columnList.stream().filter(columnQo -> Constants.APP_TYPE_DIMENSION.equals(columnQo.getAppType())).collect(Collectors.toList());
+        return this.columnList.stream()
+                .filter(columnQo -> Constants.APP_TYPE_DIMENSION.equals(columnQo.getAppType()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -110,9 +114,9 @@ public class DatasetColumnAndConditionQo extends DatasetConfig {
         if (CollectionUtils.isEmpty(this.columnList)) {
             return Collections.emptyList();
         }
-        return this.columnList.stream().filter(columnQo -> {
-            return Constants.APP_TYPE_METRICS.equals(columnQo.getAppType());
-        }).collect(Collectors.toList());
+        return this.columnList.stream()
+                .filter(columnQo -> Constants.APP_TYPE_METRICS.equals(columnQo.getAppType()))
+                .collect(Collectors.toList());
     }
 
     /**

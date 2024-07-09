@@ -8,7 +8,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +22,7 @@ public class RedissonConfig {
 
     @Bean
     @ConditionalOnProperty(value = "enabled", prefix = "redisson.single", havingValue = "true", matchIfMissing = true)
-    public RedissonClient redissonSingleClient(@Autowired RedissonSingleProperties redissonSingleProperties) {
+    public RedissonClient redissonSingleClient(RedissonSingleProperties redissonSingleProperties) {
         log.info("加载 Redisson 单节点配置: {}", redissonSingleProperties);
         Config redissonSingleConfig = new Config();
         redissonSingleConfig.useSingleServer()
@@ -35,7 +34,7 @@ public class RedissonConfig {
 
     @Bean
     @ConditionalOnProperty(value = "enabled", prefix = "redisson.cluster", havingValue = "true", matchIfMissing = true)
-    public RedissonClient redissonSingleClient(@Autowired RedissonClusterProperties redissonClusterProperties) {
+    public RedissonClient redissonClusterClient(RedissonClusterProperties redissonClusterProperties) {
         log.info("加载 Redisson 集群节点配置: {}", redissonClusterProperties);
         Config redissonSingleConfig = new Config();
         redissonSingleConfig.useClusterServers()
@@ -46,12 +45,11 @@ public class RedissonConfig {
 
     @Getter
     @Setter
-    @ConfigurationProperties(prefix = "redisson.single")
+    @ConfigurationProperties(prefix = "redisson.cluster")
     @Component
-    public static class RedissonSingleProperties {
-        private String address;
+    public static class RedissonClusterProperties {
+        private List<String> nodes;
         private String password;
-        private int database;
 
         @Override
         public String toString() {
@@ -61,11 +59,12 @@ public class RedissonConfig {
 
     @Getter
     @Setter
-    @ConfigurationProperties(prefix = "redisson.cluster")
+    @ConfigurationProperties(prefix = "redisson.single")
     @Component
-    public static class RedissonClusterProperties {
-        private List<String> nodes;
+    public static class RedissonSingleProperties {
+        private String address;
         private String password;
+        private int database;
 
         @Override
         public String toString() {

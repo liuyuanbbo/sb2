@@ -10,7 +10,8 @@ spring:
       - conf/mysql-dev-dataopen.yml
       - conf/mysql-dev-dataportal.yml
       - conf/pgsql-dev.yml
-      - conf/redis-dev.yml
+      # - conf/redis-dev-154.yml
+      - conf/redis-dev-156.yml
       # - conf/http2.yml
       - conf/kafka-code01.yml
       - conf/redisson-single-code01.yml

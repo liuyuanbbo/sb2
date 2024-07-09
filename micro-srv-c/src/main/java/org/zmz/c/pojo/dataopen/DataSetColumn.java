@@ -7,13 +7,14 @@ import tk.mybatis.mapper.annotation.NameStyle;
 import tk.mybatis.mapper.code.Style;
 
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Getter
 @Setter
 @ToString
 @Table(name = "app_sql_column")
 @NameStyle(value = Style.camelhumpAndLowercase)
-public class DataSetColumn {
+public class DataSetColumn implements Serializable {
     private Long appDetailId;
 
     private Long columnId;

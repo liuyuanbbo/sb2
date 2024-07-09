@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import org.zmz.c.utils.I18nUtil;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.zmz.c.qo.dataopen.Constants.DATAOPEM_DCSYS_KEY_PREFIX;
 import static org.zmz.c.qo.dataopen.Constants.SMART_ATTR_KEY_PREFIX;
@@ -31,7 +29,7 @@ public class StaticDataService {
     StringRedisTemplate stringRedisTemplate;
 
     @Resource
-    RedisTemplate<Object, Object> redisTemplate;
+    RedisTemplate<String, Object> redisTemplate;
 
     @Resource
     DcSystemConfigMapper dcSystemConfigMapper;
