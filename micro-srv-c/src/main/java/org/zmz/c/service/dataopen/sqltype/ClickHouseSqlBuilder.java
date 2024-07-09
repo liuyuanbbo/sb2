@@ -1,7 +1,6 @@
 package org.zmz.c.service.dataopen.sqltype;
 
 import cn.hutool.core.util.StrUtil;
-import org.apache.commons.lang.StrUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.zmz.c.qo.dataopen.Column;

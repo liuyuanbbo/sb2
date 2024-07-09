@@ -23,7 +23,7 @@
 //import org.zmz.c.qo.dataopen.OrgDimension;
 //import org.zmz.c.qo.dataopen.OutPutMode;
 //import org.zmz.c.qo.dataopen.SubQuerySqlQo;
-//import org.zmz.c.service.dataopen.dataset.GpColumnTypeEnum;
+//import org.zmz.c.service.dataopen.sqlenum.GpColumnTypeEnum;
 //import org.zmz.c.service.dataopen.dataset.SqlBuilderHelper;
 //import org.zmz.c.service.dataopen.dataset.SqlComponent;
 //import org.zmz.c.service.dataopen.dataset.SqlFuncEnum;

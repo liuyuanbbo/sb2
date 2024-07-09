@@ -167,4 +167,8 @@ public class DatasetColumnAndConditionQo extends DatasetConfig {
         return condList.stream().filter(d -> d.getColumnId() != null).map(DatasetConditionQo::getObjId).distinct()
                 .collect(Collectors.toList());
     }
+
+    public boolean judgeIndexView() {
+        return "IndexView".equalsIgnoreCase(operType);
+    }
 }

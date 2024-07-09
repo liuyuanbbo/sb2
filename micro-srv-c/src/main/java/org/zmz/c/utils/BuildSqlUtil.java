@@ -1,5 +1,6 @@
 package org.zmz.c.utils;
 
+import cn.hutool.core.util.StrUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.zmz.c.pojo.dataopen.ZmgrMetaColumns;
@@ -7,8 +8,10 @@ import org.zmz.c.qo.dataopen.DatasetConditionQo;
 import org.zmz.c.qo.dataopen.ProRestrictColumnVo;
 import org.zmz.c.service.dataopen.sql.AbstractSqlParser;
 import org.zmz.c.service.dataopen.sqltype.SqlBuilderHelper;
+import org.zmz.c.vo.dataopen.dataset.PhysicsColumnResponseVo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -245,7 +248,7 @@ public final class BuildSqlUtil {
             // 算术运算条件
         }
         // 普通条件
-        else if (StringUtil.isNotEmpty(condOperator)) {
+        else if (StringUtils.isNotEmpty(condOperator)) {
             // 自定义sql不需要拼字段，预留，暂未用到
             if ("simpleCond".equals(condType) && !"SQL".equalsIgnoreCase(condOperator)) {
                 whereBuilder.append(tableCode).append(".").append(columnCode);
@@ -260,7 +263,7 @@ public final class BuildSqlUtil {
                                         String columnType, String cycleType, String dataFormat, String isSql, AbstractSqlParser abstractSqlParser) {
         // 拼接条件
         // 有date类型的字段条件，需要格式化日期
-        if (columnType.toLowerCase().contains("date") && StringUtil.isNotEmpty(dataFormat)
+        if (columnType.toLowerCase().contains("date") && StrUtil.isNotEmpty(dataFormat)
                 && !KeyValues.YES_VALUE_1.equals(isSql) && !"SQL".equalsIgnoreCase(condOperator)
                 && !"EXPRESSION".equalsIgnoreCase(condOperator)) {
             // 分割值
@@ -288,15 +291,10 @@ public final class BuildSqlUtil {
 
     /**
      * 条件值是否增加单引号
-     *
-     * @param whereBuilder
-     * @param condOperator
-     * @param condValue
-     * @param addQuot
      */
     public static void appendSimpleCond(StringBuilder whereBuilder, String condOperator, String condValue,
                                         boolean addQuot) {
-        if (StringUtil.isNotEmpty(condOperator)) {
+        if (StrUtil.isNotEmpty(condOperator)) {
             String quot = addQuot ? "'" : "";
             // 拼接条件 arithmeticCond
             if ("NOT IN".equalsIgnoreCase(condOperator) || "IN".equalsIgnoreCase(condOperator)) {
@@ -344,7 +342,7 @@ public final class BuildSqlUtil {
                     String str = splitArray[i];
                     splitArray[i] = quot + str + quot;
                 }
-                String joinStr = StringUtil.join(" AND ", splitArray);
+                String joinStr = StrUtil.join(" AND ", Arrays.stream(splitArray).toList());
                 whereBuilder.append(joinStr).append(" ");
             }
             // 自定义表达式,比如：[a.col] %100 = 0
@@ -371,14 +369,15 @@ public final class BuildSqlUtil {
         boolean dynamicSql = CheckStringUtil.isDynamicSql(condValue);
         if (dynamicSql) {
             return condValue;
-        } else if (StringUtil.isNotEmpty(quot)) {
+        }
+        if (StrUtil.isNotEmpty(quot)) {
             return quot.concat(condValue).concat(quot);
         }
         return condValue;
     }
 
     public static void appendSimpleCondOfPeriod(StringBuilder whereBuilder, String[] resultPeriod, boolean isStr) {
-        if (StringUtil.isNotEmpty(resultPeriod[0])) {
+        if (StrUtil.isNotEmpty(resultPeriod[0])) {
             // 拼接条件 arithmeticCond
             if ("NOT IN".equalsIgnoreCase(resultPeriod[0]) || "IN".equalsIgnoreCase(resultPeriod[0])) {
                 whereBuilder.append(" ").append(resultPeriod[0]).append(" ");
@@ -408,7 +407,7 @@ public final class BuildSqlUtil {
                         splitArray[i] = resultPeriod[i + 1];
                     }
                 }
-                String joinStr = StringUtil.join(" AND ", splitArray);
+                String joinStr = StrUtil.join(" AND ", Arrays.stream(splitArray).toList());
                 whereBuilder.append(joinStr).append(" ");
             }
 

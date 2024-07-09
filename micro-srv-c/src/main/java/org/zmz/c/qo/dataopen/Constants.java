@@ -113,6 +113,25 @@ public interface Constants {
     };
 
     /**
+     * 账期用整型，由于分钟级别超长，修改为BIGINT
+     */
+    Map<String, String> DATA_TYPE_INT = new HashMap<>() {
+        {
+            put("mysql", "BIGINT");
+            put("hive", "BIGINT");
+            put("gp", "BIGINT");
+            put("postgresql", "BIGINT");
+            put("oushudb", "BIGINT");
+            put("gbase", "BIGINT");
+            put("oracle", "NUMBER");
+            put("rapidsdb", "BIGINT");
+            put("clickhouse", "Int64");
+            put("doris", "BIGINT");
+            put("whalehouse", "Int64");
+        }
+    };
+
+    /**
      * sql生成模式: preview:预览sql; task:任务sql; check: 校验sql
      */
     String SQL_PREVIEW = "preview";
@@ -151,13 +170,71 @@ public interface Constants {
 
     String OBJ_TREE_RELA_TYPE_V = "v";
 
+    /**
+     * 计算类型,SUM:求和,COUNT:计数,MAX:最大值,MIN:最小值,AVG:平均值,PERCENTILE_APPROX:分位数函数
+     */
+    String CALCULATE_TYPE_MAX = "MAX";
+
+    String CALCULATE_TYPE_MIN = "MIN";
+
+    String DATASET_AREA_LEVEL = "consume_area_level";
+
+    /**
+     * 过渡组织标识占位符，该格式不会被调度替换
+     */
+    String ORG_ID = "$orgId";
+
+    /**
+     * 数据开放表态参数key前缀，缓存到redis的兼数开的，统一用数据开的
+     */
+    String DATAOPEM_DCSYS_KEY_PREFIX = "SYSTEM_CONFIG";
+
+    String SQL_CHECK = "check";
+
+    String ROOT_ID = "-1";
+
+    /**
+     * 数据消费默认配置LanId,预览过滤数据使用
+     */
+    String CONSUME_DEF_LAN_ID = "CONSUME_DEF_LAN_ID";
+
+    /**
+     * 数据消费组织明细表模型
+     */
+    String CONSUME_ORG_MODEL = "CONSUME_ORG_MODEL";
+
+    /**
+     * 数据消费默认配置provinceId,预览过滤数据使用
+     */
+    String CONSUME_DEF_PROV_ID = "CONSUME_DEF_PROV_ID";
+
+    /**
+     * HIVE建表字段类型，计算表达式，默认使用bigint
+     */
+    String HIVE_DATA_TYPE_BIGINT = "bigint";
+
+    String HIVE_DATA_TYPE_INT = "int";
+
+    String HIVE_DATA_TYPE_DOUBLE = "double";
+
+    String MYSQL_DATA_TYPE_BIGINT = "-5";
+
+    String ORACLE_DATA_TYPE_NUMBER = "3";
+
+    String GP_DATA_TYPE_BIGINT = "bigint";
+
+    String GBASE_DATA_TYPE_BIGINT = "bigint";
+
+    String CLICKHOUSE_DATA_TYPE_BIGINT = "UInt64";
+
+    String DORIS_DATA_TYPE_INT = "int";
 
     class DimensionType {
 
-        String TYPE_MAIN = "main";
+        public static final String TYPE_MAIN = "main";
 
-        String TYPE_INCLUDE = "include";
+        public static final String TYPE_INCLUDE = "include";
 
-        String TYPE_EXCLUDE = "exclude";
+        public static final String TYPE_EXCLUDE = "exclude";
     }
 }

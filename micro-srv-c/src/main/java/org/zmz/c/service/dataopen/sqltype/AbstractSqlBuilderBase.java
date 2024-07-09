@@ -1,8 +1,8 @@
 package org.zmz.c.service.dataopen.sqltype;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +21,7 @@ import org.zmz.c.qo.dataopen.ObjRelaTreeColumnVo;
 import org.zmz.c.qo.dataopen.OrgDimension;
 import org.zmz.c.qo.dataopen.OutPutMode;
 import org.zmz.c.qo.dataopen.SubQuerySqlQo;
+import org.zmz.c.service.dataopen.common.StaticDataService;
 import org.zmz.c.service.dataopen.dataset.AcctSqlService;
 import org.zmz.c.service.dataopen.dataset.EngineType;
 import org.zmz.c.service.dataopen.dataset.SqlComponent;
@@ -29,11 +30,14 @@ import org.zmz.c.service.dataopen.remote.DataCommonService;
 import org.zmz.c.service.dataopen.sqlfunc.AbstractFuncParser;
 import org.zmz.c.service.dataopen.sqlfunc.PeriodExpression;
 import org.zmz.c.service.dataopen.sqlfunc.SqlBuilderFactory;
+import org.zmz.c.utils.AcctTimeUtil;
 import org.zmz.c.utils.JsonUtil;
 import org.zmz.c.utils.KeyValues;
+import org.zmz.c.utils.OrganizationUtil;
 import org.zmz.c.utils.SqlConvertUtils;
 import org.zmz.c.utils.SqlUtils;
 import org.zmz.c.vo.dataopen.dataset.ResultSql;
+import org.zmz.c.vo.dataopen.dataset.TimeGranularityVo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -334,7 +338,7 @@ public abstract class AbstractSqlBuilderBase {
             return model.getMetaDataInfo().getSchemaCode();
         }
         // 获取模型详情失败
-        throw new BaseException(CommonErrorCode.ERROR_CODE_50242, metaDataId);
+        throw new RuntimeException("根据 metaDataId " + metaDataId + " 获取模型详情失败");
     }
 
     private void joinSrcAndTgt(SqlComponent component, Map<String, String> dimAlias, MetricsDimensionPathVo mainTb,
@@ -512,11 +516,12 @@ public abstract class AbstractSqlBuilderBase {
         MetricsDimensionPathVo orgDetailsSrc = getDataPrivCtrlInfo().getOrgInfoPathsMap().get(path.getSrcTableId());
 
         // 需要添加数据权限过滤条件,目前临时表只加权限控制条件
-        if (component.where.length() == 0) {
+        if (component.where.isEmpty()) {
             ModelInfo orgDimModel = getDataPrivCtrlInfo().getOrgDimensionModelInfoList().stream()
-                    .filter(model -> path.getSrcTableId().equals(model.getMetaDataInfo().getMetaDataId())).findFirst()
-                    .get();
-            if (StringUtil.isNotEmpty(orgDimModel.getBussinessAttr().getOrgField())) {
+                    .filter(model -> path.getSrcTableId().equals(model.getMetaDataInfo().getMetaDataId()))
+                    .findFirst()
+                    .orElse(new ModelInfo());
+            if (StringUtils.isNotEmpty(orgDimModel.getBussinessAttr().getOrgField())) {
                 String orgName = joinOrgDetails(component.join, tempAlias, orgDetailsSrc);
                 component.where.append(orgName).append(SqlUtils.STR_POINT).append(getOrgDetailsPathCode())
                         .append(" like '%").append(Constants.ORG_ID).append("%'");
@@ -764,7 +769,7 @@ public abstract class AbstractSqlBuilderBase {
         Map<String, StringBuilder> expMap = new HashMap<>();
         StringBuilder hivePeriodDim = new StringBuilder();
         // 不需要注释 的 数据源类型
-        Set<String> ignoreNotesTypeSets = Sets.newHashSet(KeyValues.DS_HIVE, KeyValues.DS_WHALEHOUSE);
+        Set<String> ignoreNotesTypeSets = Set.of(KeyValues.DS_HIVE, KeyValues.DS_WHALEHOUSE);
         for (DatasetColumnQo dimension : dimensionList) {
 
             // 隐藏字段过滤
@@ -929,7 +934,7 @@ public abstract class AbstractSqlBuilderBase {
         }
 
         // 删掉逗号
-        if (fieldSql.length() > 0) {
+        if (!fieldSql.isEmpty()) {
             fieldSql.deleteCharAt(fieldSql.length() - 1);
         }
 
@@ -988,9 +993,14 @@ public abstract class AbstractSqlBuilderBase {
      * @param aliasMap      别名map
      * @param temTableAlias 临时表别名
      */
-    protected void mergeGroupBy(List<DatasetColumnQo> metrics, List<DatasetColumnQo> dimensionList,
-                                StringBuilder groupSql, Map<String, Map<String, String>> aliasMap, Map<String, String> temTableAlias,
-                                boolean hasOrgTable, String tmpTbName, OrgDimension replaceLevelColumn) {
+    protected void mergeGroupBy(List<DatasetColumnQo> metrics,
+                                List<DatasetColumnQo> dimensionList,
+                                StringBuilder groupSql,
+                                Map<String, Map<String, String>> aliasMap,
+                                Map<String, String> temTableAlias,
+                                boolean hasOrgTable,
+                                String tmpTbName,
+                                OrgDimension replaceLevelColumn) {
         // 权限控制，划小架构维度字段id拼接。维度拖到了组织维度表的字段，但是不包含组织id
         boolean haveOrgId = checkHaveOrgId();
         DatasetColumnQo orgDimColumn = SqlBuilderHelper.getOrgDimensionMinColumn(getDataPrivCtrlInfo());
@@ -1025,8 +1035,6 @@ public abstract class AbstractSqlBuilderBase {
                             && (dimension.getColumnCode().equals(replaceLevelColumn.getOrgIdColumnCode())
                             || dimension.getColumnCode().equals(replaceLevelColumn.getOrgNameColumnCode()))) {
                         appendLevelColumnGroup(groupSql, replaceLevelColumn, dimTableAlias);
-                    } else {
-                        continue;
                     }
                 } else {
                     groupSql.append(dimTableAlias).append(SqlUtils.STR_POINT).append(dimension.getColumnCode())
@@ -1065,7 +1073,7 @@ public abstract class AbstractSqlBuilderBase {
                 }
             }
         }
-        if (groupSql.length() > 0) {
+        if (!groupSql.isEmpty()) {
             groupSql.deleteCharAt(groupSql.length() - 1);
         }
     }
@@ -1103,7 +1111,9 @@ public abstract class AbstractSqlBuilderBase {
         return tbName;
     }
 
-    protected String appendPrePeriod(String tbName, Column column, PeriodExpression condPeriodExp,
+    protected String appendPrePeriod(String tbName,
+                                     Column column,
+                                     PeriodExpression condPeriodExp,
                                      SqlFuncEnum funcEnum) {
         String cond;
         // 如果sql输出类型的，且为动态条件，不需要拼引号 静态的可能需要拼引号
@@ -1146,7 +1156,6 @@ public abstract class AbstractSqlBuilderBase {
      *
      * @param metrics       度量
      * @param dimensionType 度量类型
-     * @return
      */
     protected List<PeriodExpression> getPeriodExpressionFromMetrics(List<DatasetColumnQo> metrics,
                                                                     List<DatasetConditionQo> acctConds, String dimensionType) {
@@ -1198,7 +1207,7 @@ public abstract class AbstractSqlBuilderBase {
         // 一次性临时表不需要加账期
         String subfix = Constants.SCHEDULE_LOOP_TYPE_O.equalsIgnoreCase(cycleType) ? "" : "_${acct}";
         // oracle表名不能长于30，生成8位随机码
-        tmpTable = (tmpTable + "tmp_".concat(String.valueOf(RandomUtil.nextInt(90000000) + 10000000)).concat("_")
+        tmpTable = (tmpTable + "tmp_".concat(String.valueOf(RandomUtil.getSecureRandom().nextInt(90000000) + 10000000)).concat("_")
                 .concat(String.valueOf(getIncrementTbIndex())).concat(subfix));
         return tmpTable;
     }
@@ -1256,9 +1265,9 @@ public abstract class AbstractSqlBuilderBase {
         if (condOperator.startsWith("BETWEEN")) {
             qo.setCondOperator("BETWEEN");
         } else if ("IN".equalsIgnoreCase(condOperator)) {
-            return "(" + StringUtil.join(",", splitArray) + ")";
+            return "(" + StringUtils.join(",", splitArray) + ")";
         }
-        return StringUtil.join(" and ", splitArray);
+        return StringUtils.join(" and ", splitArray);
     }
 
     /**
@@ -1301,15 +1310,13 @@ public abstract class AbstractSqlBuilderBase {
 
     /**
      * 主视图与相对维度视图合并
-     *
-     * @param dimensionList
-     * @param mainSql
-     * @param subSqlList
-     * @param replaceLevelColumn
-     * @return
      */
-    protected abstract String mergeRelativeDims(boolean mergeRelativeDims, List<DatasetColumnQo> dimensionList,
-                                                String mainSql, List<SubQuerySqlQo> subSqlList, OrgDimension replaceLevelColumn, ResultSql result);
+    protected abstract String mergeRelativeDims(boolean mergeRelativeDims,
+                                                List<DatasetColumnQo> dimensionList,
+                                                String mainSql,
+                                                List<SubQuerySqlQo> subSqlList,
+                                                OrgDimension replaceLevelColumn,
+                                                ResultSql result);
 
     protected abstract String getDefOrgPathCode();
 
@@ -1352,8 +1359,12 @@ public abstract class AbstractSqlBuilderBase {
      */
     protected abstract boolean checkHaveOrgId();
 
-    protected abstract void appendTableSql(boolean isPriv, Map.Entry<String, List<MetricsDimensionPathVo>> entry,
-                                           Map<Long, String> hasAppend, boolean needAppendPeriod, boolean hasOrgTable, Map<String, String> tableAlias,
+    protected abstract void appendTableSql(boolean isPriv,
+                                           Map.Entry<String, List<MetricsDimensionPathVo>> entry,
+                                           Map<Long, String> hasAppend,
+                                           boolean needAppendPeriod,
+                                           boolean hasOrgTable,
+                                           Map<String, String> tableAlias,
                                            SqlComponent component);
 
     /**

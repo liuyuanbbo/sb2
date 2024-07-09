@@ -281,7 +281,7 @@ public final class SqlBuilderHelper {
                 }
             }
         } else {
-            return MapUtils.getString(alias.get(dimension.getTableId().toString()), dimension.getTableId().toString());
+            return MapUtil.getStr(alias.get(dimension.getTableId().toString()), dimension.getTableId().toString());
         }
         return null;
     }

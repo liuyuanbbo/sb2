@@ -1,23 +1,18 @@
 package org.zmz.c.service.dataopen.sqltype;
 
-import com.ztesoft.bss.smart.enums.meta.column.MysqlColumnTypeEnum;
-import com.ztesoft.bss.smart.jentity.consume.prod.qo.DatasetColumnAndConditionQo;
-import com.ztesoft.bss.smart.jentity.consume.prod.qo.DatasetColumnQo;
-import com.ztesoft.bss.smart.jentity.consume.prod.util.SqlUtils;
-import com.ztesoft.bss.smart.qo.inf.Column;
-import com.ztesoft.bss.smart.util.KeyValues;
-import com.ztesoft.bss.smart.util.StringUtil;
-import com.ztesoft.bss.smart.vo.inf.ModelInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.zmz.c.qo.dataopen.Column;
+import org.zmz.c.qo.dataopen.DatasetColumnAndConditionQo;
+import org.zmz.c.qo.dataopen.DatasetColumnQo;
+import org.zmz.c.qo.dataopen.ModelInfo;
+import org.zmz.c.service.dataopen.sqlenum.MysqlColumnTypeEnum;
+import org.zmz.c.utils.KeyValues;
+import org.zmz.c.utils.SqlUtils;
 
 import java.util.Map;
 
-/**
- * @author Feng.yh
- * @date 2022-03-27 22:19
- * @description
- */
 public class MysqlSqlBuilder extends AbstractSqlBuilder {
     public MysqlSqlBuilder() {
     }
@@ -31,7 +26,7 @@ public class MysqlSqlBuilder extends AbstractSqlBuilder {
     @Override
     public void getPage(StringBuilder sql) {
         if (null != params.getPageSize() && null != params.getPageIndex() && params.getPageSize() > 0
-            && params.getPageIndex() >= 0) {
+                && params.getPageIndex() >= 0) {
             sql.append(SqlUtils.SQL_LIMIT);
             Integer offset = (params.getPageIndex() > 0) ? (params.getPageIndex() - 1) * params.getPageSize() : 0;
             sql.append(offset).append(SqlUtils.STR_DOT).append(params.getPageSize());
@@ -44,32 +39,27 @@ public class MysqlSqlBuilder extends AbstractSqlBuilder {
         MysqlColumnTypeEnum typeEnum = MysqlColumnTypeEnum.valueOf(column.getColumnType().toUpperCase());
         if (!CollectionUtils.isEmpty(column.getColumnGroup())) {
             if (typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.DECIMAL.name())
-                || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.DOUBLE.name())
-                || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.FLOAT.name())
-                || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.NUMERIC.name())) {
+                    || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.DOUBLE.name())
+                    || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.FLOAT.name())
+                    || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.NUMERIC.name())) {
                 outField.append("round(").append("IFNULL(").append(metric).append(",0),")
-                    .append(column.getColumnAccuracy()).append(")");
-            }
-            else if (typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.BIGINT.name())
-                || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.INT.name())
-                || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.BLOB.name())) {
+                        .append(column.getColumnAccuracy()).append(")");
+            } else if (typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.BIGINT.name())
+                    || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.INT.name())
+                    || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.BLOB.name())) {
                 outField.append("IFNULL(").append(metric).append(",0)");
-            }
-            else {
+            } else {
                 outField.append(metric);
             }
-        }
-        else {
+        } else {
             if (!ObjectUtils.isEmpty(column.getColumnAccuracy())) {
                 outField.append("round(").append("IFNULL(").append(metric).append(",0),")
-                    .append(column.getColumnAccuracy()).append(")");
-            }
-            else if (typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.BIGINT.name())
-                || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.INT.name())
-                || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.BLOB.name())) {
+                        .append(column.getColumnAccuracy()).append(")");
+            } else if (typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.BIGINT.name())
+                    || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.INT.name())
+                    || typeEnum.name().equalsIgnoreCase(MysqlColumnTypeEnum.BLOB.name())) {
                 outField.append("IFNULL(").append(metric).append(",0)");
-            }
-            else {
+            } else {
                 outField.append(metric);
             }
         }
@@ -82,7 +72,7 @@ public class MysqlSqlBuilder extends AbstractSqlBuilder {
         fieldSql.append(columnExp);
         if (!column.getColumnType().equalsIgnoreCase(columnType)) {
             fieldSql.insert(0, SqlUtils.STR_LEFT_BRACKET).insert(0, SqlUtils.STR_FUNC_CAST).append(SqlUtils.SQL_AS)
-                .append("int".equalsIgnoreCase(columnType) ? "SIGNED" : columnType).append(SqlUtils.STR_RIGHT_BRACKET);
+                    .append("int".equalsIgnoreCase(columnType) ? "SIGNED" : columnType).append(SqlUtils.STR_RIGHT_BRACKET);
         }
         return fieldSql.toString();
     }
@@ -91,9 +81,9 @@ public class MysqlSqlBuilder extends AbstractSqlBuilder {
     public String castColumnType(String columnExp, String columnType) {
         StringBuilder fieldSql = new StringBuilder();
         fieldSql.append(columnExp);
-        if (StringUtil.isNotEmpty(columnType)) {
+        if (StringUtils.isNotEmpty(columnType)) {
             fieldSql.insert(0, SqlUtils.STR_LEFT_BRACKET).insert(0, SqlUtils.STR_FUNC_CAST).append(SqlUtils.SQL_AS)
-                .append("int".equalsIgnoreCase(columnType) ? "SIGNED" : columnType).append(SqlUtils.STR_RIGHT_BRACKET);
+                    .append("int".equalsIgnoreCase(columnType) ? "SIGNED" : columnType).append(SqlUtils.STR_RIGHT_BRACKET);
         }
         return fieldSql.toString();
     }

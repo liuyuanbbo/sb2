@@ -8,7 +8,7 @@ import org.zmz.c.qo.dataopen.Column;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.Partition;
 import org.zmz.c.service.dataopen.dataset.ColumnType;
-import org.zmz.c.service.dataopen.dataset.GpColumnTypeEnum;
+import org.zmz.c.service.dataopen.sqlenum.GpColumnTypeEnum;
 import org.zmz.c.utils.KeyValues;
 import org.zmz.c.utils.SqlUtils;
 

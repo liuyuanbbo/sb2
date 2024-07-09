@@ -1,4 +1,6 @@
-package org.zmz.c.service.dataopen.dataset;
+package org.zmz.c.service.dataopen.sqlenum;
+
+import org.zmz.c.service.dataopen.dataset.ColumnType;
 
 public enum GpColumnTypeEnum implements ColumnType {
 

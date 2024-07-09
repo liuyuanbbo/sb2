@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.ModelInfo;
 import org.zmz.c.qo.dataopen.ModelInfoQo;
 import org.zmz.c.service.dataopen.feign.FeignDataCommonService;
@@ -14,6 +15,7 @@ import org.zmz.c.utils.JsonUtil;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -77,5 +79,27 @@ public class DataCommonService {
         }
         log.info("获取模型详情接口耗时:{}", System.currentTimeMillis() - startTime);
         return modelInfos;
+    }
+
+    public ModelInfo queryAllModelInfoPro(Long metaDataId) {
+        ModelInfoQo modelInfoQo = new ModelInfoQo();
+        modelInfoQo.setMetaDataIdList(Collections.singletonList(metaDataId));
+        List<ModelInfo> modelInfos = this.queryAllModelInfoBatch(modelInfoQo);
+        if (CollUtil.isNotEmpty(modelInfos)) {
+            return modelInfos.get(0);
+        }
+        return null;
+    }
+
+    public ModelInfo getTimeModel(String tableType) {
+        // 获取时间维表
+        ModelInfoQo modelInfoQo = new ModelInfoQo();
+        modelInfoQo.setIsTimeDimension(Constants.YES_VALUE_1);
+        modelInfoQo.setTableType(tableType);
+        List<ModelInfo> modelInfoList = this.queryAllModelInfoBatch(modelInfoQo);
+        if (CollUtil.isEmpty(modelInfoList)) {
+            return null;
+        }
+        return modelInfoList.get(0);
     }
 }

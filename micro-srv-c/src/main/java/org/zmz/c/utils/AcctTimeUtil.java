@@ -1,12 +1,17 @@
 package org.zmz.c.utils;
 
 import cn.hutool.core.collection.CollUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.OutPutMode;
+import org.zmz.c.service.dataopen.sqltype.SqlBuilderHelper;
 import org.zmz.c.vo.dataopen.dataset.CycleInfo;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +116,60 @@ public class AcctTimeUtil {
             }
         }
         return Constants.SCHEDULE_LOOP_TYPE_D;
+    }
 
+    /**
+     * 根据获取账期
+     *
+     * @param scheduleType 调度类型
+     * @param cycleType    周期
+     * @param outPutMode   输出模式
+     * @return outPutMode
+     */
+    public static String getAcctValOutPubMode(String scheduleType, String cycleType, String outPutMode) {
+        // sql的默认输出账期字段替换
+        if (OutPutMode.SQL.equalsIgnoreCase(outPutMode)) {
+            return Constants.ACCT_CODE_EXP;
+        } else {
+            return getAcctVal(scheduleType, cycleType);
+        }
+    }
+
+    public static String getDefAcctValue(String cycleType) {
+        if (isCycle(cycleType)) {
+            switch (cycleType.toUpperCase()) {
+                case "Y":
+                    return DateUtil.getLastAcct(Calendar.YEAR);
+                case "M":
+                    return DateUtil.getLastMonth(DateUtil.DATE_FORMAT_6);
+                case "H":
+                    return DateUtil.getLastAcct(Calendar.HOUR);
+                case "F":
+                    return DateUtil.getLastAcct(Calendar.MINUTE);
+                case "D":
+                    return DateUtil.getYesterday(DateUtil.DATE_FORMAT_8);
+                default:
+                    return DateUtil.getDate();
+            }
+        }
+        return "";
+    }
+
+    public static boolean isCycle(String dataCycle) {
+        return StringUtils.isNotEmpty(dataCycle) && !"O".equalsIgnoreCase(dataCycle);
+    }
+
+    /**
+     * 返回上月
+     *
+     * @param pattern 日期的格式
+     */
+    public static String getLastMonth(String pattern) {
+        Calendar c = Calendar.getInstance();
+        // 当前月份减1
+        c.add(Calendar.MONTH, -1);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        Date date = c.getTime();
+        return sdf.format(date);
     }
 }

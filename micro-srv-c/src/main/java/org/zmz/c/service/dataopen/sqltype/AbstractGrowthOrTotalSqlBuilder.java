@@ -1,5 +1,6 @@
 package org.zmz.c.service.dataopen.sqltype;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -8,6 +9,7 @@ import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.DatasetColumnQo;
 import org.zmz.c.qo.dataopen.DatasetConditionQo;
 import org.zmz.c.qo.dataopen.MetricsDimensionPathVo;
+import org.zmz.c.qo.dataopen.ModelInfo;
 import org.zmz.c.qo.dataopen.OrgDimension;
 import org.zmz.c.qo.dataopen.SubQuerySqlQo;
 import org.zmz.c.service.dataopen.dataset.SqlComponent;
@@ -25,16 +27,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author fyh
- * @date 2023-03-31 17:43
- * @description 同比、环比sql拼接
- */
+@Slf4j
 public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilderBase {
 
     /**
      * 是否有同环比、月/年累计
-     * 
+     *
      * @param metrics 度量
      * @return true/false
      */
@@ -70,7 +68,7 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         // 判断是否需要关联时间维表
         boolean joinTimeSql = false;
         DatasetColumnQo acctDimension = dimensionList.stream().filter(d -> Constants.YES_VALUE_1.equals(d.getIsAcct()))
-            .findFirst().orElse(null);
+                .findFirst().orElse(null);
         if (Constants.SCHEDULE_LOOP_TYPE_O.equalsIgnoreCase(scheduleType) && acctDimension != null) {
             Column periodColumn = getPeriodColumnFromMetric(metricList.get(0), acctDimension);
             if (null != periodColumn) {
@@ -78,7 +76,7 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
                 joinTimeSql = SqlBuilderHelper.isTotal(funcEnum);
                 // 全局度量条件
                 DatasetConditionQo acctCond = CollectionUtils.isEmpty(condList) ? null
-                    : condList.stream().filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct())).findFirst()
+                        : condList.stream().filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct())).findFirst()
                         .orElse(null);
                 PeriodExpression condPeriodExp = new PeriodExpression();
                 if (acctCond != null) {
@@ -86,28 +84,27 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
                     condPeriodExp.setOperator(acctCond.getCondOperator());
                     condPeriodExp.setIsDynamic(acctCond.getIsDynamic());
                     String[] split = acctCond.getCondValue().contains("~") ? acctCond.getCondValue().split("~")
-                        : acctCond.getCondValue().split(",");
+                            : acctCond.getCondValue().split(",");
                     condPeriodExp.setPeriodScope(new LinkedList<>(Arrays.asList(split)));
-                }
-                else {
+                } else {
                     condPeriodExp = this.getPeriodExpressionByFunc(acctDimension.getCycleType(), funcEnum);
                 }
                 if (joinTimeSql) {
                     String tbName = SqlBuilderHelper.getAliasName(alias, periodColumn.getMetaDataId());
                     String columnExp = tbName + SqlUtils.STR_POINT + periodColumn.getColumnCode();
                     component.join.append(SqlUtils.SQL_INNER_JOIN).append("(").append(getTimeSubSql(condPeriodExp))
-                        .append(") tm ").append(totalJoinOnSql(columnExp, funcEnum));
+                            .append(") tm ").append(totalJoinOnSql(columnExp, funcEnum));
                 }
             }
         }
 
         this.appendOutField(singleSql, metricList, dimensionType, dimensionList, alias, component.field,
-            replaceLevelColumn, funcEnum, joinTimeSql);
+                replaceLevelColumn, funcEnum, joinTimeSql);
 
         if (SqlBuilderHelper.isGrowthOrTotal(funcEnum)) {
             // 同比、环比
             this.appendWhere(singleSql, component.where, metricList, dimensionType, condList, alias, null, null,
-                funcEnum);
+                    funcEnum);
         }
 
         this.appendGroupBy(metricList, dimensionList, component.group, alias, replaceLevelColumn, joinTimeSql);
@@ -129,34 +126,34 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
 
         Map<String, Map<String, List<MetricsDimensionPathVo>>> tempTablesMap = this.params.getTempTablesMap();
         Map<String, Map<String, MetricsDimensionPathVo>> mainTablesToTempTablesMap = this.params
-            .getMainTablesToTempTablesMap();
+                .getMainTablesToTempTablesMap();
         Map<String, Map<String, List<MetricsDimensionPathVo>>> mainTablesMap = this.params.getMainTablesMap();
         boolean hasOrgTable = SqlBuilderHelper.hasOrgTable(getDataPrivCtrlInfo(), metricList.get(0).getPathsMap());
         boolean mainSlaveTabPeriod = needSlaveTablePeriod(metricList, dimensionList);
 
         SqlComponent component = new SqlComponent();
         String tmpTbName = subJoinTables(component, mainTbPathAlias, tempTbPathAlias, hasOrgTable, result,
-            metricList.get(0), cacheTempPath, tempTablesMap, mainTablesToTempTablesMap, mainTablesMap,
-            mainSlaveTabPeriod);
+                metricList.get(0), cacheTempPath, tempTablesMap, mainTablesToTempTablesMap, mainTablesMap,
+                mainSlaveTabPeriod);
         Map<String, List<MetricsDimensionPathVo>> mainTbPaths = mainTablesMap.get(metricList.get(0).getPath());
 
         SqlFuncEnum funcEnum = SqlFuncEnum.getFuncByName(metricList.get(0).getFunc());
 
         StringBuilder fields = mergeField(singleSql, metricList, dimensionType, dimensionList, mainTbPathAlias,
-            tempTbPathAlias, hasOrgTable, tmpTbName, replaceLevelColumn, funcEnum);
+                tempTbPathAlias, hasOrgTable, tmpTbName, replaceLevelColumn, funcEnum);
         component.field.append(fields);
 
         if (SqlBuilderHelper.isGrowth(funcEnum)) {
             // 同比、环比
             this.appendWhere(singleSql, component.where, metricList, dimensionType, condList, mainTbPathAlias,
-                mainTbPaths, tempTbPathAlias, funcEnum);
+                    mainTbPaths, tempTbPathAlias, funcEnum);
         } else if (SqlBuilderHelper.isTotal(funcEnum)) {
             // 月/年累计 需要关联时间维表
             this.appendWhere(singleSql, component.where, metricList, dimensionType, condList, mainTbPathAlias,
-                mainTbPaths, tempTbPathAlias, funcEnum);
+                    mainTbPaths, tempTbPathAlias, funcEnum);
         }
         this.mergeGroupBy(metricList, dimensionList, component.group, mainTbPathAlias, tempTbPathAlias, hasOrgTable,
-            tmpTbName, replaceLevelColumn);
+                tmpTbName, replaceLevelColumn);
 
         SubQuerySqlQo relativeDimension = new SubQuerySqlQo();
         relativeDimension.setDimensionList(dimensionList);
@@ -191,66 +188,59 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
                     // 一次性任务调度
                     acct = "'$add_month(${month_id},0,-1)'";
                     acct_1 = "'$add_month(${month_id},0,-2)'";
-                }
-                else {
+                } else {
                     acct = "'$add_day(${day_id},0,0,-1)'";
                     acct_1 = "'$add_day(${day_id},0,0,-2)'";
                 }
-            }
-            else if (KeyValues.ACCT_TMIE_M.equals(column.getCycleType())) {
+            } else if (KeyValues.ACCT_TMIE_M.equals(column.getCycleType())) {
                 // 月账任务调度
                 acct = "'${month_id}'";
                 acct_1 = "'$add_month(${month_id},0,-1)'";
-            }
-            else {
+            } else {
                 acct = "'${day_id}'";
                 acct_1 = "'$add_day(${day_id},0,0,-1)'";
             }
 
             metricPeriod.append(tbName).append(SqlUtils.STR_POINT).append(column.getColumnCode())
-                .append(SqlUtils.STR_IN).append(SqlUtils.STR_LEFT_BRACKET)
-                .append(SqlBuilderHelper.replaceString(acct_1, isStr)).append(SqlUtils.STR_DOT)
-                .append(SqlBuilderHelper.replaceString(acct, isStr)).append(SqlUtils.STR_RIGHT_BRACKET);
-        }
-        else if (KeyValues.ACCT_TMIE_D.equalsIgnoreCase(column.getCycleType())) {
+                    .append(SqlUtils.STR_IN).append(SqlUtils.STR_LEFT_BRACKET)
+                    .append(SqlBuilderHelper.replaceString(acct_1, isStr)).append(SqlUtils.STR_DOT)
+                    .append(SqlBuilderHelper.replaceString(acct, isStr)).append(SqlUtils.STR_RIGHT_BRACKET);
+        } else if (KeyValues.ACCT_TMIE_D.equalsIgnoreCase(column.getCycleType())) {
             // 日账期
             acct = AcctTimeUtil.getAcctValAddQuotOutPubMode(this.scheduleType, column.getCycleType(),
                     column.getColumnType(), this.outPutMode);
             metricPeriod.append(tbName).append(SqlUtils.STR_POINT).append(column.getColumnCode())
-                .append(SqlUtils.STR_EQUAL).append(acct);
-        }
-        else if (!checkMixed() && KeyValues.ACCT_TMIE_M.equalsIgnoreCase(column.getCycleType())) {
+                    .append(SqlUtils.STR_EQUAL).append(acct);
+        } else if (!checkMixed() && KeyValues.ACCT_TMIE_M.equalsIgnoreCase(column.getCycleType())) {
             // 非日月账期混用、月账期不减1
             acct = AcctTimeUtil.getAcctValAddQuotOutPubMode(this.scheduleType, column.getCycleType(),
                     column.getColumnType(), this.outPutMode);
             metricPeriod.append(tbName).append(SqlUtils.STR_POINT).append(column.getColumnCode())
-                .append(SqlUtils.STR_EQUAL).append(acct);
-        }
-        else if (checkMixed() && KeyValues.ACCT_TMIE_M.equalsIgnoreCase(column.getCycleType())) {
+                    .append(SqlUtils.STR_EQUAL).append(acct);
+        } else if (checkMixed() && KeyValues.ACCT_TMIE_M.equalsIgnoreCase(column.getCycleType())) {
             // 日月账期混用、全局条件没有配置月账期则减1，否则为配置的月账期
             acct = "'$add_month(${month_id},0,-1)'";
             metricPeriod.append(tbName).append(SqlUtils.STR_POINT).append(column.getColumnCode())
-                .append(SqlUtils.STR_EQUAL).append(SqlBuilderHelper.replaceString(acct, isStr));
-        }
-        else {
+                    .append(SqlUtils.STR_EQUAL).append(SqlBuilderHelper.replaceString(acct, isStr));
+        } else {
             // 其他 acct = "'${acct}'";
             acct = AcctTimeUtil.getAcctValAddQuotOutPubMode(this.scheduleType, column.getCycleType(),
                     column.getColumnType(), this.outPutMode);
             metricPeriod.append(tbName).append(SqlUtils.STR_POINT).append(column.getColumnCode())
-                .append(SqlUtils.STR_EQUAL).append(SqlBuilderHelper.replaceString(acct, isStr));
+                    .append(SqlUtils.STR_EQUAL).append(SqlBuilderHelper.replaceString(acct, isStr));
         }
     }
 
     protected abstract Map<String, Map<String, String>> joinTables(Map<String, List<MetricsDimensionPathVo>> pathsMap,
-        String dataPrivPathKey, boolean needAppendPeriod, SqlComponent component);
+                                                                   String dataPrivPathKey, boolean needAppendPeriod, SqlComponent component);
 
     protected abstract void appendOutField(boolean singleSql, List<DatasetColumnQo> metrics, String dimensionType,
-        List<DatasetColumnQo> dimensionList, Map<String, Map<String, String>> aliasMap, StringBuilder fieldSql,
-        OrgDimension replaceLevelColumn, SqlFuncEnum funcEnum, boolean joinTimeSql);
+                                           List<DatasetColumnQo> dimensionList, Map<String, Map<String, String>> aliasMap, StringBuilder fieldSql,
+                                           OrgDimension replaceLevelColumn, SqlFuncEnum funcEnum, boolean joinTimeSql);
 
     protected abstract void appendGroupBy(List<DatasetColumnQo> metrics, List<DatasetColumnQo> dimensionList,
-        StringBuilder groupSql, Map<String, Map<String, String>> aliasMap, OrgDimension replaceLevelColumn,
-        boolean joinTimeSql);
+                                          StringBuilder groupSql, Map<String, Map<String, String>> aliasMap, OrgDimension replaceLevelColumn,
+                                          boolean joinTimeSql);
 
     protected PeriodExpression getMetricPeriodExpression(Column column, SqlFuncEnum funcEnum) {
         return getPeriodExpressionByFunc(column.getCycleType(), funcEnum);
@@ -263,11 +253,9 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         exp.setPeriodScope(periodList);
         if (SqlFuncEnum.monthTotal.equals(funcEnum)) {
             this.getPeriodMonthTotal(cycleType, exp);
-        }
-        else if (SqlFuncEnum.yearTotal.equals(funcEnum)) {
+        } else if (SqlFuncEnum.yearTotal.equals(funcEnum)) {
             this.getPeriodYearTotal(cycleType, exp);
-        }
-        else {
+        } else {
             String period = AcctTimeUtil.getAcctValOutPubMode(scheduleType, cycleType, outPutMode);
             // 默认账期为动态
             exp.setIsDynamic(Constants.YES_VALUE_1);
@@ -283,18 +271,16 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         String currStar;
         String currEnd;
         if ("D".equalsIgnoreCase(cycleType)) {
-            if (StringUtil.isEqual("M", scheduleType)) {
+            if (StringUtils.equals("M", scheduleType)) {
                 // 日账期按月调度
                 currStar = "$add_day(${month_id},0,F)";
                 currEnd = "$add_day(${month_id},0,L)";
-            }
-            else if (StringUtil.isEqual("O", scheduleType)) {
+            } else if (StringUtils.equals("O", scheduleType)) {
                 // 日账期-一次性
                 // todo 一次性 昨天所属月份的第一天，比如9月1号，要取8月1号
                 currStar = "${month_id}01";
                 currEnd = "$add_day(${day_id},-1)";
-            }
-            else {
+            } else {
                 // 日账期-周期性按日调度
                 currStar = "${month_id}01";
                 currEnd = "${day_id}";
@@ -302,9 +288,8 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
             periodList.add(currStar);
             periodList.add(currEnd);
             exp.setOperator("BETWEEN");
-        }
-        else {
-            currEnd = StringUtil.isEqual("O", scheduleType) ? "$add_month(${month_id},-1)" : "${month_id}";
+        } else {
+            currEnd = StringUtils.equals("O", scheduleType) ? "$add_month(${month_id},-1)" : "${month_id}";
             exp.setOperator("=");
             periodList.add(currEnd);
         }
@@ -315,27 +300,24 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         String currStar;
         String currEnd;
         if ("D".equalsIgnoreCase(cycleType)) {
-            if (StringUtil.isEqual("M", scheduleType)) {
+            if (StringUtils.equals("M", scheduleType)) {
                 // 日账期按月调度
                 currStar = "$add_day(${year_id},F)";
                 currEnd = "$add_day(${month_id},L)";
-            }
-            else if (StringUtil.isEqual("O", scheduleType)) {
+            } else if (StringUtils.equals("O", scheduleType)) {
                 // 日账期一次性
                 // todo 一次性 昨天所属年份的第一天，比如20230101，要取20220101
                 currStar = "$add_day(${year_id},F)";
                 currEnd = "$add_day(${day_id},-1)";
-            }
-            else {
+            } else {
                 // 日账期按日调度
                 currStar = "$add_day(${year_id},F)";
                 currEnd = "${day_id}";
             }
-        }
-        else {
+        } else {
             // todo 一次性 上月所属年份的第一月，比如202301，要取202201
             currStar = "${year_id}01";
-            currEnd = StringUtil.isEqual("O", scheduleType) ? "$add_month(${month_id},-1)" : "${month_id}";
+            currEnd = StringUtils.equals("O", scheduleType) ? "$add_month(${month_id},-1)" : "${month_id}";
         }
         exp.setOperator("BETWEEN");
         periodList.add(currStar);
@@ -348,10 +330,9 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         ModelInfo timeModel = dataCommonService.getTimeModel(this.getDbType());
         if (timeModel != null) {
             timeSql.append("SELECT * FROM ").append(timeModel.getMetaDataInfo().getSchemaCode()).append(".")
-                .append(timeModel.getMetaDataInfo().getMetaDataCode());
-        }
-        else {
-            LoggerUtil.error("{} 类型数据库没有配置时间维表", this.getDbType());
+                    .append(timeModel.getMetaDataInfo().getMetaDataCode());
+        } else {
+            log.error("{} 类型数据库没有配置时间维表", this.getDbType());
         }
         return timeSql;
     }
@@ -361,12 +342,12 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         // 年累计
         if (funcEnum.equals(SqlFuncEnum.yearTotal)) {
             onSql.append("ON ").append(acctColExp).append(" <= tm.acct AND SUBSTR(CAST(").append(acctColExp)
-                .append(" AS varchar), 1, 4) = SUBSTR(CAST(tm.acct AS varchar), 1, 4)");
+                    .append(" AS varchar), 1, 4) = SUBSTR(CAST(tm.acct AS varchar), 1, 4)");
         }
         // 月累计
         if (funcEnum.equals(SqlFuncEnum.monthTotal)) {
             onSql.append("ON ").append(acctColExp).append(" <= tm.acct AND SUBSTR(CAST(").append(acctColExp)
-                .append(" AS varchar), 1, 6) = SUBSTR(CAST(tm.acct AS varchar), 1, 6)");
+                    .append(" AS varchar), 1, 6) = SUBSTR(CAST(tm.acct AS varchar), 1, 6)");
         }
         return onSql;
     }

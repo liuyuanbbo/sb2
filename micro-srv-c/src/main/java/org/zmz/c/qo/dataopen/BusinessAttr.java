@@ -72,4 +72,19 @@ public class BusinessAttr implements Serializable {
      * 省份字段
      */
     private String provinceField;
+
+    /**
+     * 时间粒度
+     */
+    private String timeGranularity;
+
+    /**
+     * 时间粒度值
+     */
+    private String timeGranularityValueColumn;
+
+    /**
+     * 时间粒度字段
+     */
+    private String timeGranularityColumn;
 }

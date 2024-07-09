@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 import org.zmz.c.qo.dataopen.Column;
+import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.DatasetColumnQo;
 import org.zmz.c.qo.dataopen.DatasetConditionQo;
 import org.zmz.c.qo.dataopen.OutPutMode;
@@ -14,6 +15,7 @@ import org.zmz.c.service.dataopen.sql.SqlParserFactory;
 import org.zmz.c.service.dataopen.sqltype.AbstractSqlBuilderBase;
 import org.zmz.c.service.dataopen.sqltype.SqlBuilderHelper;
 import org.zmz.c.utils.AcctTimeUtil;
+import org.zmz.c.utils.BuildSqlUtil;
 import org.zmz.c.utils.KeyValues;
 import org.zmz.c.utils.SqlUtils;
 import org.zmz.c.vo.dataopen.dataset.CycleInfo;
@@ -258,7 +260,7 @@ public abstract class AbstractFuncParser {
         List<DatasetConditionQo> condList = this.builder.params.getCondList();
         List<DatasetConditionQo> acct = CollectionUtils.isEmpty(condList) ? Collections.emptyList()
                 : condList.stream().filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct()))
-                .collect(Collectors.toList());
+                .toList();
         Column columnPeriod = this.builder.allPeriod.get(currMetric.getTableId());
         // 其他度量上有账期
         boolean hasPeriods = checkOtherMetricsHasPeriod();
@@ -299,6 +301,6 @@ public abstract class AbstractFuncParser {
             CycleInfo cycleInfo = AcctTimeUtil.getCycleInfo().get(cycleType);
             return cycleInfo.getCycleVal();
         }
-        return com.ztesoft.bss.smart.jentity.common.constants.Constants.ACCT_CODE_EXP;
+        return Constants.ACCT_CODE_EXP;
     }
 }

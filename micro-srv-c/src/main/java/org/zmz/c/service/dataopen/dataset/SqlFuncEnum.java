@@ -1,6 +1,6 @@
 package org.zmz.c.service.dataopen.dataset;
 
-import cn.hutool.core.util.StrUtil;
+import org.apache.commons.lang3.StringUtils;
 
 public enum SqlFuncEnum {
 
@@ -12,10 +12,7 @@ public enum SqlFuncEnum {
      * 原生函数
      */
     Native,
-    /**
-     * 环比
-     */
-    momGrowth,
+    MAX, MIN, COUNT, COUNTDISTINCT, LOGICCOUNT,
     /**
      * 月累计
      */
@@ -25,22 +22,47 @@ public enum SqlFuncEnum {
      */
     yearTotal,
     /**
-     * 年同比
+     * 环比的基础上增加新选项环比绝对值，本期实际值 - 上期实际值
+     */
+    pp,
+    /**
+     * 环比，比上期，(本期实际值 -上期实际值)/上期实际值 x100%
+     */
+    momGrowth,
+    /**
+     * 年同比，比同期，本期实际值 -去年同期实际值
+     */
+    yoy,
+    /**
+     * 年同比，比同期， (本期实际值 -去年同期实际值)/去年同期实际值 x100%
      */
     yoyGrowth,
     /**
-     * 日账期的月同比
+     * 日账期的月同比,本期实际值 -上月同期实际值
      */
-    mmGrowth, MAX, MIN, COUNT, COUNTDISTINCT, LOGICCOUNT,
+    mm,
     /**
-     * 环比的基础上增加新选项环比绝对值，环比绝对值即本期减去上期即可
+     * 月同比，比同期， (本期实际值 -上月同期实际值)/上月同期实际值 x100%
      */
-    pp;
+    mmGrowth,
+    /**
+     * 日：比上年末：(本期实际值 -去年最后一天实际值)
+     * 月：比上年末：（本期实际值 -去年12月实际值)
+     */
+    yearEnd,
+    /**
+     * 日：比上年末(%)：（本期实际值 -去年最后一天实际值)/去年最后一天实际值 x100%
+     * 月：比上年末(%)：(本期实际值 -去年12月实际值)/去年12月实际值 x100%
+     */
+    yearEndGrowth;
 
     public static SqlFuncEnum getFuncByName(String func) {
-        if (StrUtil.isBlank(func)) {
+        if (StringUtils.isBlank(func)) {
             return nullFunc;
         }
+        /**
+         * 自定义输出函数
+         */
         for (SqlFuncEnum value : SqlFuncEnum.values()) {
             if (value.toString().equals(func.replace("-", ""))) {
                 return value;

@@ -2,12 +2,21 @@ package org.zmz.c.pojo.dataopen;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import tk.mybatis.mapper.annotation.NameStyle;
+import tk.mybatis.mapper.code.Style;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@ToString
+@Table(name = "obj_info")
+@NameStyle(value = Style.camelhumpAndLowercase)
 public class ObjInfo {
+    @Id
     public Long objectId;
     public Long parentId;
     public Long grpId;
