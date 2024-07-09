@@ -1,18 +1,15 @@
 package org.zmz.c.service.dataopen.sql;
 
-import com.ztesoft.bss.smart.enums.meta.column.ColumnType;
-import com.ztesoft.bss.smart.enums.meta.column.MysqlColumnTypeEnum;
-import com.ztesoft.bss.smart.qo.inf.Column;
-import com.ztesoft.bss.smart.qo.inf.Partition;
-import com.ztesoft.bss.smart.util.KeyValues;
-import org.apache.commons.collections.CollectionUtils;
+
+import org.springframework.util.CollectionUtils;
+import org.zmz.c.qo.dataopen.Column;
+import org.zmz.c.qo.dataopen.Partition;
+import org.zmz.c.service.dataopen.dataset.ColumnType;
+import org.zmz.c.service.dataopen.sqlenum.MysqlColumnTypeEnum;
+import org.zmz.c.utils.KeyValues;
 
 import java.util.List;
 
-/**
- * @author lingy
- * @date 2020-10-21
- */
 public final class ObjMysqlSqlParser extends AbstractSqlParser {
 
     private static ObjMysqlSqlParser instance;
@@ -44,16 +41,16 @@ public final class ObjMysqlSqlParser extends AbstractSqlParser {
         for (Column metaColumn : metaColumnsList) {
             this.validateColumnLengthAccuracy(metaColumn);
             builder.append("ALTER TABLE ").append(tableCode).append(" ADD COLUMN ").append(metaColumn.getColumnCode())
-                .append(" ").append(metaColumn.getColumnType()).append(this.getColumnLengthAccuracyDeclare(metaColumn))
-                .append(" COMMENT '").append(metaColumn.getColumnName()).append("';");
+                    .append(" ").append(metaColumn.getColumnType()).append(this.getColumnLengthAccuracyDeclare(metaColumn))
+                    .append(" COMMENT '").append(metaColumn.getColumnName()).append("';");
         }
         return builder.toString();
     }
 
     /**
      * 拼接建表语句的分区字段SQL
-     * 
-     * @param builder builder
+     *
+     * @param builder       builder
      * @param partitionCols 分区字段列表
      */
     @Override

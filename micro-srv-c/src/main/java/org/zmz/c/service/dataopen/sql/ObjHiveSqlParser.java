@@ -1,35 +1,30 @@
 package org.zmz.c.service.dataopen.sql;
 
-import com.ztesoft.bss.smart.entity.sys.AttrValue;
-import com.ztesoft.bss.smart.enums.meta.column.ColumnType;
-import com.ztesoft.bss.smart.jentity.common.constants.Constants;
-import com.ztesoft.bss.smart.jentity.consume.prod.util.SqlUtils;
-import com.ztesoft.bss.smart.qo.inf.Column;
-import com.ztesoft.bss.smart.qo.inf.Partition;
-import com.ztesoft.bss.smart.service.sys.StaticDataService;
-import com.ztesoft.bss.smart.util.BuildSqlUtil;
-import com.ztesoft.bss.smart.util.KeyValues;
-import com.ztesoft.bss.smart.util.ListUtil;
-import com.ztesoft.bss.smart.util.StringUtil;
-import com.ztesoft.common.web.SpringContextUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
+import org.zmz.c.pojo.dataopen.AttrValue;
+import org.zmz.c.qo.dataopen.Column;
+import org.zmz.c.qo.dataopen.Constants;
+import org.zmz.c.qo.dataopen.Partition;
+import org.zmz.c.service.dataopen.common.StaticDataService;
+import org.zmz.c.service.dataopen.dataset.ColumnType;
+import org.zmz.c.utils.BuildSqlUtil;
+import org.zmz.c.utils.KeyValues;
+import org.zmz.c.utils.SqlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.ztesoft.common.enums.HiveStorageInputFormatEnum.PARQUET;
-import static com.ztesoft.common.enums.HiveStorageInputFormatEnum.TEXTFILE;
+import static org.zmz.c.service.dataopen.sqlenum.HiveStorageInputFormatEnum.PARQUET;
+import static org.zmz.c.service.dataopen.sqlenum.HiveStorageInputFormatEnum.TEXTFILE;
 
-/**
- * @author lingy
- * @date 2021-5-20
- */
 @Getter
 @Setter
 public final class ObjHiveSqlParser extends AbstractSqlParser {
@@ -59,7 +54,7 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
 
     @Override
     public String getCreateSql(String schemaCode, String tableCode, List<Column> columnList,
-        List<Partition> partitionCols) {
+                               List<Partition> partitionCols) {
         StringBuilder builder = new StringBuilder();
         String storedFormat = PARQUET.name();
         String rowFormat = "";
@@ -68,13 +63,13 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
         builder.append(schemaCode).append(".").append(tableCode);
 
         // 字段
-        if (CollectionUtils.isNotEmpty(columnList)) {
+        if (CollUtil.isNotEmpty(columnList)) {
             boolean isSame = false;
             boolean isExistField = false;
             builder.append(" ( ");
 
             for (Column metaColumn : columnList) {
-                if (CollectionUtils.isNotEmpty(partitionCols)) {
+                if (CollUtil.isNotEmpty(partitionCols)) {
                     for (Partition bdMetaParVo : partitionCols) {
                         if (metaColumn.getColumnCode().equals(bdMetaParVo.getColumnCode())) {
                             isSame = true;
@@ -90,7 +85,7 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
                     builder.append(metaColumn.getColumnCode()).append(" ").append(metaColumn.getColumnType());
                     if (StringUtils.isNotEmpty(metaColumn.getColumnName())) {
                         builder.append(" ").append("COMMENT").append(" ").append("'").append(metaColumn.getColumnName())
-                            .append("'");
+                                .append("'");
                     }
 
                     isExistField = true;
@@ -101,7 +96,7 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
         }
 
         // 分区字段
-        if (CollectionUtils.isNotEmpty(partitionCols)) {
+        if (CollUtil.isNotEmpty(partitionCols)) {
             builder.append(" PARTITIONED BY (");
             int partitionNum = partitionCols.size();
 
@@ -111,9 +106,9 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
 
                 for (Column metaColumn : columnList) {
                     if (metaColumn.getColumnCode().equals(partitionColumn.getColumnCode())
-                        && StringUtil.isNotEmpty(metaColumn.getColumnName())) {
+                            && StringUtils.isNotEmpty(metaColumn.getColumnName())) {
                         builder.append(" ").append("COMMENT").append(" ").append("'").append(metaColumn.getColumnName())
-                            .append("'");
+                                .append("'");
                         break;
                     }
                 }
@@ -137,13 +132,13 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
 
     @Override
     public String getAddColumnSql(String schemaCode, String tableCode, List<Column> metaColumnsList) {
-        if (schemaCode == null || StringUtil.isEmpty(tableCode) || CollectionUtils.isEmpty(metaColumnsList)) {
+        if (schemaCode == null || StringUtils.isEmpty(tableCode) || CollectionUtils.isEmpty(metaColumnsList)) {
             return null;
         }
         StringBuilder alterSql = BuildSqlUtil.getAlterAddColumnSql(schemaCode, tableCode).append("(");
         for (Column metaColumn : metaColumnsList) {
             alterSql.append(metaColumn.getColumnCode()).append(" ").append(metaColumn.getColumnType())
-                .append(" COMMENT '").append(metaColumn.getColumnName()).append("',");
+                    .append(" COMMENT '").append(metaColumn.getColumnName()).append("',");
         }
         alterSql.deleteCharAt(alterSql.length() - 1);
         alterSql.append(")");
@@ -152,8 +147,8 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
 
     /**
      * 拼接建表语句的分区字段SQL
-     * 
-     * @param builder builder
+     *
+     * @param builder       builder
      * @param partitionCols 分区字段列表
      */
     @Override
@@ -162,12 +157,12 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
 
     @Override
     public String dropPartitionSql(String schemaCode, String tableCode, Map<String, String> partitionMap) {
-        if (MapUtils.isEmpty(partitionMap)) {
+        if (MapUtil.isEmpty(partitionMap)) {
             return "";
         }
         StringBuilder dropPartitionSql = new StringBuilder("ALTER TABLE ").append(schemaCode).append(".")
                 .append(tableCode).append(" DROP IF EXISTS PARTITION ");
-        if (MapUtils.isNotEmpty(partitionMap)) {
+        if (MapUtil.isNotEmpty(partitionMap)) {
             dropPartitionSql.append("(");
             int i = 0;
             for (Map.Entry<String, String> entry : partitionMap.entrySet()) {
@@ -187,30 +182,29 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
      * 生成插入数据sql
      *
      * @param schemaCode 库
-     * @param tableCode 表
+     * @param tableCode  表
      * @param columnList 物理表字段列表
      * @param columnList 字段列表
      * @return 插入数据SQL
      */
     @Override
     public String getInsertSql(String schemaCode, String tableCode, List<Column> physicColumnList,
-        List<Column> columnList, List<Partition> partitionList, String tempTableCode, String selectSql) {
+                               List<Column> columnList, List<Partition> partitionList, String tempTableCode, String selectSql) {
         StringBuilder insertSql = new StringBuilder();
 
         // 拼接hive动态分区配置命令
-        if (ListUtil.isNotEmpty(partitionList)) {
-            StaticDataService staticDataService = SpringContextUtil.getBean(StaticDataService.class);
+        if (CollUtil.isNotEmpty(partitionList)) {
+            StaticDataService staticDataService = SpringUtil.getBean(StaticDataService.class);
             List<AttrValue> attrValues = staticDataService.getAttrValueByCode("HIVE_SQL_SET");
-            if (ListUtil.isNotEmpty(attrValues)) {
+            if (CollUtil.isNotEmpty(attrValues)) {
                 // SET hive.map.aggr=true;SET hive.groupby.skewindata=true;
                 // 优化group by 产生的数据倾斜
-                List<String> setSql = attrValues.stream().map(attr -> {
-                    return attr.getAttrValue().endsWith(";")
-                        ? attr.getAttrValue().substring(0, attr.getAttrValue().length() - 1)
-                        : attr.getAttrValue();
-                }).collect(Collectors.toList());
+                List<String> setSql = attrValues.stream()
+                        .map(attr -> attr.getAttrValue().endsWith(";")
+                                ? attr.getAttrValue().substring(0, attr.getAttrValue().length() - 1)
+                                : attr.getAttrValue()).collect(Collectors.toList());
                 insertSql.append(StringUtils.join(setSql, ";" + Constants.NEW_LINE_STR)).append(";")
-                    .append(Constants.NEW_LINE_STR);
+                        .append(Constants.NEW_LINE_STR);
             }
         }
 
@@ -218,7 +212,7 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
         insertSql.append(schemaCode).append(".").append(tableCode);
         // 分区
         List<String> partitions = new ArrayList<>();
-        if (ListUtil.isNotEmpty(partitionList)) {
+        if (CollUtil.isNotEmpty(partitionList)) {
             partitions = partitionList.stream().map(Partition::getColumnCode).collect(Collectors.toList());
             insertSql.append(" PARTITION ( ");
             for (Partition metaColumn : partitionList) {
@@ -229,59 +223,55 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
         }
         insertSql.append(Constants.NEW_LINE_STR);
         // hive表字段顺序
-        if (CollectionUtils.isNotEmpty(physicColumnList)) {
+        if (CollUtil.isNotEmpty(physicColumnList)) {
             List<String> selectColumnCodes = columnList.stream().map(Column::getColumnCode)
-                .collect(Collectors.toList());
+                    .toList();
             List<String> columnCodes = new ArrayList<>();
             for (Column column : physicColumnList) {
-                if (ListUtil.isNotEmpty(partitionList) && partitions.contains(column.getColumnCode())) {
+                if (CollUtil.isNotEmpty(partitionList) && partitions.contains(column.getColumnCode())) {
                     continue;
                 }
                 if (selectColumnCodes.contains(column.getColumnCode())) {
                     columnCodes.add(column.getColumnCode());
-                }
-                else {
+                } else {
                     // 数据库有，查询无，设置空值
                     columnCodes.add("null");
                 }
             }
             // 动态分区，分区字段放在最后
-            if (ListUtil.isNotEmpty(partitions)) {
+            if (CollUtil.isNotEmpty(partitions)) {
                 for (Partition metaColumn : partitionList) {
                     columnCodes.add(metaColumn.getColumnCode());
                 }
             }
             insertSql.append("SELECT ").append(Constants.NEW_LINE_STR);
-            insertSql.append(StringUtil.join(columnCodes, ",\n"));
+            insertSql.append(StringUtils.join(columnCodes, ",\n"));
             insertSql.append(Constants.NEW_LINE_STR).append(" FROM ");
             if (StringUtils.isNotEmpty(tempTableCode)) {
                 insertSql.append(schemaCode).append(".").append(tempTableCode).append(";");
-            }
-            else {
+            } else {
                 insertSql.append(" (").append(selectSql).append(") t ;");
             }
-        }
-        else {
+        } else {
             if (StringUtils.isNotEmpty(tempTableCode)) {
                 insertSql.append("SELECT ").append(Constants.NEW_LINE_STR);
                 List<String> columnCodes = new ArrayList<>();
                 for (Column column : columnList) {
-                    if (ListUtil.isNotEmpty(partitionList) && partitions.contains(column.getColumnCode())) {
+                    if (CollUtil.isNotEmpty(partitionList) && partitions.contains(column.getColumnCode())) {
                         continue;
                     }
                     columnCodes.add(column.getColumnCode());
                 }
                 // 动态分区，分区字段放在最后
-                if (ListUtil.isNotEmpty(partitions)) {
+                if (CollUtil.isNotEmpty(partitions)) {
                     for (Partition metaColumn : partitionList) {
                         columnCodes.add(metaColumn.getColumnCode());
                     }
                 }
-                insertSql.append(StringUtil.join(columnCodes, ",\n"));
+                insertSql.append(StringUtils.join(columnCodes, ",\n"));
                 insertSql.append(Constants.NEW_LINE_STR).append(" FROM ").append(schemaCode).append(".")
-                    .append(tempTableCode).append(";");
-            }
-            else {
+                        .append(tempTableCode).append(";");
+            } else {
                 insertSql.append(" ").append(selectSql).append(";");
             }
         }
@@ -300,9 +290,9 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
 
     /**
      * Hive不支持有注释 非必要删除，前置调度SQL标识符SKIP_ERROR，当前行SQL执行出错也会继续往下执行 不能保证表存在时可以调用当前方法，否则调用getDropTableSql方法
-     * 
+     *
      * @param schemaCode 库编码
-     * @param tableCode 表编码
+     * @param tableCode  表编码
      * @return drop table语句
      */
     @Override
@@ -312,11 +302,6 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
 
     /**
      * hive不支持删除delete
-     * 
-     * @param schemaCode
-     * @param tableCode
-     * @param whereMap
-     * @return
      */
     @Override
     public String deleteSql(String schemaCode, String tableCode, Map<String, String> whereMap) {
@@ -357,7 +342,7 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
     public String getIfNull(Column column) {
         StringBuffer outField = new StringBuffer();
         outField.append(" if(").append(column.getColumnCode()).append(" is null,").append("0,")
-            .append(column.getColumnCode()).append(") ");
+                .append(column.getColumnCode()).append(") ");
         if (column.getColumnAccuracy() != null && column.getColumnAccuracy() != 0) {
             outField.insert(0, " round(");
             outField.append(",").append(column.getColumnAccuracy()).append(") ");

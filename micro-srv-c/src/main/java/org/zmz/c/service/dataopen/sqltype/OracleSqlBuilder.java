@@ -1,17 +1,17 @@
 package org.zmz.c.service.dataopen.sqltype;
 
-import com.ztesoft.bss.smart.enums.meta.column.OracleColumnTypeEnum;
-import com.ztesoft.bss.smart.jentity.common.constants.Constants;
-import com.ztesoft.bss.smart.jentity.consume.prod.enums.SqlFuncEnum;
-import com.ztesoft.bss.smart.jentity.consume.prod.qo.DatasetColumnAndConditionQo;
-import com.ztesoft.bss.smart.jentity.consume.prod.qo.DatasetColumnQo;
-import com.ztesoft.bss.smart.jentity.consume.prod.sqlfunc.PeriodExpression;
-import com.ztesoft.bss.smart.jentity.consume.prod.util.SqlUtils;
-import com.ztesoft.bss.smart.util.DateUtil;
-import com.ztesoft.bss.smart.util.KeyValues;
-import com.ztesoft.bss.smart.vo.inf.ModelInfo;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.zmz.c.qo.dataopen.Constants;
+import org.zmz.c.qo.dataopen.DatasetColumnAndConditionQo;
+import org.zmz.c.qo.dataopen.DatasetColumnQo;
+import org.zmz.c.qo.dataopen.ModelInfo;
+import org.zmz.c.service.dataopen.dataset.SqlFuncEnum;
+import org.zmz.c.service.dataopen.sqlenum.OracleColumnTypeEnum;
+import org.zmz.c.service.dataopen.sqlfunc.PeriodExpression;
+import org.zmz.c.utils.DateUtil;
+import org.zmz.c.utils.KeyValues;
+import org.zmz.c.utils.SqlUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -40,7 +40,7 @@ public class OracleSqlBuilder extends AbstractSqlBuilder {
     @Override
     public void getPage(StringBuilder result) {
         if (null != params.getPageSize() && null != params.getPageIndex() && params.getPageSize() > 0
-            && params.getPageIndex() >= 0) {
+                && params.getPageIndex() >= 0) {
             Integer size = params.getPageSize();
             Integer page = params.getPageIndex();
             // SELECT *
@@ -51,14 +51,14 @@ public class OracleSqlBuilder extends AbstractSqlBuilder {
             // WHERE table_alias.rowno > (page-1)*size;
             StringBuilder sql = new StringBuilder();
             sql.append(SqlUtils.SQL_SELECT).append(SqlUtils.SQL_ALL).append(SqlUtils.SQL_FROM)
-                .append(SqlUtils.STR_LEFT_BRACKET).append(SqlUtils.SQL_SELECT).append(SqlUtils.SQL_ROWNUM)
-                .append(SqlUtils.SQL_AS).append(RNUM).append(SqlUtils.STR_DOT).append(ROW_ALIAS)
-                .append(SqlUtils.STR_POINT).append("*").append(SqlUtils.SQL_FROM).append(SqlUtils.STR_LEFT_BRACKET);
+                    .append(SqlUtils.STR_LEFT_BRACKET).append(SqlUtils.SQL_SELECT).append(SqlUtils.SQL_ROWNUM)
+                    .append(SqlUtils.SQL_AS).append(RNUM).append(SqlUtils.STR_DOT).append(ROW_ALIAS)
+                    .append(SqlUtils.STR_POINT).append("*").append(SqlUtils.SQL_FROM).append(SqlUtils.STR_LEFT_BRACKET);
             result.insert(0, sql);
             result.append(SqlUtils.STR_RIGHT_BRACKET).append(ROW_ALIAS).append(SqlUtils.SQL_WHERE)
-                .append(SqlUtils.SQL_ROWNUM).append(" <= ").append(page * size).append(SqlUtils.STR_RIGHT_BRACKET)
-                .append(ALL_ALIAS).append(SqlUtils.SQL_WHERE).append(ALL_ALIAS).append(SqlUtils.STR_POINT).append(RNUM)
-                .append(" > ").append((page - 1) * size);
+                    .append(SqlUtils.SQL_ROWNUM).append(" <= ").append(page * size).append(SqlUtils.STR_RIGHT_BRACKET)
+                    .append(ALL_ALIAS).append(SqlUtils.SQL_WHERE).append(ALL_ALIAS).append(SqlUtils.STR_POINT).append(RNUM)
+                    .append(" > ").append((page - 1) * size);
         }
     }
 
@@ -68,30 +68,25 @@ public class OracleSqlBuilder extends AbstractSqlBuilder {
         OracleColumnTypeEnum typeEnum = OracleColumnTypeEnum.valueOf(column.getColumnType().toUpperCase());
         if (!CollectionUtils.isEmpty(column.getColumnGroup())) {
             if (typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.FLOAT.name())
-                || typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.NUMBER.name())) {
+                    || typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.NUMBER.name())) {
                 outField.append("round(").append("NVL(").append(metric).append(",0),")
-                    .append(column.getColumnAccuracy()).append(")");
-            }
-            else if (typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.INTEGER.name())
-                || typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.INT.name())
-                || typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.LONG.name())) {
+                        .append(column.getColumnAccuracy()).append(")");
+            } else if (typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.INTEGER.name())
+                    || typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.INT.name())
+                    || typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.LONG.name())) {
                 outField.append("NVL(").append(metric).append(",0)");
-            }
-            else {
+            } else {
                 outField.append(metric);
             }
-        }
-        else {
+        } else {
             if (!ObjectUtils.isEmpty(column.getColumnAccuracy())) {
                 outField.append("round(").append("NVL(").append(metric).append(",0),")
-                    .append(column.getColumnAccuracy()).append(")");
-            }
-            else if (typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.INTEGER.name())
-                || typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.INT.name())
-                || typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.LONG.name())) {
+                        .append(column.getColumnAccuracy()).append(")");
+            } else if (typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.INTEGER.name())
+                    || typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.INT.name())
+                    || typeEnum.name().equalsIgnoreCase(OracleColumnTypeEnum.LONG.name())) {
                 outField.append("NVL(").append(metric).append(",0)");
-            }
-            else {
+            } else {
                 outField.append(metric);
             }
         }
@@ -107,19 +102,17 @@ public class OracleSqlBuilder extends AbstractSqlBuilder {
     public String getDateOffset(String cycleType, String col, Integer offset, String type) {
         StringBuffer funcDateOffset = new StringBuffer();
         String dateFormat = Constants.SCHEDULE_LOOP_TYPE_M.equalsIgnoreCase(cycleType) ? DateUtil.DATE_FORMAT_6
-            : DateUtil.DATE_FORMAT_8;
+                : DateUtil.DATE_FORMAT_8;
 
         if ("year".equalsIgnoreCase(type)) {
             funcDateOffset.append("to_char(add_years(to_date(").append(col).append(",'").append(dateFormat)
-                .append("'), -").append(offset).append("),'").append(dateFormat).append("')");
-        }
-        else if ("month".equalsIgnoreCase(type)) {
+                    .append("'), -").append(offset).append("),'").append(dateFormat).append("')");
+        } else if ("month".equalsIgnoreCase(type)) {
             funcDateOffset.append("to_char(add_months(to_date(").append(col).append(",'").append(dateFormat)
-                .append("'), -").append(offset).append("),'").append(dateFormat).append("')");
-        }
-        else {
+                    .append("'), -").append(offset).append("),'").append(dateFormat).append("')");
+        } else {
             funcDateOffset.append("to_char(to_date(").append(col).append(",'").append(dateFormat).append("')")
-                .append("-").append(offset).append(",'").append(dateFormat).append("')");
+                    .append("-").append(offset).append(",'").append(dateFormat).append("')");
         }
 
         return funcDateOffset.toString();
@@ -138,15 +131,14 @@ public class OracleSqlBuilder extends AbstractSqlBuilder {
         String cycleType = periodExpression.getCycleType();
         if (Constants.SCHEDULE_LOOP_TYPE_M.equalsIgnoreCase(cycleType)) {
             timeSql.append("SELECT TO_CHAR(add_months(to_date('").append(startAcct)
-                .append("', 'YYYYMM'), level-1), 'YYYYMM') AS acct FROM dual")
-                .append(" CONNECT BY level <= months_between(to_date('").append(endAcct)
-                .append("', 'YYYYMM'), to_date('").append(startAcct).append("', 'YYYYMM')) + 1");
-        }
-        else {
+                    .append("', 'YYYYMM'), level-1), 'YYYYMM') AS acct FROM dual")
+                    .append(" CONNECT BY level <= months_between(to_date('").append(endAcct)
+                    .append("', 'YYYYMM'), to_date('").append(startAcct).append("', 'YYYYMM')) + 1");
+        } else {
             timeSql.append("SELECT to_char(to_date('").append(startAcct)
-                .append("', 'YYYYMMDD') + LEVEL - 1, 'YYYYMMDD') AS acct FROM dual ")
-                .append("CONNECT BY LEVEL <= TO_DATE('").append(endAcct).append("', 'YYYYMMDD') - TO_DATE('")
-                .append(startAcct).append("', 'YYYYMMDD') + 1");
+                    .append("', 'YYYYMMDD') + LEVEL - 1, 'YYYYMMDD') AS acct FROM dual ")
+                    .append("CONNECT BY LEVEL <= TO_DATE('").append(endAcct).append("', 'YYYYMMDD') - TO_DATE('")
+                    .append(startAcct).append("', 'YYYYMMDD') + 1");
         }
         return timeSql;
     }
@@ -157,12 +149,12 @@ public class OracleSqlBuilder extends AbstractSqlBuilder {
         // 年累计
         if (funcEnum.equals(SqlFuncEnum.yearTotal)) {
             onSql.append("ON ").append(acctColExp).append(" <= tm.acct AND to_char(to_date(").append(acctColExp)
-                .append(",'YYYYMM'),'YYYY')= to_char(to_date(tm.acct,'YYYYMM'),'YYYY')");
+                    .append(",'YYYYMM'),'YYYY')= to_char(to_date(tm.acct,'YYYYMM'),'YYYY')");
         }
         // 月累计
         if (funcEnum.equals(SqlFuncEnum.monthTotal)) {
             onSql.append("ON ").append(acctColExp).append(" <= tm.acct AND to_char(to_date(").append(acctColExp)
-                .append(",'YYYYMMDD'),'YYYYMM')= to_char(to_date(tm.acct,'YYYYMMDD'),'YYYYMM')");
+                    .append(",'YYYYMMDD'),'YYYYMM')= to_char(to_date(tm.acct,'YYYYMMDD'),'YYYYMM')");
         }
         return onSql;
     }

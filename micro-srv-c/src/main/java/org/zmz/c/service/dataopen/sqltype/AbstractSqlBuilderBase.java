@@ -52,8 +52,8 @@ import java.util.stream.Collectors;
 
 /**
  * @author fyh
- * @date 2022-09-05 19:08
- * @description 生成sqlMode为task的sql拼接
+ * {@code @date} 2022-09-05 19:08
+ * {@code @description} 生成sqlMode为task的sql拼接
  */
 @Slf4j
 public abstract class AbstractSqlBuilderBase {
@@ -293,7 +293,7 @@ public abstract class AbstractSqlBuilderBase {
                                        Map<String, String> dimAlias, List<MetricsDimensionPathVo> mainTbs, Map<Long, String> hasAppend,
                                        Map<Long, String> periodMaps, boolean needAppendPeriod, boolean isPriv) {
         // 度量表关联临时表
-        if (component.join.length() == 0) {
+        if (component.join.isEmpty()) {
             // 路径第一次拼接
             for (MetricsDimensionPathVo mainTb : mainTbs) {
                 if (hasJoinList.contains(mainTb)) {
@@ -409,7 +409,7 @@ public abstract class AbstractSqlBuilderBase {
         MetricsDimensionPathVo orgDetailsTgt = getDataPrivCtrlInfo().getOrgInfoPathsMap().get(tableId);
         if (!ObjectUtils.isEmpty(orgDetailsTgt) && StringUtils.isBlank(hasAppend.get(tableId)) && isPriv) {
             String orgName = joinOrgDetails(component.join, dimAlias, orgDetailsTgt);
-            if (component.where.length() > 0) {
+            if (!component.where.isEmpty()) {
                 component.where.append(SqlUtils.SQL_AND);
             }
             dimAlias.put(String.valueOf(orgDetailsTgt.getTgtTableId()), orgName);
@@ -423,10 +423,6 @@ public abstract class AbstractSqlBuilderBase {
 
     /**
      * 系统账期类型要添加到 on 关联条件上去
-     *
-     * @param path
-     * @param map
-     * @return
      */
     protected abstract String samePeriodType(MetricsDimensionPathVo path, Map<String, String> map);
 
@@ -658,7 +654,7 @@ public abstract class AbstractSqlBuilderBase {
             hasAppend.put(columnQo.getColumnId(), tempAlias.get(String.valueOf(columnQo.getTableId())));
         }
         // 多表的层级汇总，需要补全id和name字段
-        List<String> appendCols = collectDim.stream().map(DatasetColumnQo::getColumnCode).collect(Collectors.toList());
+        List<String> appendCols = collectDim.stream().map(DatasetColumnQo::getColumnCode).toList();
         if (!CollectionUtils.isEmpty(iteratorColumnMap)) {
             iteratorColumnMap.forEach((key, value) -> {
                 OrgDimension orgDimension = value.get(0);

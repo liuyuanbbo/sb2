@@ -1,17 +1,17 @@
 package org.zmz.c.service.dataopen.sqltype;
 
-import com.ztesoft.bss.smart.enums.meta.column.GpColumnTypeEnum;
-import com.ztesoft.bss.smart.jentity.common.constants.Constants;
-import com.ztesoft.bss.smart.jentity.consume.prod.enums.SqlFuncEnum;
-import com.ztesoft.bss.smart.jentity.consume.prod.qo.DatasetColumnAndConditionQo;
-import com.ztesoft.bss.smart.jentity.consume.prod.qo.DatasetColumnQo;
-import com.ztesoft.bss.smart.jentity.consume.prod.sqlfunc.PeriodExpression;
-import com.ztesoft.bss.smart.jentity.consume.prod.util.SqlUtils;
-import com.ztesoft.bss.smart.util.KeyValues;
-import com.ztesoft.bss.smart.vo.inf.ModelInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.zmz.c.qo.dataopen.Constants;
+import org.zmz.c.qo.dataopen.DatasetColumnAndConditionQo;
+import org.zmz.c.qo.dataopen.DatasetColumnQo;
+import org.zmz.c.qo.dataopen.ModelInfo;
+import org.zmz.c.service.dataopen.dataset.SqlFuncEnum;
+import org.zmz.c.service.dataopen.sqlenum.GpColumnTypeEnum;
+import org.zmz.c.service.dataopen.sqlfunc.PeriodExpression;
+import org.zmz.c.utils.KeyValues;
+import org.zmz.c.utils.SqlUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -35,8 +35,8 @@ public class GreenplumSqlBuilder extends AbstractSqlBuilder {
     @Override
     public void getPage(StringBuilder sql) {
         if (null != params.getPageSize() && null != params.getPageIndex() && params.getPageSize() > 0
-            && params.getPageIndex() >= 0) {
-            Integer index = params.getPageIndex();
+                && params.getPageIndex() >= 0) {
+            int index = params.getPageIndex();
             Integer size = params.getPageSize();
             sql.append(SqlUtils.SQL_LIMIT);
             Integer offset = (index > 0) ? (index - 1) * size : 0;
@@ -50,34 +50,29 @@ public class GreenplumSqlBuilder extends AbstractSqlBuilder {
         GpColumnTypeEnum typeEnum = GpColumnTypeEnum.valueOf(column.getColumnType().toUpperCase());
         if (!CollectionUtils.isEmpty(column.getColumnGroup())) {
             if (typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.DECIMAL.name())
-                || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.NUMERIC.name())) {
+                    || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.NUMERIC.name())) {
                 outField.append("round(").append("COALESCE(").append("cast((").append(metric).append(") as ")
-                    .append(column.getColumnType()).append(")").append(",0),").append(column.getColumnAccuracy())
-                    .append(")");
-            }
-            else if (typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.INT.name())
-                || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.INTEGER.name())
-                || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.SMALLINT.name())
-                || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.BIGINT.name())) {
+                        .append(column.getColumnType()).append(")").append(",0),").append(column.getColumnAccuracy())
+                        .append(")");
+            } else if (typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.INT.name())
+                    || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.INTEGER.name())
+                    || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.SMALLINT.name())
+                    || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.BIGINT.name())) {
                 outField.append("COALESCE(").append("cast((").append(metric).append(") as ")
-                    .append(column.getColumnType()).append(")").append(",0)");
-            }
-            else {
+                        .append(column.getColumnType()).append(")").append(",0)");
+            } else {
                 outField.append("cast((").append(metric).append(") as ").append(column.getColumnType()).append(")");
             }
-        }
-        else {
+        } else {
             if (!ObjectUtils.isEmpty(column.getColumnAccuracy())) {
                 outField.append("round(").append("COALESCE(").append(metric).append(",0),")
-                    .append(column.getColumnAccuracy()).append(")");
-            }
-            else if (typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.INT.name())
-                || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.INTEGER.name())
-                || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.SMALLINT.name())
-                || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.BIGINT.name())) {
+                        .append(column.getColumnAccuracy()).append(")");
+            } else if (typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.INT.name())
+                    || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.INTEGER.name())
+                    || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.SMALLINT.name())
+                    || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.BIGINT.name())) {
                 outField.append("COALESCE(").append(metric).append(",0)");
-            }
-            else {
+            } else {
                 outField.append(metric);
             }
         }
@@ -95,12 +90,12 @@ public class GreenplumSqlBuilder extends AbstractSqlBuilder {
         if (Constants.SCHEDULE_LOOP_TYPE_M.equalsIgnoreCase(cycleType)) {
             type = StringUtils.defaultIfEmpty(type, "month");
             funcDateOffset.append("to_char(to_date(cast( ").append(col).append(" as varchar),'yyyyMM') - interval '")
-                .append(offset).append(" ").append(type).append("', 'yyyyMM')");
+                    .append(offset).append(" ").append(type).append("', 'yyyyMM')");
         }
         if (Constants.SCHEDULE_LOOP_TYPE_D.equalsIgnoreCase(cycleType)) {
             type = StringUtils.defaultIfEmpty(type, "day");
             funcDateOffset.append("to_char(to_date(cast( ").append(col).append(" as varchar),'yyyyMMdd') - interval '")
-                .append(offset).append(" ").append(type).append("', 'yyyyMMdd')");
+                    .append(offset).append(" ").append(type).append("', 'yyyyMMdd')");
         }
         return funcDateOffset.toString();
     }
@@ -121,12 +116,11 @@ public class GreenplumSqlBuilder extends AbstractSqlBuilder {
         String cycleType = periodExpression.getCycleType();
         if (Constants.SCHEDULE_LOOP_TYPE_M.equalsIgnoreCase(cycleType)) {
             timeSql.append("SELECT to_char(generate_series(to_date('").append(startAcct)
-                .append("','yyyyMM'), to_date('").append(endAcct).append("','yyyyMM'), '1 month'), 'yyyyMM') AS acct");
-        }
-        else {
+                    .append("','yyyyMM'), to_date('").append(endAcct).append("','yyyyMM'), '1 month'), 'yyyyMM') AS acct");
+        } else {
             timeSql.append("SELECT to_char(generate_series(to_date('").append(startAcct)
-                .append("','yyyyMMdd'), to_date('").append(endAcct)
-                .append("','yyyyMMdd'), '1 day'), 'yyyyMMdd') AS acct");
+                    .append("','yyyyMMdd'), to_date('").append(endAcct)
+                    .append("','yyyyMMdd'), '1 day'), 'yyyyMMdd') AS acct");
         }
         return timeSql;
     }
@@ -140,12 +134,12 @@ public class GreenplumSqlBuilder extends AbstractSqlBuilder {
         // 年累计
         if (funcEnum.equals(SqlFuncEnum.yearTotal)) {
             onSql.append("ON ").append(acctColExp).append(" <= tm.acct AND substr(").append(acctColExp)
-                .append("::varchar,1,4)= substr(tm.acct::varchar,1,4)");
+                    .append("::varchar,1,4)= substr(tm.acct::varchar,1,4)");
         }
         // 月累计
         if (funcEnum.equals(SqlFuncEnum.monthTotal)) {
             onSql.append("ON ").append(acctColExp).append(" <= b.acct AND substr(").append(acctColExp)
-                .append("::varchar,1,6)= substr(acct::varchar,1,6)");
+                    .append("::varchar,1,6)= substr(acct::varchar,1,6)");
         }
         return onSql;
     }

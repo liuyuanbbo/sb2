@@ -229,6 +229,27 @@ public interface Constants {
 
     String DORIS_DATA_TYPE_INT = "int";
 
+    /**
+     * 通用0代表否
+     */
+    String NO_VALUE_0 = "0";
+
+    /* 是 */
+    String YES = "1";
+
+    /* 否 */
+    String NO = "0";
+
+    /* 计算类型SUM */
+    String CALCULATE_TYPE_SUM = "SUM";
+
+    String CALCULATE_TYPE_AVG = "AVG";
+
+    String SMART_ATTR_KEY_PREFIX = "smart_attr";
+
+    /* 标签发布区域dc_sql编码名 */
+    String DC_SQL_INJECTION_LABEL_OWM_SYSTEM = "INJECTION_LABEL_OWM_SYSTEM";
+
     class DimensionType {
 
         public static final String TYPE_MAIN = "main";

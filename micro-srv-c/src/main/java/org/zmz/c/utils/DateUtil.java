@@ -52,4 +52,42 @@ public final class DateUtil {
         return simpleDateFormat.format(date);
 
     }
+
+    public static String getLastMonth(String pattern) {
+        Calendar c = Calendar.getInstance();
+        // 当前月份减1
+        c.add(Calendar.MONTH, -1);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        Date date = c.getTime();
+        return sdf.format(date);
+    }
+
+    /**
+     * 返回昨天的日期
+     *
+     * @param pattern 日期的格式
+     */
+    public static String getYesterday(String pattern) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, -1);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        Date date = c.getTime();
+        return sdf.format(date);
+    }
+
+    /**
+     * 得到应用服务器的当前时间
+     */
+    public static Date getCurrentDate() {
+        return new Date(System.currentTimeMillis());
+    }
+
+    /**
+     * 得到应用服务器当前日期，以8位日期显示。
+     */
+    public static String getDate() {
+        Date date = getCurrentDate();
+        SimpleDateFormat dateFormator = new SimpleDateFormat(DateUtil.DATE_FORMAT_8);
+        return dateFormator.format(date);
+    }
 }

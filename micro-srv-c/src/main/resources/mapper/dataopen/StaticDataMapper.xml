@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.StaticDataMapper">
+    <resultMap id="attrValueResultMap" type="org.zmz.c.pojo.dataopen.AttrValue">
+        <result property="attrValueId" column="attr_value_id"/>
+        <result property="attrId" column="attr_id"/>
+        <result property="attrValueName" column="attr_value_name"/>
+        <result property="attrValueDesc" column="attr_value_desc"/>
+        <result property="createDate" column="create_date"/>
+        <result property="statusDate" column="status_date"/>
+        <result property="attrValue" column="attr_value"/>
+        <result property="statusCd" column="status_cd"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="createStaff" column="create_staff"/>
+        <result property="updateStaff" column="update_staff"/>
+        <result property="attrValueSort" column="attr_value_sort"/>
+        <result property="remark" column="remark"/>
+        <result property="parentValue" column="parent_value"/>
+        <result property="attrValueEnglishName" column="attr_value_english_name"/>
+    </resultMap>
+
+    <select id="getAttrValueByCode" resultMap="attrValueResultMap">
+        select a.attr_value_id,
+               a.attr_id,
+               a.attr_value_name,
+               a.attr_value_desc,
+               a.create_date,
+               a.status_date,
+               a.attr_value,
+               a.status_cd,
+               a.update_date,
+               a.create_staff,
+               a.update_staff,
+               a.attr_value_sort,
+               a.remark,
+               a.parent_value,
+               a.attr_value_english_name
+        from attr_value a
+                 join
+             attr_spec b
+             on (a.attr_id = b.attr_id)
+        where a.status_cd = '1000'
+          and b.status_cd = '1000'
+          and b.attr_nbr = #{code}
+        order by a.attr_value_sort
+    </select>
+
+    <select id="getStaticAttrDcsqlByCode" resultType="string">
+        select dc_sql from dc_sql where dc_name =#{code}
+    </select>
+</mapper>

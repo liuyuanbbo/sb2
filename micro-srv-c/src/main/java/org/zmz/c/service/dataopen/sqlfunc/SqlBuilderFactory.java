@@ -1,26 +1,23 @@
 package org.zmz.c.service.dataopen.sqlfunc;
 
-import com.ztesoft.bss.smart.jentity.consume.prod.enums.SqlFuncEnum;
-import com.ztesoft.bss.smart.jentity.consume.prod.qo.DatasetColumnAndConditionQo;
-import com.ztesoft.bss.smart.jentity.consume.prod.qo.DatasetColumnQo;
-import com.ztesoft.bss.smart.jentity.consume.prod.sqltype.AbstractSqlBuilder;
-import com.ztesoft.bss.smart.jentity.consume.prod.sqltype.ClickHouseSqlBuilder;
-import com.ztesoft.bss.smart.jentity.consume.prod.sqltype.GbaseSqlBuilder;
-import com.ztesoft.bss.smart.jentity.consume.prod.sqltype.GreenplumSqlBuilder;
-import com.ztesoft.bss.smart.jentity.consume.prod.sqltype.HiveSqlBuilder;
-import com.ztesoft.bss.smart.jentity.consume.prod.sqltype.MysqlSqlBuilder;
-import com.ztesoft.bss.smart.jentity.consume.prod.sqltype.OracleSqlBuilder;
-import com.ztesoft.bss.smart.jentity.consume.prod.sqltype.WhalehouseSqlBuilder;
-import com.ztesoft.bss.smart.util.KeyValues;
-import com.ztesoft.bss.smart.vo.inf.ModelInfo;
-import com.ztesoft.common.constants.CommonErrorCode;
-import com.ztesoft.common.exception.BaseException;
 import org.springframework.util.CollectionUtils;
+import org.zmz.c.qo.dataopen.DatasetColumnAndConditionQo;
+import org.zmz.c.qo.dataopen.DatasetColumnQo;
+import org.zmz.c.qo.dataopen.ModelInfo;
+import org.zmz.c.service.dataopen.dataset.SqlFuncEnum;
+import org.zmz.c.service.dataopen.sqltype.AbstractSqlBuilder;
+import org.zmz.c.service.dataopen.sqltype.ClickHouseSqlBuilder;
+import org.zmz.c.service.dataopen.sqltype.GbaseSqlBuilder;
+import org.zmz.c.service.dataopen.sqltype.GreenplumSqlBuilder;
+import org.zmz.c.service.dataopen.sqltype.HiveSqlBuilder;
+import org.zmz.c.service.dataopen.sqltype.MysqlSqlBuilder;
+import org.zmz.c.service.dataopen.sqltype.OracleSqlBuilder;
+import org.zmz.c.service.dataopen.sqltype.WhalehouseSqlBuilder;
+import org.zmz.c.utils.KeyValues;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("PMD.UseUtilityClass")
 public class SqlBuilderFactory {
 
     private static final Map<SqlFuncEnum, AbstractFuncParser> COMPONETS = new HashMap<SqlFuncEnum, AbstractFuncParser>();
@@ -92,37 +89,21 @@ public class SqlBuilderFactory {
     }
 
     public static AbstractSqlBuilder getSqlBuilder(DatasetColumnAndConditionQo params,
-        Map<Long, ModelInfo> modelInfoMap) {
+                                                   Map<Long, ModelInfo> modelInfoMap) {
         if (!CollectionUtils.isEmpty(params.getColumnList()) && modelInfoMap.isEmpty()) {
             // 缺少必要参数
-            throw new BaseException(CommonErrorCode.ERROR_CODE_50449);
+            throw new IllegalArgumentException("缺少必要参数");
         }
         String type = getDataSourceType(modelInfoMap);
-        AbstractSqlBuilder abs;
-        switch (type) {
-            case KeyValues.DS_ORACLE:
-                abs = new OracleSqlBuilder(params, modelInfoMap);
-                break;
-            case KeyValues.DS_GBASE:
-                abs = new GbaseSqlBuilder(params, modelInfoMap);
-                break;
-            case KeyValues.DS_HIVE:
-                abs = new HiveSqlBuilder(params, modelInfoMap);
-                break;
-            case KeyValues.DS_MYSQL:
-            case KeyValues.DS_RDS:
-                abs = new MysqlSqlBuilder(params, modelInfoMap);
-                break;
-            case KeyValues.DS_CLICKHOUSE:
-                abs = new ClickHouseSqlBuilder(params, modelInfoMap);
-                break;
-            case KeyValues.DS_WHALEHOUSE:
-                abs = new WhalehouseSqlBuilder(params, modelInfoMap);
-                break;
-            default:
-                abs = new GreenplumSqlBuilder(params, modelInfoMap);
-                break;
-        }
+        AbstractSqlBuilder abs = switch (type) {
+            case KeyValues.DS_ORACLE -> new OracleSqlBuilder(params, modelInfoMap);
+            case KeyValues.DS_GBASE -> new GbaseSqlBuilder(params, modelInfoMap);
+            case KeyValues.DS_HIVE -> new HiveSqlBuilder(params, modelInfoMap);
+            case KeyValues.DS_MYSQL, KeyValues.DS_RDS -> new MysqlSqlBuilder(params, modelInfoMap);
+            case KeyValues.DS_CLICKHOUSE -> new ClickHouseSqlBuilder(params, modelInfoMap);
+            case KeyValues.DS_WHALEHOUSE -> new WhalehouseSqlBuilder(params, modelInfoMap);
+            default -> new GreenplumSqlBuilder(params, modelInfoMap);
+        };
         return abs;
     }
 

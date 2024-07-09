@@ -4,6 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.zmz.c.qo.dataopen.Column;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.DataPrivCtrlVo;
 import org.zmz.c.qo.dataopen.DatasetColumnQo;
@@ -19,11 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author Feng.yh
- * @date 2022-06-17 10:52
- * @description
- */
 public final class SqlBuilderHelper {
 
     private SqlBuilderHelper() {
@@ -212,7 +208,7 @@ public final class SqlBuilderHelper {
         } else {
             path = getConvertDimPath(metric, dimension);
         }
-        if (MapUtils.isNotEmpty(aliasMap.get(path))) {
+        if (MapUtil.isNotEmpty(aliasMap.get(path))) {
             tbName = aliasMap.get(path).get(String.valueOf(dimension.getTableId()));
         } else {
             for (Map.Entry<String, Map<String, String>> entry : aliasMap.entrySet()) {
@@ -350,20 +346,12 @@ public final class SqlBuilderHelper {
                     groupSql.append(colCode).append(" ");
                     // 算术运算条件
                     // 前端多传一个字段标识是逻辑操作
-                    if (StringUtil.isNotEmpty(condValue)) {
+                    if (StringUtils.isNotEmpty(condValue)) {
                         groupSql.append("=").append(condValue).append(" ");
                     }
                 }
             } else {
                 groupSql.append(condValue);
-                // if (StringUtil.isNotEmpty(condValue)) {
-                // if (StringUtils.isNoneBlank(operatorStr)) {
-                // groupSql.append(condValue.replace("/", " " + operatorStr + " ").replaceAll(" +", " "));
-                // }
-                // else {
-                // groupSql.append(condValue);
-                // }
-                // }
             }
         }
         return groupSql.toString();
@@ -465,9 +453,6 @@ public final class SqlBuilderHelper {
 
     /**
      * 是否有时间计算，同环比年月累计
-     *
-     * @param func
-     * @return
      */
     public static boolean isGrowthOrTotal(String func) {
         SqlFuncEnum funcEnum = SqlFuncEnum.getFuncByName(func);

@@ -2,14 +2,10 @@ package org.zmz.c.service.dataopen.sqlfunc;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
+import org.zmz.c.service.dataopen.sqltype.SqlBuilderHelper;
 import org.zmz.c.utils.KeyValues;
 import org.zmz.c.utils.SqlUtils;
 
-/**
- * @author fyh
- * @date 2023-03-17 16:22
- * @description
- */
 public class TotalOrGrowthFuncParser extends AbstractFuncParser {
     @Override
     public void setOutField(StringBuilder sql) {

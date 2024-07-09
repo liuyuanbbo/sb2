@@ -27,4 +27,6 @@ public class ProRestrictColumnVo extends DataSetCondition implements Serializabl
     private String isAcct;
 
     private String cycleType;
+
+    private String dateFormat;
 }

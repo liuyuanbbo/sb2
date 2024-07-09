@@ -7,11 +7,9 @@ import org.zmz.c.qo.dataopen.OutPutMode;
 import org.zmz.c.service.dataopen.sqltype.SqlBuilderHelper;
 import org.zmz.c.vo.dataopen.dataset.CycleInfo;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,39 +135,19 @@ public class AcctTimeUtil {
 
     public static String getDefAcctValue(String cycleType) {
         if (isCycle(cycleType)) {
-            switch (cycleType.toUpperCase()) {
-                case "Y":
-                    return DateUtil.getLastAcct(Calendar.YEAR);
-                case "M":
-                    return DateUtil.getLastMonth(DateUtil.DATE_FORMAT_6);
-                case "H":
-                    return DateUtil.getLastAcct(Calendar.HOUR);
-                case "F":
-                    return DateUtil.getLastAcct(Calendar.MINUTE);
-                case "D":
-                    return DateUtil.getYesterday(DateUtil.DATE_FORMAT_8);
-                default:
-                    return DateUtil.getDate();
-            }
+            return switch (cycleType.toUpperCase()) {
+                case "Y" -> DateUtil.getLastAcct(Calendar.YEAR);
+                case "M" -> DateUtil.getLastMonth(DateUtil.DATE_FORMAT_6);
+                case "H" -> DateUtil.getLastAcct(Calendar.HOUR);
+                case "F" -> DateUtil.getLastAcct(Calendar.MINUTE);
+                case "D" -> DateUtil.getYesterday(DateUtil.DATE_FORMAT_8);
+                default -> DateUtil.getDate();
+            };
         }
         return "";
     }
 
     public static boolean isCycle(String dataCycle) {
         return StringUtils.isNotEmpty(dataCycle) && !"O".equalsIgnoreCase(dataCycle);
-    }
-
-    /**
-     * 返回上月
-     *
-     * @param pattern 日期的格式
-     */
-    public static String getLastMonth(String pattern) {
-        Calendar c = Calendar.getInstance();
-        // 当前月份减1
-        c.add(Calendar.MONTH, -1);
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-        Date date = c.getTime();
-        return sdf.format(date);
     }
 }

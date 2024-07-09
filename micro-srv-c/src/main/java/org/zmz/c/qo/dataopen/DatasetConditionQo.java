@@ -53,4 +53,14 @@ public class DatasetConditionQo extends DataSetCondition {
      * 度量/维度/条件对应的术语所对应的物理字段，范围随着拖拽会变化
      */
     private List<DatasetObjColumnVo> termRelaColumns = new ArrayList<>();
+
+    /**
+     * 时间粒度类型  timeFreq/timeFreqValue
+     */
+    private String businessType;
+
+    /**
+     * 表别名
+     */
+    private String tableAlias;
 }
