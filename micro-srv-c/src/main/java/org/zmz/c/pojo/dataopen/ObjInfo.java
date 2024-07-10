@@ -1,5 +1,6 @@
 package org.zmz.c.pojo.dataopen;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @ToString
 @TableName(schema = "obj_info")
 public class ObjInfo {
-    @TableId
+    @TableId(type = IdType.ASSIGN_ID)
     public Long objectId;
     public Long parentId;
     public Long grpId;

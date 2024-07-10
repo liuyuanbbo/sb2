@@ -2,6 +2,7 @@ package org.zmz.c.service.dataopen.dataset;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1122,7 +1123,7 @@ public class DatasetParamsBuildService {
         for (DatasetColumnQo metrics : metricsList) {
             ObjRelaTreeVo objRelaTree = buildObjRelaTree(metrics.getObjectId(), objKeyTableRelaList);
             putMetricsObjTreeToThread(metrics.getObjectId(), objRelaTree);
-            log.info("度量:{},对象树:{}", metrics.getDataName(), JsonUtil.toJson(objRelaTree));
+            log.info("度量:{},对象树:{}", metrics.getDataName(), JSONObject.toJSONString(objRelaTree));
         }
     }
 
