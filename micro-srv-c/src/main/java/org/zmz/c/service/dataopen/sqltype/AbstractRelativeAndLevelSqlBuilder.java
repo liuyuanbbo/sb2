@@ -1,5 +1,6 @@
 package org.zmz.c.service.dataopen.sqltype;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -70,7 +71,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         // 以相对维度字段进行分组 目前最多两组(包含/include,排除/exclude),后续可能冗余fix类型
         Map<List<String>, List<DatasetColumnQo>> dimGroup = getRelativeDimensionGroup(metrics, columnList);
         // 是否单条 SQL ,只有层级字段等于1个和度量分组等于1个的时候 isSingle=true
-        boolean isSingleSql = dimGroup.isEmpty() && result.isSingle;
+        boolean isSingleSql = (dimGroup.isEmpty() && result.isSingle);
         // 主视图sql(可能没有度量)
         String mainSql = appendSqlConvert(isSingleSql, metrics,
                 Constants.DimensionType.TYPE_MAIN, columnList, condList, mainSlaveTabPeriod, replaceLevelColumn, result);
@@ -107,13 +108,14 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
     @Override
     public DatasetColumnQo minLevelColumn(List<DatasetColumnQo> dimensions) {
         List<DatasetColumnQo> orgDimensions = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(dimensions)) {
+        if (CollUtil.isNotEmpty(dimensions)) {
             orgDimensions = dimensions.stream().filter(t -> {
-                return null != t.getIsOrgDimension() && t.getIsOrgDimension() > 0 && null != t.getOrgLevel()
-                        && t.getOrgLevel() >= 0;
+                Integer isOrgDimension = t.getIsOrgDimension();
+                Integer orgLevel = t.getOrgLevel();
+                return isOrgDimension != null && isOrgDimension > 0 && orgLevel != null && orgLevel >= 0;
             }).toList();
         }
-        if (!CollectionUtils.isEmpty(orgDimensions)) {
+        if (CollUtil.isNotEmpty(dimensions)) {
             return Collections.min(orgDimensions, Comparator.comparingInt(DatasetColumnQo::getOrgLevel));
         }
         return null;
@@ -125,8 +127,10 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
     @Override
     public DatasetColumnQo maxLevelColumn(List<DatasetColumnQo> dimensions) {
         for (DatasetColumnQo dimension : dimensions) {
-            if (null != dimension.getIsOrgDimension() && dimension.getIsOrgDimension() > 0
-                    && KeyValues.YES_VALUE_1.equals(dimension.getAutoLevelGroup())) {
+            Integer isOrgDimension = dimension.getIsOrgDimension();
+            if (isOrgDimension != null &&
+                    isOrgDimension > 0 &&
+                    KeyValues.YES_VALUE_1.equals(dimension.getAutoLevelGroup())) {
                 return dimension;
             }
         }
@@ -150,44 +154,54 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
     @Override
     public void hasAutoLevel(List<DatasetColumnQo> dimensions) {
         for (DatasetColumnQo dimension : dimensions) {
-            if (null != dimension.getIsOrgDimension() && dimension.getIsOrgDimension() > 0
-                    && KeyValues.YES_VALUE_1.equals(dimension.getAutoLevelGroup())) {
+            Integer isOrgDimension = dimension.getIsOrgDimension();
+            if (isOrgDimension != null &&
+                    isOrgDimension > 0 &&
+                    KeyValues.YES_VALUE_1.equals(dimension.getAutoLevelGroup())) {
                 autoLevelGroup = true;
                 break;
             }
         }
 
+        // autoLevelGroup 存在 层级字段配置了自动向上汇总
         if (autoLevelGroup) {
             Map<Long, ModelInfo> allModelInfo = this.modelInfoMap;
             DatasetColumnQo minLevelColumn = minLevelColumn(dimensions);
             DatasetColumnQo currLevelColumn = maxLevelColumn(dimensions);
+            List<DatasetColumnQo> filterDimensions = dimensions.stream().filter(t -> {
+                Integer isOrgDimension = t.getIsOrgDimension();
+                Integer orgLevel = t.getOrgLevel();
+                return isOrgDimension != null &&
+                        isOrgDimension > 0 &&
+                        orgLevel != null &&
+                        orgLevel > 0 &&
+                        allModelInfo.get(t.getTableId()) != null;
+            }).toList();
             // 遍历找出要替换的层级字段(层级小于等于配置向上汇总的层级字段)
-            for (DatasetColumnQo dimension : dimensions) {
-                if (null != dimension.getIsOrgDimension() && dimension.getIsOrgDimension() > 0
-                        && null != dimension.getOrgLevel() && dimension.getOrgLevel() > 0
-                        && null != allModelInfo.get(dimension.getTableId())) {
+            for (DatasetColumnQo dimension : filterDimensions) {
+                String columnCode = dimension.getColumnCode();
+                Long tableId = dimension.getTableId();
+                List<OrgDimension> orgDimensionList = allModelInfo.get(tableId)
+                        .getBussinessAttr().getOrgDimensionList();
 
-                    List<OrgDimension> orgDimensionList = allModelInfo.get(dimension.getTableId()).getBussinessAttr()
-                            .getOrgDimensionList();
+                if (CollUtil.isNotEmpty(orgDimensionList)) {
+                    orgDimensionList = orgDimensionList.stream().filter(t -> {
+                        String orgLevel = t.getOrgLevel();
+                        return (Integer.parseInt(orgLevel) <= currLevelColumn.getOrgLevel()
+                                && Integer.parseInt(orgLevel) >= minLevelColumn.getOrgLevel());
+                    }).collect(Collectors.toList());
+                }
 
-                    if (!CollectionUtils.isEmpty(orgDimensionList)) {
-                        orgDimensionList = orgDimensionList.stream().filter(t -> {
-                            return (Integer.parseInt(t.getOrgLevel()) <= currLevelColumn.getOrgLevel()
-                                    && Integer.parseInt(t.getOrgLevel()) >= minLevelColumn.getOrgLevel());
-                        }).collect(Collectors.toList());
-                    }
-
-                    // 单表模型配置多层级字段的去掉没选到的字段
-                    if (!CollectionUtils.isEmpty(orgDimensionList)) {
-                        orgDimensionList.sort((o1, o2) -> Integer.parseInt(o2.getOrgLevel()) - Integer.parseInt(o1.getOrgLevel()));
-                        List<OrgDimension> finalOrgDimensionList = orgDimensionList;
-                        orgDimensionList.forEach(t -> {
-                            if (t.getOrgIdColumnCode().equals(dimension.getColumnCode())
-                                    || t.getOrgNameColumnCode().equals(dimension.getColumnCode())) {
-                                t.setMetaDataId(dimension.getTableId());
-                                iteratorColumnMap.put(dimension.getTableId(), finalOrgDimensionList);
-                            }
-                        });
+                // 单表模型配置多层级字段的去掉没选到的字段
+                if (CollUtil.isNotEmpty(orgDimensionList)) {
+                    // 根据 orgLevel 倒序排列
+                    orgDimensionList.sort((o1, o2) -> Integer.parseInt(o2.getOrgLevel()) - Integer.parseInt(o1.getOrgLevel()));
+                    for (OrgDimension t : orgDimensionList) {
+                        if (t.getOrgIdColumnCode().equals(columnCode) ||
+                                t.getOrgNameColumnCode().equals(columnCode)) {
+                            t.setMetaDataId(tableId);
+                            iteratorColumnMap.put(tableId, orgDimensionList);
+                        }
                     }
                 }
             }
@@ -539,6 +553,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         List<DatasetColumnQo> growthOrTotalsMetric = null;
         SqlComponent component = new SqlComponent();
         Map<String, Map<String, String>> alias;
+        // 此分支可以先不管
         if (this.params.judgeIndexView()) {
             alias = getIndexViewSql(component, metrics, dimensionList);
         } else {
@@ -548,7 +563,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             String dataPrivPathKey = metrics.get(0).getDataPrivPathKey();
             alias = joinTables(pathsMap, dataPrivPathKey, needAppendPeriod, component);
         }
-        boolean single = singleSql && CollectionUtils.isEmpty(growthOrTotalsMetric);
+        boolean single = (singleSql && CollectionUtils.isEmpty(growthOrTotalsMetric));
         if (params.getDetailTableId() != null) {
             component.field.append(" * ");
         } else {
@@ -614,7 +629,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
      */
     boolean hasCalMetric(List<DatasetColumnQo> metrics) {
         for (DatasetColumnQo metric : metrics) {
-            if (!CollectionUtils.isEmpty(metric.getColumnGroup())) {
+            if (CollUtil.isNotEmpty(metric.getColumnGroup())) {
                 return true;
             }
         }
@@ -693,9 +708,15 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
      * @param replaceLevelColumn 层级替换字段
      */
     @Override
-    protected void appendOutField(boolean singleSql, List<DatasetColumnQo> metrics, String dimensionType,
-                                  List<DatasetColumnQo> dimensionList, Map<String, Map<String, String>> aliasMap, StringBuilder fieldSql,
-                                  OrgDimension replaceLevelColumn, SqlFuncEnum funcEnum, boolean joinTimeSql) {
+    protected void appendOutField(boolean singleSql,
+                                  List<DatasetColumnQo> metrics,
+                                  String dimensionType,
+                                  List<DatasetColumnQo> dimensionList,
+                                  Map<String, Map<String, String>> aliasMap,
+                                  StringBuilder fieldSql,
+                                  OrgDimension replaceLevelColumn,
+                                  SqlFuncEnum funcEnum,
+                                  boolean joinTimeSql) {
         // 划小架构表最细粒度字段
         DatasetColumnQo orgDimColumn = SqlBuilderHelper.getOrgDimensionMinColumn(getDataPrivCtrlInfo());
         DatasetColumnQo metric = metrics.get(0);

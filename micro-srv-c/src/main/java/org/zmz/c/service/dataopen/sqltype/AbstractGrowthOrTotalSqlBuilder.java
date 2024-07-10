@@ -31,7 +31,7 @@ import java.util.Map;
 public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilderBase {
 
     /**
-     * 是否有同环比、月/年累计
+     * 检查是否有同环比、月/年累计
      *
      * @param metrics 度量
      * @return true/false
@@ -55,8 +55,12 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
      * 同/环比或者月/年累计的子查询
      */
     protected void subSqlGrowthOrTotal(List<SubQuerySqlQo> subSqlList,
-                                       List<DatasetColumnQo> metricList, String dimensionType, List<DatasetColumnQo> dimensionList,
-                                       List<DatasetConditionQo> condList, boolean needAppendPeriod, OrgDimension replaceLevelColumn,
+                                       List<DatasetColumnQo> metricList,
+                                       String dimensionType,
+                                       List<DatasetColumnQo> dimensionList,
+                                       List<DatasetConditionQo> condList,
+                                       boolean needAppendPeriod,
+                                       OrgDimension replaceLevelColumn,
                                        String scheduleType) {
         SqlComponent component = new SqlComponent();
         Map<String, List<MetricsDimensionPathVo>> pathsMap = metricList.get(0).getPathsMap();
@@ -237,14 +241,25 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
     }
 
     protected abstract Map<String, Map<String, String>> joinTables(Map<String, List<MetricsDimensionPathVo>> pathsMap,
-                                                                   String dataPrivPathKey, boolean needAppendPeriod, SqlComponent component);
+                                                                   String dataPrivPathKey,
+                                                                   boolean needAppendPeriod,
+                                                                   SqlComponent component);
 
-    protected abstract void appendOutField(boolean singleSql, List<DatasetColumnQo> metrics, String dimensionType,
-                                           List<DatasetColumnQo> dimensionList, Map<String, Map<String, String>> aliasMap, StringBuilder fieldSql,
-                                           OrgDimension replaceLevelColumn, SqlFuncEnum funcEnum, boolean joinTimeSql);
+    protected abstract void appendOutField(boolean singleSql,
+                                           List<DatasetColumnQo> metrics,
+                                           String dimensionType,
+                                           List<DatasetColumnQo> dimensionList,
+                                           Map<String, Map<String, String>> aliasMap,
+                                           StringBuilder fieldSql,
+                                           OrgDimension replaceLevelColumn,
+                                           SqlFuncEnum funcEnum,
+                                           boolean joinTimeSql);
 
-    protected abstract void appendGroupBy(List<DatasetColumnQo> metrics, List<DatasetColumnQo> dimensionList,
-                                          StringBuilder groupSql, Map<String, Map<String, String>> aliasMap, OrgDimension replaceLevelColumn,
+    protected abstract void appendGroupBy(List<DatasetColumnQo> metrics,
+                                          List<DatasetColumnQo> dimensionList,
+                                          StringBuilder groupSql,
+                                          Map<String, Map<String, String>> aliasMap,
+                                          OrgDimension replaceLevelColumn,
                                           boolean joinTimeSql);
 
     protected PeriodExpression getMetricPeriodExpression(Column column, SqlFuncEnum funcEnum) {

@@ -1,5 +1,6 @@
 package org.zmz.c.service.dataopen.sqltype;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +80,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
     @Override
     public String sqlParse() {
         ResultSql result = new ResultSql();
-        if (!CollectionUtils.isEmpty(this.metrics)) {
+        if (CollUtil.isNotEmpty(this.metrics)) {
             // 按度量归属表进行分组
             result.metricsGroup = this.metrics.stream().collect(Collectors.groupingBy(DatasetColumnQo::getTableId));
             // 计算字段不能single
@@ -94,7 +95,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                 }
             }
         }
-        result.isGroupBy = !CollectionUtils.isEmpty(this.metrics);
+        result.isGroupBy = CollUtil.isNotEmpty(this.metrics);
         generalSqlBuilder(result);
         if (Constants.SQL_TASK.equals(params.getSqlMode())) {
             return scheduleSql(result);
@@ -127,8 +128,6 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
 
     /**
      * 没有临时表的调度sql构建、如果是单个sql就需要添加上输出字段的注释(度量归属表分组只有一个、层级字段一个)
-     *
-     * @param result 返回参数引用
      */
     private void generalSqlBuilder(ResultSql result) {
         if (autoLevelGroup) {
@@ -140,14 +139,17 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                     if (iteratorColumnMap.size() > 1) {
                         result.isSingle = false;
                         // 多表的层级字段
-                        iteratorColumnMap.forEach((key, value) -> appendRelativeMetric(result, entry.getValue(), params.getColumnList(), params.getCondList(),
-                                value.get(0)));
+                        iteratorColumnMap.forEach(
+                                (key, value) -> appendRelativeMetric(result, entry.getValue(), params.getColumnList(), params.getCondList(), value.get(0))
+                        );
                         return;
                     }
                     // 单表的层级字段
                     List<OrgDimension> orgDimensions = iteratorColumnMap.get(currLevelColumn.getTableId());
-                    result.isSingle = result.isSingle && result.metricsGroup.size() == 1 && orgDimensions.size() == 1;
-                    orgDimensions.forEach(t -> appendRelativeMetric(result, entry.getValue(), params.getColumnList(), params.getCondList(), t));
+                    result.isSingle = (result.isSingle && result.metricsGroup.size() == 1 && orgDimensions.size() == 1);
+                    orgDimensions.forEach(
+                            t -> appendRelativeMetric(result, entry.getValue(), params.getColumnList(), params.getCondList(), t)
+                    );
                 }
                 return;
             }
@@ -155,22 +157,27 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
             if (iteratorColumnMap.size() > 1) {
                 result.isSingle = false;
                 // 多表的层级字段
-                iteratorColumnMap.forEach((key, value) -> appendRelativeMetric(result, params.getCustomMetrics(), params.getColumnList(),
-                        params.getCondList(), value.get(0)));
+                iteratorColumnMap.forEach(
+                        (key, value) -> appendRelativeMetric(result, params.getCustomMetrics(), params.getColumnList(), params.getCondList(), value.get(0))
+                );
                 return;
             }
             // 单表的层级字段、没有度量 一般不会有这样的配置
             List<OrgDimension> orgDimensions = iteratorColumnMap.get(currLevelColumn.getTableId());
-            result.isSingle = result.isSingle && orgDimensions.size() == 1;
-            orgDimensions.forEach(t -> appendRelativeMetric(result, params.getCustomMetrics(), params.getColumnList(), params.getCondList(), t));
+            result.isSingle = (result.isSingle && orgDimensions.size() == 1);
+            orgDimensions.forEach(
+                    t -> appendRelativeMetric(result, params.getCustomMetrics(), params.getColumnList(), params.getCondList(), t)
+            );
             return;
         }
 
         // 没有层级字段
         if (MapUtil.isNotEmpty(result.metricsGroup)) {
             // 有度量 没有层级字段
-            result.isSingle = result.isSingle && result.metricsGroup.size() == 1;
-            result.metricsGroup.forEach((key, value) -> appendRelativeMetric(result, value, params.getColumnList(), params.getCondList(), null));
+            result.isSingle = (result.isSingle && result.metricsGroup.size() == 1);
+            result.metricsGroup.forEach(
+                    (key, value) -> appendRelativeMetric(result, value, params.getColumnList(), params.getCondList(), null)
+            );
             return;
         }
         // 没有度量 没有层级字段，此时不需要group by
@@ -934,19 +941,20 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
     private void searchPeriodColumn() {
         String cycleType = null;
         for (Map.Entry<Long, ModelInfo> entity : this.modelInfoMap.entrySet()) {
-            MetaDataInfo info = entity.getValue().getMetaDataInfo();
             ModelInfo modelInfo = entity.getValue();
+            MetaDataInfo info = modelInfo.getMetaDataInfo();
+            String dataCycleCode = info.getDataCycleCode();
             if (null != modelInfo.findAcctColumn()) {
                 Column period = modelInfo.findAcctColumn();
-                period.setCycleType(info.getDataCycleCode());
+                period.setCycleType(dataCycleCode);
                 this.allPeriod.put(entity.getKey(), period);
             }
-            if (null == cycleType && StringUtils.isNoneBlank(info.getDataCycleCode())) {
-                cycleType = info.getDataCycleCode();
+            if (null == cycleType && StringUtils.isNoneBlank(dataCycleCode)) {
+                cycleType = dataCycleCode;
             }
             // 标记为日月账期混用
-            if (null != cycleType && StringUtils.isNoneBlank(info.getDataCycleCode())
-                    && !cycleType.equals(info.getDataCycleCode())) {
+            if (null != cycleType && StringUtils.isNoneBlank(dataCycleCode)
+                    && !cycleType.equals(dataCycleCode)) {
                 this.isMixed = true;
             }
             initTimeGranularity(modelInfo);
@@ -1024,6 +1032,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                 this.relMap.put(v.getMetaDataId() + "_" + v.getRelaKeyObjectId(), v);
             }
         } else {
+            //检查维度字段是否有层级字段配置自动向上汇总配置
             hasAutoLevel(dimensions);
         }
         searchPeriodColumn();
