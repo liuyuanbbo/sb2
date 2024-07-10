@@ -1,5 +1,6 @@
 package org.zmz.c.service.dataopen.sqltype;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -21,9 +22,7 @@ import org.zmz.c.utils.SqlUtils;
 import org.zmz.c.vo.dataopen.dataset.ResultSql;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +61,7 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
                                        boolean needAppendPeriod,
                                        OrgDimension replaceLevelColumn,
                                        String scheduleType) {
+
         SqlComponent component = new SqlComponent();
         Map<String, List<MetricsDimensionPathVo>> pathsMap = metricList.get(0).getPathsMap();
         String dataPrivPathKey = metricList.get(0).getDataPrivPathKey();
@@ -87,9 +87,9 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
                     condPeriodExp.setCycleType(acctCond.getCycleType());
                     condPeriodExp.setOperator(acctCond.getCondOperator());
                     condPeriodExp.setIsDynamic(acctCond.getIsDynamic());
-                    String[] split = acctCond.getCondValue().contains("~") ? acctCond.getCondValue().split("~")
-                            : acctCond.getCondValue().split(",");
-                    condPeriodExp.setPeriodScope(new LinkedList<>(Arrays.asList(split)));
+                    String condValue = acctCond.getCondValue();
+                    List<String> split = condValue.contains("~") ? StrUtil.split("~", condValue) : StrUtil.split(",", condValue);
+                    condPeriodExp.setPeriodScope(split);
                 } else {
                     condPeriodExp = this.getPeriodExpressionByFunc(acctDimension.getCycleType(), funcEnum);
                 }
@@ -134,19 +134,19 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         Map<String, String> tempTbPathAlias = new HashMap<>();
 
         Map<String, Map<String, List<MetricsDimensionPathVo>>> tempTablesMap = this.params.getTempTablesMap();
-        Map<String, Map<String, MetricsDimensionPathVo>> mainTablesToTempTablesMap = this.params
-                .getMainTablesToTempTablesMap();
+        Map<String, Map<String, MetricsDimensionPathVo>> mainTablesToTempTablesMap = this.params.getMainTablesToTempTablesMap();
         Map<String, Map<String, List<MetricsDimensionPathVo>>> mainTablesMap = this.params.getMainTablesMap();
-        boolean hasOrgTable = SqlBuilderHelper.hasOrgTable(getDataPrivCtrlInfo(), metricList.get(0).getPathsMap());
+        DatasetColumnQo metrics0 = metricList.get(0);
+        boolean hasOrgTable = SqlBuilderHelper.hasOrgTable(getDataPrivCtrlInfo(), metrics0.getPathsMap());
         boolean mainSlaveTabPeriod = needSlaveTablePeriod(metricList, dimensionList);
 
         SqlComponent component = new SqlComponent();
         String tmpTbName = subJoinTables(component, mainTbPathAlias, tempTbPathAlias, hasOrgTable, result,
-                metricList.get(0), cacheTempPath, tempTablesMap, mainTablesToTempTablesMap, mainTablesMap,
+                metrics0, cacheTempPath, tempTablesMap, mainTablesToTempTablesMap, mainTablesMap,
                 mainSlaveTabPeriod);
-        Map<String, List<MetricsDimensionPathVo>> mainTbPaths = mainTablesMap.get(metricList.get(0).getPath());
+        Map<String, List<MetricsDimensionPathVo>> mainTbPaths = mainTablesMap.get(metrics0.getPath());
 
-        SqlFuncEnum funcEnum = SqlFuncEnum.getFuncByName(metricList.get(0).getFunc());
+        SqlFuncEnum funcEnum = SqlFuncEnum.getFuncByName(metrics0.getFunc());
 
         StringBuilder fields = mergeField(singleSql, metricList, dimensionType, dimensionList, mainTbPathAlias,
                 tempTbPathAlias, hasOrgTable, tmpTbName, replaceLevelColumn, funcEnum);

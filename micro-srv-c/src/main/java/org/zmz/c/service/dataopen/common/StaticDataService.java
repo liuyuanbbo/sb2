@@ -3,17 +3,20 @@ package org.zmz.c.service.dataopen.common;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.zmz.c.mapper.dataopen.ObjInfoMapper;
 import org.zmz.c.mapper.dataopen.StaticDataMapper;
+import org.zmz.c.mapper.dataportal.DcSystemConfigListMapper;
 import org.zmz.c.mapper.dataportal.DcSystemConfigMapper;
 import org.zmz.c.pojo.dataopen.AttrValue;
 import org.zmz.c.pojo.dataportal.DcSystemConfig;
+import org.zmz.c.pojo.dataportal.DcSystemConfigList;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.utils.I18nUtil;
+import org.zmz.c.utils.KeyValues;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -35,10 +38,10 @@ public class StaticDataService {
     DcSystemConfigMapper dcSystemConfigMapper;
 
     @Resource
-    ObjInfoMapper objInfoMapper;
+    StaticDataMapper staticDataMapper;
 
     @Resource
-    StaticDataMapper staticDataMapper;
+    DcSystemConfigListMapper dcSystemConfigListMapper;
 
     public String getDcSystemParamByCache(String code, String defaultValue) {
         String value = this.getDcSystemParamByCache(code);
@@ -132,5 +135,19 @@ public class StaticDataService {
 //            return attrValue;
 //        }).collect(Collectors.toList());
 //    }
+    public List<DcSystemConfigList> getDcSystemConfigList(String standType) {
+        QueryWrapper<DcSystemConfigList> wrapper = new QueryWrapper<>();
+        wrapper.eq("stand_type", standType);
+        wrapper.eq("state_cd", KeyValues.STATUS_CD_00A);
+        return dcSystemConfigListMapper.selectList(wrapper);
+    }
+
+    public DcSystemConfigList getDcSystemConfigList(String standType, String standCode) {
+        QueryWrapper<DcSystemConfigList> wrapper = new QueryWrapper<>();
+        wrapper.eq("stand_type", standType);
+        wrapper.eq("stand_code", standCode);
+        wrapper.eq("state_cd", KeyValues.STATUS_CD_00A);
+        return dcSystemConfigListMapper.selectOne(wrapper);
+    }
 
 }

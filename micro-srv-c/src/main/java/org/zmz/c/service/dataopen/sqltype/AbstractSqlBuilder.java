@@ -147,9 +147,9 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                     // 单表的层级字段
                     List<OrgDimension> orgDimensions = iteratorColumnMap.get(currLevelColumn.getTableId());
                     result.isSingle = (result.isSingle && result.metricsGroup.size() == 1 && orgDimensions.size() == 1);
-                    orgDimensions.forEach(
-                            t -> appendRelativeMetric(result, entry.getValue(), params.getColumnList(), params.getCondList(), t)
-                    );
+                    for (OrgDimension t : orgDimensions) {
+                        appendRelativeMetric(result, entry.getValue(), params.getColumnList(), params.getCondList(), t);
+                    }
                 }
                 return;
             }
@@ -864,29 +864,36 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
     @Override
     protected Map<Long, String> getPeriodFromPathsAndCondList(List<MetricsDimensionPathVo> paths) {
         Map<Long, String> maps = new HashMap<>();
-        if (!CollectionUtils.isEmpty(this.params.getCondList())) {
-            for (DatasetConditionQo qo : this.params.getCondList()) {
+        List<DatasetConditionQo> condList = this.params.getCondList();
+        if (CollUtil.isNotEmpty(condList)) {
+            for (DatasetConditionQo qo : condList) {
                 if (KeyValues.YES_VALUE_1.equals(qo.getIsAcct()) && StringUtils.isNoneBlank(qo.getCycleType())) {
                     StringBuilder strB;
                     for (MetricsDimensionPathVo path : paths) {
-                        if (null != path.getSrcTableId() && null == maps.get(path.getSrcTableId())) {
-                            Column column = this.allPeriod.get(path.getSrcTableId());
+                        Long srcTableId = path.getSrcTableId();
+                        if (null != srcTableId && null == maps.get(srcTableId)) {
+                            Column column = this.allPeriod.get(srcTableId);
                             if (null != column && column.getCycleType().equals(qo.getCycleType())) {
                                 strB = new StringBuilder();
                                 String value = replaceValues(qo, column);
-                                strB.append(column.getColumnCode()).append(SqlUtils.STR_BLANK)
-                                        .append(qo.getCondOperator()).append(value);
-                                maps.put(path.getSrcTableId(), strB.toString());
+                                strB.append(column.getColumnCode())
+                                        .append(SqlUtils.STR_BLANK)
+                                        .append(qo.getCondOperator())
+                                        .append(value);
+                                maps.put(srcTableId, strB.toString());
                             }
                         }
-                        if (null != path.getTgtTableId() && null == maps.get(path.getTgtTableId())) {
-                            Column column = this.allPeriod.get(path.getTgtTableId());
+                        Long tgtTableId = path.getTgtTableId();
+                        if (null != tgtTableId && null == maps.get(tgtTableId)) {
+                            Column column = this.allPeriod.get(tgtTableId);
                             if (null != column && column.getCycleType().equals(qo.getCycleType())) {
                                 strB = new StringBuilder();
                                 String value = replaceValues(qo, column);
-                                strB.append(column.getColumnCode()).append(SqlUtils.STR_BLANK)
-                                        .append(qo.getCondOperator()).append(value);
-                                maps.put(path.getTgtTableId(), strB.toString());
+                                strB.append(column.getColumnCode())
+                                        .append(SqlUtils.STR_BLANK)
+                                        .append(qo.getCondOperator())
+                                        .append(value);
+                                maps.put(tgtTableId, strB.toString());
                             }
                         }
                     }

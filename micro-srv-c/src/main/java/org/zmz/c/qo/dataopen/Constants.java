@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface Constants {
+    int PAGE_INDEX = 1;
     String APP_TYPE_DIMENSION = "dimension";
     String APP_TYPE_METRICS = "metrics";
 
@@ -249,6 +250,13 @@ public interface Constants {
 
     /* 标签发布区域dc_sql编码名 */
     String DC_SQL_INJECTION_LABEL_OWM_SYSTEM = "INJECTION_LABEL_OWM_SYSTEM";
+
+    String STATUS_CD_00A = "00A";
+
+    /**
+     * 通用状态码无效，删除
+     */
+    String STATUS_CD_1200 = "1200";
 
     class DimensionType {
 

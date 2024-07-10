@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.zmz.c.mapper.dataopen.ObjTableRelaMapper">
-    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.ObjTableRela">
+    <resultMap id="ObjTableRelaResultMap" type="org.zmz.c.pojo.dataopen.ObjTableRela">
         <id column="rela_id" jdbcType="BIGINT" property="relaId"/>
         <result column="object_id" jdbcType="BIGINT" property="objectId"/>
         <result column="meta_data_id" jdbcType="BIGINT" property="metaDataId"/>
@@ -13,4 +13,53 @@
         <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode"/>
         <result column="data_cycle" jdbcType="VARCHAR" property="dataCycle"/>
     </resultMap>
+
+    <select id="getObjTableRelaList" parameterType="java.util.Map" resultMap="ObjTableRelaResultMap">
+        select rela_id,
+        object_id,
+        meta_data_id,
+        meta_data_code,
+        datasource_code,
+        main_flag,
+        meta_data_type,
+        status_cd,
+        com_acct_id,
+        data_cycle
+        from obj_table_rela
+        <where>
+            <if test="objectId != null and objectId != ''">
+                AND object_id = #{objectId}
+            </if>
+            <if test="objectIds != null and objectIds.size() > 0">
+                AND object_id IN
+                <foreach collection="objectIds" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="statusCd != null and statusCd != ''">
+                AND status_cd =#{statusCd}
+            </if>
+            <if test="keywords != null and keywords != ''">
+                AND meta_data_code like CONCAT(CONCAT('%', #{keywords}), '%')
+            </if>
+            <if test="mainFlag != null and mainFlag != ''">
+                AND main_flag =#{mainFlag}
+            </if>
+            <if test="metaDataType != null and metaDataType != ''">
+                AND meta_data_type =#{metaDataType}
+            </if>
+            <if test="metaDataIds != null and metaDataIds.size() > 0">
+                AND meta_data_id IN
+                <foreach collection="metaDataIds" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="objTableRelas != null and objTableRelas.size() > 0">
+                AND (object_id,meta_data_id) IN
+                <foreach collection="objTableRelas" open="(" item="item" close=")" separator=",">
+                    (#{item.objectId},#{item.metaDataId})
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

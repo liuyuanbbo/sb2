@@ -98,8 +98,9 @@ public class DatasetConfig implements Serializable {
     private String accessType;
 
     public boolean isAcctOffset() {
-        return this.acctOffset != null && CollUtil.isNotEmpty(this.acctOffset.getLeftTableIds())
-                && CollUtil.isNotEmpty(this.acctOffset.getRightTableIds());
+        return this.acctOffset != null &&
+                CollUtil.isNotEmpty(this.acctOffset.getLeftTableIds()) &&
+                CollUtil.isNotEmpty(this.acctOffset.getRightTableIds());
     }
 
     /**

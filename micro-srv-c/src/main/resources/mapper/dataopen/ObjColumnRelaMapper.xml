@@ -21,4 +21,13 @@
         <result column="src_column_id" jdbcType="BIGINT" property="srcColumnId"/>
         <result column="seq" jdbcType="BIGINT" property="seq"/>
     </resultMap>
+
+    <!--根据 objectId srcTableId columnCode 查询-->
+    <select id="getObjColumnByCondition" resultMap="BaseResultMap">
+        select *
+        from obj_column_rela
+        where object_id = #{objectId}
+          and src_table_id = #{srcTableId}
+          and column_code = #{columnCode}
+    </select>
 </mapper>

@@ -282,6 +282,7 @@ public final class SqlBuilderHelper {
         return null;
     }
 
+    // 添加 sql 字段注释
     public static String fieldNotes(String columnName) {
         StringBuilder sb = new StringBuilder();
         if (StringUtils.isNoneBlank(columnName)) {

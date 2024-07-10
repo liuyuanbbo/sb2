@@ -1,7 +1,7 @@
 package org.zmz.c.mapper.dataopen;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.zmz.c.pojo.dataopen.ObjInfo;
-import tk.mybatis.mapper.common.Mapper;
 
-public interface ObjInfoMapper extends Mapper<ObjInfo> {
+public interface ObjInfoMapper extends BaseMapper<ObjInfo> {
 }

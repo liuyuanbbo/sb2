@@ -30,4 +30,8 @@ public class ResponseUtil {
     private String resultMsg;
 
     private String errorCode;
+
+    public boolean isSuccess() {
+        return "0".equals(this.resultCode);
+    }
 }

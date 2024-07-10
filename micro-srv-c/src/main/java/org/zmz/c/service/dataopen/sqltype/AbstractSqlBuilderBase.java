@@ -172,11 +172,12 @@ public abstract class AbstractSqlBuilderBase {
                                    Map<String, Map<String, MetricsDimensionPathVo>> mainTablesToTempTablesMap,
                                    Map<String, Map<String, List<MetricsDimensionPathVo>>> mainTablesMap, boolean needAppendPeriod) {
         // 度量的所有到维度路径上抽出来的临时表
-        Map<String, List<MetricsDimensionPathVo>> tempTbPaths = tempTablesMap.get(metric.getPath());
+        String path = metric.getPath();
+        Map<String, List<MetricsDimensionPathVo>> tempTbPaths = tempTablesMap.get(path);
         // 度量的所有维度路径被抽取后的路径
-        Map<String, List<MetricsDimensionPathVo>> mainTbPaths = mainTablesMap.get(metric.getPath());
+        Map<String, List<MetricsDimensionPathVo>> mainTbPaths = mainTablesMap.get(path);
         // 主表到临时表关联字段关系
-        Map<String, MetricsDimensionPathVo> mainTbToTempTbPaths = mainTablesToTempTablesMap.get(metric.getPath());
+        Map<String, MetricsDimensionPathVo> mainTbToTempTbPaths = mainTablesToTempTablesMap.get(path);
 
         // 遍历度量到维度的所有路径,先生成临时表然后与度量表关联
         List<MetricsDimensionPathVo> hasJoinList = new ArrayList<>();
@@ -193,20 +194,20 @@ public abstract class AbstractSqlBuilderBase {
             List<MetricsDimensionPathVo> mainTbs = mainTbPaths.get(dimPath);
             boolean isPriv = dimPath.equals(metric.getDataPrivPathKey());
             Map<String, String> dimTbAlias = new HashMap<>();
-            if (!MapUtil.isEmpty(publicAlias)) {
+            if (MapUtil.isNotEmpty(publicAlias)) {
                 dimTbAlias.putAll(publicAlias);
             }
-            if (!CollectionUtils.isEmpty(mainTbs) && !CollectionUtils.isEmpty(tempTbs)) {
+            if (CollUtil.isNotEmpty(mainTbs) && CollUtil.isNotEmpty(tempTbs)) {
                 MetricsDimensionPathVo objRelation = mainTbToTempTbPaths.get(dimPath);
                 // 1 有临时表和度量表
                 // 1.1 分别构建临时表sql和度量表sql
                 // 检查临时表是否可复用,不可复用就创建临时表
-                String cacheTempDimPath = checkTempTablePath(cacheTempPath, tempTbs, metric.getPath() + dimPath);
+                String cacheTempDimPath = checkTempTablePath(cacheTempPath, tempTbs, path + dimPath);
                 if (StringUtils.isBlank(cacheTempDimPath)) {
                     // 临时表构建
-                    tempTableJoin(hasOrgTable, hasAppend, metric.getPath(), dimPath, tempTbs, objRelation,
+                    tempTableJoin(hasOrgTable, hasAppend, path, dimPath, tempTbs, objRelation,
                             result.tmpTableSql, result.tmpTableNames, metric, periodMaps, needAppendPeriod, isPriv);
-                    tmpTbName = result.tmpTableNames.get(metric.getPath() + dimPath);
+                    tmpTbName = result.tmpTableNames.get(path + dimPath);
                 } else {
                     tmpTbName = result.tmpTableNames.get(cacheTempDimPath);
                 }
@@ -434,14 +435,17 @@ public abstract class AbstractSqlBuilderBase {
         if (StringUtils.isNoneBlank(samePeriod)) {
             join.append(SqlUtils.SQL_AND).append(samePeriod);
         }
-        String tgtName = tableAlias.get(String.valueOf(path.getTgtTableId()));
+        Long tgtTableId = path.getTgtTableId();
+        String tgtName = tableAlias.get(String.valueOf(tgtTableId));
         // 主表有账期字段是配置到where条件中。从表账期字段全局条件中有值的优先配置、否则用默认的。
-        if (StringUtils.isNoneBlank(periodMaps.get(path.getTgtTableId())) && needAppendPeriod) {
-            join.append(SqlUtils.SQL_AND).append(tgtName).append(SqlUtils.STR_POINT)
-                    .append(periodMaps.get(path.getTgtTableId()));
+        if (StringUtils.isNoneBlank(periodMaps.get(tgtTableId)) && needAppendPeriod) {
+            join.append(SqlUtils.SQL_AND)
+                    .append(tgtName)
+                    .append(SqlUtils.STR_POINT)
+                    .append(periodMaps.get(tgtTableId));
         } else {
             if (!this.params.isAcctOffset()) {
-                String periodTgt = getDefultPeriod(path.getTgtTableId(), tableAlias);
+                String periodTgt = getDefultPeriod(tgtTableId, tableAlias);
                 if (StringUtils.isNoneBlank(periodTgt) && needAppendPeriod) {
                     join.append(SqlUtils.SQL_AND).append(periodTgt);
                 }
@@ -459,18 +463,30 @@ public abstract class AbstractSqlBuilderBase {
         Map<String, String> tempAlias = new HashMap<>();
         SqlComponent component = new SqlComponent();
         for (MetricsDimensionPathVo tempTb : tempTbs) {
-            if (StringUtils.isBlank(tempAlias.get(String.valueOf(tempTb.getSrcTableId())))) {
+
+            Long srcTableId = tempTb.getSrcTableId();
+            String srcTableIdStr = String.valueOf(srcTableId);
+            if (StringUtils.isBlank(tempAlias.get(srcTableIdStr))) {
                 String srcName = createTableAlias();
-                tempAlias.put(String.valueOf(tempTb.getSrcTableId()), srcName);
-                component.join.append(this.schemaMap.get(tempTb.getSrcTableId())).append(SqlUtils.STR_POINT)
-                        .append(tempTb.getSrcTableCode()).append(SqlUtils.STR_BLANK).append(srcName);
-                if (null != tempTb.getTgtTableId()
-                        && StringUtils.isBlank(tempAlias.get(String.valueOf(tempTb.getTgtTableId())))) {
+                tempAlias.put(srcTableIdStr, srcName);
+                component.join.append(this.schemaMap.get(srcTableId))
+                        .append(SqlUtils.STR_POINT)
+                        .append(tempTb.getSrcTableCode())
+                        .append(SqlUtils.STR_BLANK)
+                        .append(srcName);
+
+                Long tgtTableId = tempTb.getTgtTableId();
+                String tgtTableIdStr = String.valueOf(tgtTableId);
+                if (null != tgtTableId && StringUtils.isBlank(tempAlias.get(tgtTableIdStr))) {
                     String tgtName = createTableAlias();
-                    tempAlias.put(String.valueOf(tempTb.getTgtTableId()), tgtName);
-                    component.join.append(SqlUtils.SQL_INNER_JOIN).append(this.schemaMap.get(tempTb.getTgtTableId()))
-                            .append(SqlUtils.STR_POINT).append(tempTb.getTgtTableCode()).append(SqlUtils.STR_BLANK)
-                            .append(tgtName).append(SqlUtils.SQL_ON);
+                    tempAlias.put(tgtTableIdStr, tgtName);
+                    component.join.append(SqlUtils.SQL_INNER_JOIN)
+                            .append(this.schemaMap.get(tgtTableId))
+                            .append(SqlUtils.STR_POINT)
+                            .append(tempTb.getTgtTableCode())
+                            .append(SqlUtils.STR_BLANK)
+                            .append(tgtName)
+                            .append(SqlUtils.SQL_ON);
                     this.appendKeyColumns(tempTb.getKeyColumnRelas(), component.join, srcName, tgtName);
 
                     // 账期条件
@@ -483,7 +499,7 @@ public abstract class AbstractSqlBuilderBase {
                 if (null == tempTb.getTgtTableId()) {
                     continue;
                 }
-                String srcName = tempAlias.get(String.valueOf(tempTb.getSrcTableId()));
+                String srcName = tempAlias.get(srcTableIdStr);
                 String tgtName = createTableAlias();
                 tempAlias.put(String.valueOf(tempTb.getTgtTableId()), tgtName);
                 component.join.append(SqlUtils.SQL_INNER_JOIN).append(this.schemaMap.get(tempTb.getTgtTableId()))
@@ -603,8 +619,9 @@ public abstract class AbstractSqlBuilderBase {
         return orgName;
     }
 
+    // 创建表 别名(tb+自增数字)
     protected String createTableAlias() {
-        return "tb".concat(String.valueOf(getIncrementTbIndex()));
+        return "tb" + getIncrementTbIndex();
     }
 
     /**

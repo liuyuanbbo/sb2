@@ -123,11 +123,6 @@ public class DatasetSqlService {
         if (StrUtil.isNotEmpty(acctColumnCode) && allColCodes.add(acctColumnCode)) {
             allCols.add(0, TABLE_ALIAS_PREFIX + 1 + "." + acctColumnCode);
         }
-        /*
-         * // 周期性预览拼接账期条件 if (StringUtils.isEmpty(acctColumnCode) &&
-         * !Constants.SCHEDULE_LOOP_TYPE_O.equals(params.getScheduleType())) { if ("D".equals(params.getScheduleType()))
-         * { allCols.add(0, "${day_id} as day_id"); } else { allCols.add(0, "${month_id} as month_id"); } }
-         */
 
         sqlSb.insert(0, StrUtil.join(",", allCols));
         sqlSb.insert(0, SqlUtils.SQL_SELECT);

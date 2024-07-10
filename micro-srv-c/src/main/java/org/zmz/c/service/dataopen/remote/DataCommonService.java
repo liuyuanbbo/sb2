@@ -4,13 +4,18 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.ModelInfo;
 import org.zmz.c.qo.dataopen.ModelInfoQo;
+import org.zmz.c.qo.dataopen.PhysicsModelQo;
 import org.zmz.c.service.dataopen.feign.FeignDataCommonService;
+import org.zmz.c.service.exception.BaseException;
 import org.zmz.c.utils.JsonUtil;
+import org.zmz.c.utils.ResponseUtil;
+import org.zmz.c.vo.dataopen.dataset.PhysicsTableResponseVo;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -101,5 +106,25 @@ public class DataCommonService {
             return null;
         }
         return modelInfoList.get(0);
+    }
+
+    /**
+     * 获取落地的物理表
+     */
+    public List<PhysicsTableResponseVo> getPhysicsTableListPro(PhysicsModelQo physicsModelQo) {
+        String module = "physicsmodel/getTableList";
+        log.info("获取落地的物理表{}入参:{}", module, JsonUtil.toJson(physicsModelQo));
+
+        ResponseUtil responseUtil = feignDataCommonService.getTableList(physicsModelQo);
+        isSuccess(responseUtil);
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(responseUtil.getResultObject());
+        return jsonObject.getJSONArray("tableList").toJavaList(PhysicsTableResponseVo.class);
+    }
+
+    public void isSuccess(ResponseUtil responseUtil) {
+        if (!responseUtil.isSuccess()) {
+            log.info("公共服务接口返回失败信息: {}", JSONObject.toJSONString(responseUtil));
+            throw new BaseException(responseUtil.getResultMsg());
+        }
     }
 }

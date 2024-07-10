@@ -81,7 +81,7 @@ public class AcctSqlService {
                 String cycleType = acctCol.getCycleType();
                 // 获取数据库类型，不同数据库类型的时间维表只有一张
 
-                ObjInfo objInfo = objInfoMapper.selectByPrimaryKey(acctCol.getObjectId());
+                ObjInfo objInfo = objInfoMapper.selectById(acctCol.getObjectId());
                 // 获取时间维表
                 ModelInfo timeModel = dataCommonService.getTimeModel(objInfo.getTableType());
                 if (timeModel == null) {

@@ -45,6 +45,14 @@ public class DatasetModelService {
     }
 
     /**
+     * 获取使用到的模型
+     */
+    public Map<Long, ModelInfo> getModelInfoMap(DatasetColumnAndConditionQo columnAndConditionQo) {
+        DatasetRelaQo datasetRelaQo = this.getDatasetRelas(columnAndConditionQo);
+        return dataCommonService.queryAllModelInfoMap(datasetRelaQo.getTableIds());
+    }
+
+    /**
      * 获取数据集引用的对象、表、字段、指标等id
      */
     public DatasetRelaQo getDatasetRelas(DatasetDetail datasetDetail) {

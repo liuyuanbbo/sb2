@@ -2,6 +2,7 @@ package org.zmz.c.service.dataopen.sqltype;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
@@ -51,6 +52,7 @@ import java.util.stream.Collectors;
  * {@code @date} 2023-03-16 21:05
  * {@code @description} 相对维度和层级字段
  */
+@Slf4j
 public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthOrTotalSqlBuilder {
 
     /**
@@ -138,12 +140,16 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
     }
 
     protected OrgDimension getOrgLevelDimension(DatasetColumnQo maxLevelColumn) {
-        List<OrgDimension> orgDimensions = iteratorColumnMap.get(maxLevelColumn.getTableId());
-        return orgDimensions.stream().filter(f -> {
-            return f.getMetaDataId().equals(maxLevelColumn.getTableId())
-                    && (f.getOrgIdColumnCode().equals(maxLevelColumn.getColumnCode())
-                    || f.getOrgNameColumnCode().equals(maxLevelColumn.getColumnCode()));
-        }).findFirst().orElse(null);
+        Long tableId = maxLevelColumn.getTableId();
+        String columnCode = maxLevelColumn.getColumnCode();
+        List<OrgDimension> orgDimensions = iteratorColumnMap.get(tableId);
+        return orgDimensions.stream()
+                .filter(f -> f.getMetaDataId().equals(tableId)
+                                && (
+                                f.getOrgIdColumnCode().equals(columnCode) ||
+                                        f.getOrgNameColumnCode().equals(columnCode)
+                        )
+                ).findFirst().orElse(null);
     }
 
     /**
@@ -536,13 +542,17 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         if (params.getDetailTableId() != null) {
             component.field.append(" * ");
         } else {
+            // append 输出字段
             this.appendOutField(single, metrics, dimensionType, dimensionList, alias, component.field,
                     replaceLevelColumn, null, false);
         }
+        log.info("549 行 field append完毕之后的 sql: {}", component.field);
         this.appendWhere(single, component.where, metrics, dimensionType, condList, alias, null, null, null);
+        //log.info("551 行 where append完毕之后的 sql: {}", component.where);
         if (result.isGroupBy) {
             this.appendGroupBy(metrics, dimensionList, component.group, alias, replaceLevelColumn, false);
         }
+        //log.info("555 行 group append完毕之后的 sql: {}", component.group);
         if (single) {
             // 排序
             orderByColumnList(component.order, metrics, dimensionList, alias);
@@ -729,17 +739,24 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 if (appendHiveAccountField(fieldSql, hivePeriodDim, dimension, dimSb, notes)) {
                     continue;
                 }
-            } else if (Constants.APP_TYPE_DIMENSION.equals(dimension.getAppType())) {
+            }
+            // appType 为 dimension
+            else if (Constants.APP_TYPE_DIMENSION.equals(dimension.getAppType())) {
                 // 维度字段
                 // 虚拟维度对象字段替换
                 this.replaceVColumn(dimension, metric);
                 Map<String, String> alias = SqlBuilderHelper.getAliasMap(metric, dimension, aliasMap, !params.judgeIndexView());
+                String columnCode = dimension.getColumnCode();
+                Long tableId = dimension.getTableId();
+                String tableIdStr = String.valueOf(tableId);
                 if (autoLevelGroup && isLevelColumn(dimension)) {
-                    if (dimension.getTableId().equals(replaceLevelColumn.getMetaDataId())
-                            && (dimension.getColumnCode().equals(replaceLevelColumn.getOrgIdColumnCode())
-                            || dimension.getColumnCode().equals(replaceLevelColumn.getOrgNameColumnCode()))) {
-                        appendLevelColumnField(dimSb, replaceLevelColumn,
-                                alias.get(String.valueOf(dimension.getTableId())));
+                    if (tableId.equals(replaceLevelColumn.getMetaDataId()) &&
+                            (
+                                    columnCode.equals(replaceLevelColumn.getOrgIdColumnCode()) ||
+                                            columnCode.equals(replaceLevelColumn.getOrgNameColumnCode())
+                            )
+                    ) {
+                        appendLevelColumnField(dimSb, replaceLevelColumn, alias.get(tableIdStr));
                     } else {
                         continue;
                     }
@@ -749,26 +766,42 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                     }
                 }
                 // 有枚举的维度字段
-                else if (!CollectionUtils.isEmpty(dimension.getEnumList())) {
+                else if (CollUtil.isNotEmpty(dimension.getEnumList())) {
                     fieldSql.append("CASE ");
                     for (Map<?, ?> map : dimension.getEnumList()) {
-                        fieldSql.append(" WHEN ").append(alias.get(String.valueOf(dimension.getTableId())))
-                                .append(SqlUtils.STR_POINT).append(dimension.getColumnCode()).append(SqlUtils.STR_EQUAL)
-                                .append("'").append(map.get("code")).append("'").append(" THEN ").append("'")
-                                .append(map.get("name")).append("'");
+                        fieldSql.append(" WHEN ")
+                                .append(alias.get(tableIdStr))
+                                .append(SqlUtils.STR_POINT)
+                                .append(columnCode)
+                                .append(SqlUtils.STR_EQUAL)
+                                .append("'")
+                                .append(map.get("code"))
+                                .append("'")
+                                .append(" THEN ")
+                                .append("'")
+                                .append(map.get("name"))
+                                .append("'");
                     }
                     fieldSql.append(" END AS ").append(dimension.getAlias()).append(SqlUtils.STR_DOT);
                 } else {
-                    dimSb.append(alias.get(String.valueOf(dimension.getTableId()))).append(SqlUtils.STR_POINT)
-                            .append(dimension.getColumnCode());
-                    fieldSql.append(dimSb).append(SqlUtils.SQL_AS).append(dimension.getAlias()).append(notes)
+                    dimSb.append(alias.get(tableIdStr))
+                            .append(SqlUtils.STR_POINT)
+                            .append(columnCode);
+
+                    fieldSql.append(dimSb)
+                            .append(SqlUtils.SQL_AS)
+                            .append(dimension.getAlias())
+                            .append(notes)
                             .append(SqlUtils.STR_DOT);
                 }
-            } else if (Constants.APP_TYPE_METRICS.equals(dimension.getAppType())
+            }
+            // appType 为 metrics
+            else if (Constants.APP_TYPE_METRICS.equals(dimension.getAppType())
                     && dimensionType.equalsIgnoreCase(dimension.getDimensionType())
                     && CollectionUtils.isEmpty(dimension.getColumnGroup())) {
                 // 虚拟字段
                 replaceVCondition(metric);
+
                 List<String> funs = metrics.stream().map(DatasetColumnQo::getFunc).toList();
                 List<Long> columnIds = metrics.stream().map(DatasetColumnQo::getColumnId).toList();
                 List<String> columnCodes = metrics.stream().map(DatasetColumnQo::getColumnCode).toList();
@@ -786,14 +819,20 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 }
                 // 隐藏字段过滤
                 if (!dimension.isHide() || !singleSql) {
-                    fieldSql.append(dimSb).append(SqlUtils.SQL_AS).append(dimension.getAlias()).append(notes)
+                    fieldSql.append(dimSb)
+                            .append(SqlUtils.SQL_AS)
+                            .append(dimension.getAlias())
+                            .append(notes)
                             .append(SqlUtils.STR_DOT);
                 }
             } else if (Constants.APP_TYPE_METRICS.equals(dimension.getAppType())
                     && !dimensionType.equalsIgnoreCase(dimension.getDimensionType())
                     && CollectionUtils.isEmpty(dimension.getColumnGroup())) {
                 dimSb.append("0");
-                fieldSql.append(dimSb).append(SqlUtils.SQL_AS).append(dimension.getAlias()).append(notes)
+                fieldSql.append(dimSb)
+                        .append(SqlUtils.SQL_AS)
+                        .append(dimension.getAlias())
+                        .append(notes)
                         .append(SqlUtils.STR_DOT);
             } else if (singleSql && CollUtil.isNotEmpty(dimension.getColumnGroup())) {
                 calcSingleColumnSql(dimension, dimSb, singleSql, expMap, fieldSql, notes);
@@ -803,7 +842,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         }
 
         // hive的账期维度放后面
-        if (!hivePeriodDim.isEmpty()) {
+        if (BuildSqlUtil.sbIsNotEmpty(hivePeriodDim)) {
             fieldSql.append(hivePeriodDim);
         }
 
@@ -813,17 +852,24 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             if (ObjectUtils.isEmpty(orgDimColumn)) {
                 Long userId = this.params.getCreator();
                 StringBuilder orgStr = new StringBuilder();
-                orgStr.append("'").append(OrganizationUtil.getOrgIdByUserId(userId)).append("'").append(SqlUtils.SQL_AS)
-                        .append(CUSTOM_ORG_ID_ALIAS).append(SqlUtils.STR_DOT);
+                orgStr.append("'")
+                        .append(OrganizationUtil.getOrgIdByUserId(userId))
+                        .append("'")
+                        .append(SqlUtils.SQL_AS)
+                        .append(CUSTOM_ORG_ID_ALIAS)
+                        .append(SqlUtils.STR_DOT);
                 fieldSql.insert(0, orgStr);
             } else {
                 // 拖到组织维度表字段了、但是没有拖到组织id
                 if (!checkHaveOrgId()) {
                     StringBuilder orgStr = new StringBuilder();
-                    String tbName = SqlBuilderHelper.getAliasName(aliasMap, orgDimColumn.getTableId(),
-                            orgDimColumn.getPath());
-                    orgStr.append(tbName).append(SqlUtils.STR_POINT).append(orgDimColumn.getColumnCode())
-                            .append(SqlUtils.SQL_AS).append(CUSTOM_ORG_ID_ALIAS).append(SqlUtils.STR_DOT);
+                    String tbName = SqlBuilderHelper.getAliasName(aliasMap, orgDimColumn.getTableId(), orgDimColumn.getPath());
+                    orgStr.append(tbName)
+                            .append(SqlUtils.STR_POINT)
+                            .append(orgDimColumn.getColumnCode())
+                            .append(SqlUtils.SQL_AS)
+                            .append(CUSTOM_ORG_ID_ALIAS)
+                            .append(SqlUtils.STR_DOT);
                     fieldSql.insert(0, orgStr);
                 }
             }
@@ -1242,7 +1288,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
      * 替换度量条件
      */
     private void replaceVCondition(DatasetColumnQo metric) {
-        if (!CollectionUtils.isEmpty(metric.getCondList())) {
+        if (CollUtil.isNotEmpty(metric.getCondList())) {
             for (DatasetConditionQo subCond : metric.getCondList()) {
                 if (subCond.getObjId() != null
                         && Constants.OBJ_TREE_RELA_TYPE_V.equalsIgnoreCase(subCond.getRelaType())) {
