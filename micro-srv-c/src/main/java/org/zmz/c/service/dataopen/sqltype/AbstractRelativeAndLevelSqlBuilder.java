@@ -218,12 +218,15 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
     @Override
     protected Map<List<String>, List<DatasetColumnQo>> getRelativeDimensionGroup(List<DatasetColumnQo> metrics,
                                                                                  List<DatasetColumnQo> dimensionList) {
-        List<DatasetColumnQo> collectFilter = metrics.stream().filter(t -> {
-            return Constants.APP_TYPE_METRICS.equalsIgnoreCase(t.getAppType())
-                    && StringUtils.isNotBlank(t.getDimensionType())
-                    && !Constants.DimensionType.TYPE_MAIN.equals(t.getDimensionType());
-        }).toList();
-        if (!CollectionUtils.isEmpty(collectFilter)) {
+        List<DatasetColumnQo> collectFilter = metrics.stream()
+                .filter(t -> {
+                    String dimensionType = t.getDimensionType();
+                    return Constants.APP_TYPE_METRICS.equalsIgnoreCase(t.getAppType()) &&
+                            StringUtils.isNotBlank(dimensionType) &&
+                            !Constants.DimensionType.TYPE_MAIN.equals(dimensionType);
+                }).toList();
+
+        if (CollUtil.isNotEmpty(collectFilter)) {
             List<String> metricsAlias = metrics.stream().map(DatasetColumnQo::getAlias).toList();
             return collectFilter.stream()
                     .collect(Collectors.groupingBy(t -> {
@@ -476,14 +479,8 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                     fields.append(dimSb).append(SqlUtils.SQL_AS).append(dimension.getAlias()).append(notes)
                             .append(SqlUtils.STR_DOT);
                 }
-            } else if (singleSql && !CollectionUtils.isEmpty(dimension.getColumnGroup())) {
-                String expression = SqlBuilderHelper.getColumnGroup(dimension.getColumnGroup(), expMap, null,
-                        singleSql);
-                String convertMetric = this.metricIfNull("(" + SqlConvertUtils.divisionConvert(expression) + ")",
-                        dimension);
-                dimSb.append(convertMetric);
-                fields.append(dimSb).append(SqlUtils.SQL_AS).append(dimension.getAlias()).append(notes)
-                        .append(SqlUtils.STR_DOT);
+            } else if (singleSql && CollUtil.isNotEmpty(dimension.getColumnGroup())) {
+                calcSingleColumnSql(dimension, dimSb, singleSql, expMap, fields, notes);
             }
             // 缓存
             expMap.put(dimension.getAlias(), dimSb);
@@ -506,27 +503,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         }
 
         // 没有配置账期维度的调度sql且只有一个sql
-        if (singleSql && !hasPeriod && Constants.SQL_TASK.equals(this.sqlMode)
-                && !"O".equalsIgnoreCase(this.scheduleType)) {
-            // 没有账期
-            String periodStr;
-            if ("D".equals(this.scheduleType)) {
-                periodStr = "${day_id} as day_id,";
-            } else {
-                periodStr = "${month_id} as month_id,";
-            }
-
-            if (getDbType().equals(KeyValues.DS_HIVE)) {
-                fields.append(periodStr);
-            } else {
-                fields.insert(0, periodStr);
-            }
-        }
-
-        // 删掉逗号
-        if (!fields.isEmpty()) {
-            fields.deleteCharAt(fields.length() - 1);
-        }
+        buildSingleTaskSql(singleSql, hasPeriod, fields);
         sql.append(fields);
     }
 
@@ -651,7 +628,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             String pathKey = entry.getKey();
             List<MetricsDimensionPathVo> pathVos = entry.getValue();
             Map<String, String> tableAlias = new HashMap<>();
-            if (!MapUtil.isEmpty(publicAlias)) {
+            if (MapUtil.isNotEmpty(publicAlias)) {
                 tableAlias.putAll(publicAlias);
             }
             boolean isPriv = entry.getKey().equals(dataPrivPathKey);
@@ -808,12 +785,13 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 replaceVCondition(metric);
                 List<String> funs = metrics.stream().map(DatasetColumnQo::getFunc).toList();
                 List<Long> columnIds = metrics.stream().map(DatasetColumnQo::getColumnId).toList();
-                List<String> columnCodes = metrics.stream().map(DatasetColumnQo::getColumnCode)
-                        .toList();
+                List<String> columnCodes = metrics.stream().map(DatasetColumnQo::getColumnCode).toList();
                 List<Long> tablesIds = metrics.stream().map(DatasetColumnQo::getTableId).toList();
                 // 度量字段，没有的用0输出
-                if (funs.contains(dimension.getFunc()) && columnIds.contains(dimension.getColumnId())
-                        && columnCodes.contains(dimension.getColumnCode()) && tablesIds.contains(dimension.getTableId())) {
+                if (funs.contains(dimension.getFunc()) &&
+                        columnIds.contains(dimension.getColumnId()) &&
+                        columnCodes.contains(dimension.getColumnCode()) &&
+                        tablesIds.contains(dimension.getTableId())) {
                     AbstractFuncParser parser = SqlBuilderFactory.getFuncParser(dimension);
                     parser.initParams(this, getDbType(), dimension, metrics, aliasMap, new LinkedHashMap<>());
                     parser.setOutField(dimSb);
@@ -831,14 +809,8 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 dimSb.append("0");
                 fieldSql.append(dimSb).append(SqlUtils.SQL_AS).append(dimension.getAlias()).append(notes)
                         .append(SqlUtils.STR_DOT);
-            } else if (singleSql && !CollectionUtils.isEmpty(dimension.getColumnGroup())) {
-                String expression = SqlBuilderHelper.getColumnGroup(dimension.getColumnGroup(), expMap, null,
-                        singleSql);
-                String convertMetric = this.metricIfNull("(" + SqlConvertUtils.divisionConvert(expression) + ")",
-                        dimension);
-                dimSb.append(convertMetric);
-                fieldSql.append(dimSb).append(SqlUtils.SQL_AS).append(dimension.getAlias()).append(notes)
-                        .append(SqlUtils.STR_DOT);
+            } else if (singleSql && CollUtil.isNotEmpty(dimension.getColumnGroup())) {
+                calcSingleColumnSql(dimension, dimSb, singleSql, expMap, fieldSql, notes);
             }
             // 缓存
             expMap.put(dimension.getAlias(), dimSb);
@@ -872,37 +844,25 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         }
 
         // 没有配置账期维度的调度sql且只有一个sql
-        if (singleSql && !hasPeriod && Constants.SQL_TASK.equals(this.sqlMode)
-                && !"O".equalsIgnoreCase(this.scheduleType)) {
-            // 没有账期
-            String periodStr;
-            if ("D".equals(this.scheduleType)) {
-                periodStr = "${day_id} as day_id,";
-            } else {
-                periodStr = "${month_id} as month_id,";
-            }
+        buildSingleTaskSql(singleSql, hasPeriod, fieldSql);
+    }
 
-            if (getDbType().equals(KeyValues.DS_HIVE)) {
-                fieldSql.append(periodStr);
-            } else {
-                fieldSql.insert(0, periodStr);
-            }
-        }
-
-        // 删掉逗号
-        if (!fieldSql.isEmpty()) {
-            fieldSql.deleteCharAt(fieldSql.length() - 1);
-        }
+    private void calcSingleColumnSql(DatasetColumnQo dimension,
+                                     StringBuilder sb,
+                                     boolean singleSql,
+                                     Map<String, StringBuilder> expMap,
+                                     StringBuilder fieldSql,
+                                     String notes) {
+        String expression = SqlBuilderHelper.getColumnGroup(dimension.getColumnGroup(), expMap, null, singleSql);
+        String convertMetric = this.metricIfNull("(" + SqlConvertUtils.divisionConvert(expression) + ")", dimension);
+        sb.append(convertMetric);
+        fieldSql.append(sb).append(SqlUtils.SQL_AS).append(dimension.getAlias()).append(notes).append(SqlUtils.STR_DOT);
     }
 
     @Override
     protected void periodDistinct(PeriodExpression condPeriodExp, List<PeriodExpression> periodExpressionFromMetrics) {
-        if ("=".equalsIgnoreCase(condPeriodExp.getOperator().trim())) {
-            periodExpressionFromMetrics.removeIf(next -> {
-                return next.getOperator().trim().equalsIgnoreCase(condPeriodExp.getOperator().trim())
-                        && condPeriodExp.getPeriodScope().get(0).equalsIgnoreCase(next.getPeriodScope().get(0));
-            });
-        }
+        periodExpressionFromMetrics.removeIf(next -> "=".equalsIgnoreCase(next.getOperator().trim())
+                && condPeriodExp.getPeriodScope().get(0).equalsIgnoreCase(next.getPeriodScope().get(0)));
     }
 
     /**
@@ -952,7 +912,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                             });
                         }
                         // 度量账期去重
-                        if (!periodExpressionFromMetrics.isEmpty()) {
+                        if (CollUtil.isNotEmpty(periodExpressionFromMetrics)) {
                             periodDistinct(condPeriodExp, periodExpressionFromMetrics);
                         }
                         List<String> periodConds = new ArrayList<>();
@@ -995,7 +955,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                     } else {
                         Set<Long> ids = DealConditionParamUtils.getTableIdsByMap(aliasMap, this.allPeriod);
                         // 度量账期去重
-                        if (!periodExpressionFromMetrics.isEmpty()) {
+                        if (CollUtil.isNotEmpty(periodExpressionFromMetrics)) {
                             periodDistinct(condPeriodExp, periodExpressionFromMetrics);
                         }
                         List<String> periodConds = new ArrayList<>();

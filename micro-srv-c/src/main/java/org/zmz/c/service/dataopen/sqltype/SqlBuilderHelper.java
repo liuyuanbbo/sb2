@@ -460,9 +460,13 @@ public final class SqlBuilderHelper {
     }
 
     public static boolean isGrowthOrTotal(SqlFuncEnum funcEnum) {
-        Set<SqlFuncEnum> growthOrTotalFuncs = new HashSet<>(Arrays.asList(SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth,
-                SqlFuncEnum.pp, SqlFuncEnum.momGrowth, SqlFuncEnum.mm, SqlFuncEnum.mmGrowth, SqlFuncEnum.yearEnd,
-                SqlFuncEnum.yearEndGrowth, SqlFuncEnum.monthTotal, SqlFuncEnum.yearTotal));
+        Set<SqlFuncEnum> growthOrTotalFuncs = Set.of(
+                SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth,
+                SqlFuncEnum.pp, SqlFuncEnum.momGrowth,
+                SqlFuncEnum.mm, SqlFuncEnum.mmGrowth,
+                SqlFuncEnum.yearEnd, SqlFuncEnum.yearEndGrowth,
+                SqlFuncEnum.monthTotal, SqlFuncEnum.yearTotal
+        );
         return growthOrTotalFuncs.contains(funcEnum);
     }
 

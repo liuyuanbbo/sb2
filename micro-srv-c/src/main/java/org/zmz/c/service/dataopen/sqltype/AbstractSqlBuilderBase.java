@@ -1,5 +1,6 @@
 package org.zmz.c.service.dataopen.sqltype;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.spring.SpringUtil;
@@ -561,7 +562,7 @@ public abstract class AbstractSqlBuilderBase {
         if (!ObjectUtils.isEmpty(orgDimColumn)) {
             List<DatasetColumnQo> collectDim = this.params.getColumnList().stream()
                     .filter(obj -> !Constants.APP_TYPE_METRICS.equals(obj.getAppType())
-                    && !KeyValues.YES_VALUE_1.equals(obj.getIsAcct()) && dimPath.equals(obj.getPath()))
+                            && !KeyValues.YES_VALUE_1.equals(obj.getIsAcct()) && dimPath.equals(obj.getPath()))
                     .toList();
             if (!CollectionUtils.isEmpty(collectDim)) {
                 for (DatasetColumnQo columnQo : collectDim) {
@@ -821,12 +822,13 @@ public abstract class AbstractSqlBuilderBase {
                     && CollectionUtils.isEmpty(dimension.getColumnGroup())) {
                 List<String> funs = metrics.stream().map(DatasetColumnQo::getFunc).toList();
                 List<Long> columnIds = metrics.stream().map(DatasetColumnQo::getColumnId).toList();
-                List<String> columnCodes = metrics.stream().map(DatasetColumnQo::getColumnCode)
-                        .toList();
+                List<String> columnCodes = metrics.stream().map(DatasetColumnQo::getColumnCode).toList();
                 List<Long> tablesIds = metrics.stream().map(DatasetColumnQo::getTableId).toList();
                 // 度量字段，没有的用0输出
-                if (funs.contains(dimension.getFunc()) && columnIds.contains(dimension.getColumnId())
-                        && columnCodes.contains(dimension.getColumnCode()) && tablesIds.contains(dimension.getTableId())) {
+                if (funs.contains(dimension.getFunc()) &&
+                        columnIds.contains(dimension.getColumnId()) &&
+                        columnCodes.contains(dimension.getColumnCode()) &&
+                        tablesIds.contains(dimension.getTableId())) {
                     AbstractFuncParser parser = SqlBuilderFactory.getFuncParser(dimension);
                     parser.initParams(this, getDbType(), dimension, metrics, aliasMetric, temTableAlias);
                     parser.setOutField(dimExp);
@@ -900,8 +902,17 @@ public abstract class AbstractSqlBuilderBase {
         }
 
         // 没有配置账期维度的调度sql且只有一个sql
-        if (singleSql && !hasPeriod && Constants.SQL_TASK.equals(this.sqlMode)
-                && !"O".equalsIgnoreCase(this.scheduleType)) {
+        buildSingleTaskSql(singleSql, hasPeriod, fieldSql);
+
+        return fieldSql;
+    }
+
+    // 抽取 没有配置账期维度 && sqlMode 为调度类型 && 单SQL
+    protected void buildSingleTaskSql(boolean singleSql, boolean hasPeriod, StringBuilder fieldSql) {
+        if (singleSql &&
+                Constants.SQL_TASK.equals(this.sqlMode) &&
+                !hasPeriod &&
+                !"O".equalsIgnoreCase(this.scheduleType)) {
             // 没有账期
             String periodStr;
             if ("D".equals(this.scheduleType)) {
@@ -921,8 +932,6 @@ public abstract class AbstractSqlBuilderBase {
         if (!fieldSql.isEmpty()) {
             fieldSql.deleteCharAt(fieldSql.length() - 1);
         }
-
-        return fieldSql;
     }
 
     protected void appendLevelColumnField(StringBuilder fieldSql, OrgDimension replaceLevelColumn, String tbAlias) {
@@ -1204,8 +1213,8 @@ public abstract class AbstractSqlBuilderBase {
     public boolean needSlaveTablePeriod(List<DatasetColumnQo> metrics, List<DatasetColumnQo> columnList) {
         for (DatasetColumnQo columnQo : columnList) {
             // 有账期作维度
-            if (Constants.APP_TYPE_DIMENSION.equalsIgnoreCase(columnQo.getAppType())
-                    && KeyValues.YES_VALUE_1.equals(columnQo.getIsAcct())) {
+            if (Constants.APP_TYPE_DIMENSION.equalsIgnoreCase(columnQo.getAppType()) &&
+                    KeyValues.YES_VALUE_1.equals(columnQo.getIsAcct())) {
                 return false;
             }
         }
@@ -1213,14 +1222,14 @@ public abstract class AbstractSqlBuilderBase {
         for (DatasetColumnQo metric : metrics) {
             List<DatasetConditionQo> metricCond = metric.getCondList();
             // 度量上面有账期条件
-            if (!CollectionUtils.isEmpty(metricCond)) {
+            if (CollUtil.isNotEmpty(metricCond)) {
                 List<DatasetConditionQo> collect = metricCond.stream()
                         .filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct())).toList();
-                if (!CollectionUtils.isEmpty(collect)) {
+                if (CollUtil.isNotEmpty(collect)) {
                     return false;
                 }
             }
-            // 同环比或者年月累计
+            // 是否有同环比或者年月累计 有的话 返回 false
             if (SqlBuilderHelper.isGrowthOrTotal(metric.getFunc())) {
                 return false;
             }
@@ -1229,8 +1238,9 @@ public abstract class AbstractSqlBuilderBase {
     }
 
     protected boolean isLevelColumn(DatasetColumnQo dimension) {
-        return autoLevelGroup && null != dimension.getIsOrgDimension() && dimension.getIsOrgDimension() > 0
-                && null != dimension.getOrgLevel() && dimension.getOrgLevel() > 0;
+        Integer isOrgDimension = dimension.getIsOrgDimension();
+        Integer orgLevel = dimension.getOrgLevel();
+        return autoLevelGroup && isOrgDimension != null && isOrgDimension > 0 && orgLevel != null && orgLevel > 0;
     }
 
     protected String replaceValues(DatasetConditionQo qo, Column periodColumn) {

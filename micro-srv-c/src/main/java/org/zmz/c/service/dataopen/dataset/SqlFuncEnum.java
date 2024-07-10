@@ -60,7 +60,7 @@ public enum SqlFuncEnum {
         if (StringUtils.isBlank(func)) {
             return nullFunc;
         }
-        /**
+        /*
          * 自定义输出函数
          */
         for (SqlFuncEnum value : SqlFuncEnum.values()) {

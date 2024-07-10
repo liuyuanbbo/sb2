@@ -88,7 +88,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
             // 调度模式的sql。1、生成维度临时表多个，2、维度临时表与度量关联
             if (Constants.SQL_TASK.equals(params.getSqlMode())) {
                 result.isSingle = !this.hasCalMetric(params.getColumnList());
-                if (!CollectionUtils.isEmpty(this.params.getTempTablesMap())) {
+                if (CollUtil.isNotEmpty(this.params.getTempTablesMap())) {
                     // 临时表不为空
                     this.scheduleSqlBuilder(result);
                     return scheduleSql(result);
