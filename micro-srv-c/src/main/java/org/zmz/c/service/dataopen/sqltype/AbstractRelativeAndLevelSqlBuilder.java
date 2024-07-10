@@ -402,18 +402,10 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 // 缓存
                 expMap.put(dimension.getAlias(), dimSb);
                 // hive数据源的账期字段抽取出来放到所有字段最后面
-                if (getDbType().equals(KeyValues.DS_HIVE) && !"O".equals(this.scheduleType)) {
-                    hivePeriodDim.append(dimSb)
-                            .append(SqlUtils.SQL_AS)
-                            .append(dimension.getAlias())
-                            .append(SqlUtils.STR_DOT);
+                if (appendHiveAccountField(fields, hivePeriodDim, dimension, dimSb, notes)) {
                     continue;
                 }
-                fields.append(dimSb)
-                        .append(SqlUtils.SQL_AS)
-                        .append(dimension.getAlias())
-                        .append(notes)
-                        .append(SqlUtils.STR_DOT);
+
             } else if (Constants.APP_TYPE_DIMENSION.equals(dimension.getAppType())) {
                 // 维度字段
                 if (autoLevelGroup && isLevelColumn(dimension)) {
@@ -707,9 +699,8 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
 
             StringBuilder dimSb = new StringBuilder();
             // 单个sql的时候需要注释
-            String notes = !ignoreNotesTypeSets.contains(getDbType()) && singleSql
-                    ? SqlBuilderHelper.fieldNotes(dimension.getDataName())
-                    : "";
+            String notes = !ignoreNotesTypeSets.contains(getDbType()) && singleSql ?
+                    SqlBuilderHelper.fieldNotes(dimension.getDataName()) : "";
             // 是否有拖到最细细度组织维度字段
             if (!ObjectUtils.isEmpty(orgDimColumn) && orgDimColumn.getColumnId().equals(dimension.getColumnId())) {
                 haveOrgId(true);
@@ -735,14 +726,9 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                     fieldPeriod(dimSb, dimension);
                 }
                 // hive数据源的账期字段抽取出来放到所有字段最后面
-                if (getDbType().equals(KeyValues.DS_HIVE) && !"O".equals(this.scheduleType)) {
-                    hivePeriodDim.append(dimSb).append(SqlUtils.SQL_AS).append(dimension.getAlias())
-                            .append(SqlUtils.STR_DOT);
+                if (appendHiveAccountField(fieldSql, hivePeriodDim, dimension, dimSb, notes)) {
                     continue;
                 }
-                // 注释
-                fieldSql.append(dimSb).append(SqlUtils.SQL_AS).append(dimension.getAlias()).append(notes)
-                        .append(SqlUtils.STR_DOT);
             } else if (Constants.APP_TYPE_DIMENSION.equals(dimension.getAppType())) {
                 // 维度字段
                 // 虚拟维度对象字段替换
@@ -845,6 +831,25 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
 
         // 没有配置账期维度的调度sql且只有一个sql
         buildSingleTaskSql(singleSql, hasPeriod, fieldSql);
+    }
+
+    private boolean appendHiveAccountField(StringBuilder fieldSql,
+                                           StringBuilder hivePeriodDim,
+                                           DatasetColumnQo dimension,
+                                           StringBuilder dimSb, String notes) {
+        if (getDbType().equals(KeyValues.DS_HIVE) && !"O".equals(this.scheduleType)) {
+            hivePeriodDim.append(dimSb)
+                    .append(SqlUtils.SQL_AS)
+                    .append(dimension.getAlias())
+                    .append(SqlUtils.STR_DOT);
+            return true;
+        }
+        fieldSql.append(dimSb)
+                .append(SqlUtils.SQL_AS)
+                .append(dimension.getAlias())
+                .append(notes)
+                .append(SqlUtils.STR_DOT);
+        return false;
     }
 
     private void calcSingleColumnSql(DatasetColumnQo dimension,
@@ -1011,7 +1016,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             Column column = this.allPeriod.get(datasetColumnQo0.getTableId());
             if (column != null) {
                 String tbName = getAlias(aliasMap, datasetColumnQo0.getTableId());
-                if (!CollectionUtils.isEmpty(periodExpressionFromMetrics)) {
+                if (CollUtil.isNotEmpty(periodExpressionFromMetrics)) {
                     // 去除重复账期条件
                     Set<PeriodExpression> set = new TreeSet<>(
                             (o1, o2) -> {

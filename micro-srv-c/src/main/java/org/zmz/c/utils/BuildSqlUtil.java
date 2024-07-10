@@ -362,8 +362,6 @@ public final class BuildSqlUtil {
 
     /**
      * 符号拼接，处理是是否是动态sql
-     *
-     * @return String
      */
     private static String handleQuotCondValue(String condValue, String quot) {
         boolean dynamicSql = CheckStringUtil.isDynamicSql(condValue);
@@ -381,18 +379,18 @@ public final class BuildSqlUtil {
             // 拼接条件 arithmeticCond
             if ("NOT IN".equalsIgnoreCase(resultPeriod[0]) || "IN".equalsIgnoreCase(resultPeriod[0])) {
                 whereBuilder.append(" ").append(resultPeriod[0]).append(" ");
-                StringBuffer buf = new StringBuffer();
+                StringBuilder bud = new StringBuilder();
                 for (int i = 1; i < resultPeriod.length; i++) {
                     if (isStr) {
-                        buf.append("'").append(resultPeriod[i].trim()).append("'");
+                        bud.append("'").append(resultPeriod[i].trim()).append("'");
                     } else {
-                        buf.append(resultPeriod[i].trim());
+                        bud.append(resultPeriod[i].trim());
                     }
                     if (i != resultPeriod.length - 1) {
-                        buf.append(",");
+                        bud.append(",");
                     }
                 }
-                String newRuleValue = buf.toString();
+                String newRuleValue = bud.toString();
                 newRuleValue = SqlBuilderHelper.replaceString(newRuleValue, isStr);
                 whereBuilder.append("(").append(newRuleValue).append(")").append(" ");
             } else if ("BETWEEN".equals(resultPeriod[0]) || "NOT BETWEEN".equals(resultPeriod[0])) {
@@ -412,5 +410,9 @@ public final class BuildSqlUtil {
             }
 
         }
+    }
+
+    public static boolean sbIsNotEmpty(StringBuilder sb) {
+        return !sb.isEmpty();
     }
 }

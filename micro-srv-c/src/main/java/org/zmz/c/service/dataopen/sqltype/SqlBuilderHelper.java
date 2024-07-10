@@ -304,6 +304,7 @@ public final class SqlBuilderHelper {
         return null;
     }
 
+    // 检查数据权限
     public static boolean checkDataPriv(DataPrivCtrlVo dataPrivCtrlInfo) {
         if (null == dataPrivCtrlInfo) {
             return false;
