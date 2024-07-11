@@ -224,7 +224,7 @@ public abstract class AbstractSqlBuilderBase {
                     tempTbPathAlias.put(dimPath, tgtName);
                 }
             } else {
-                List<MetricsDimensionPathVo> mains = !CollectionUtils.isEmpty(mainTbs) ? mainTbs : tempTbs;
+                List<MetricsDimensionPathVo> mains = CollUtil.isNotEmpty(mainTbs) ? mainTbs : tempTbs;
                 metricTableJoin(hasJoinList, component, dimTbAlias, mains, hasAppend, periodMaps, needAppendPeriod,
                         isPriv);
             }
@@ -273,7 +273,7 @@ public abstract class AbstractSqlBuilderBase {
 
         // 生成同环比或者月/年累计的子查询、相同粒度下的同一统计函数
         List<SubQuerySqlQo> subSqlList = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(growthOrTotalsMetric)) {
+        if (CollUtil.isNotEmpty(growthOrTotalsMetric)) {
             Map<String, List<DatasetColumnQo>> funcGroups = growthOrTotalsMetric.stream()
                     .collect(Collectors.groupingBy(DatasetColumnQo::getFunc));
             funcGroups.forEach((key, values) -> {
@@ -363,7 +363,7 @@ public abstract class AbstractSqlBuilderBase {
                         .append(this.getSchemaCodeByTableId(mainTb.getTgtTableId())).append(SqlUtils.STR_POINT)
                         .append(mainTb.getTgtTableCode()).append(SqlUtils.SQL_AS).append(tgtName).append(SqlUtils.SQL_ON);
 
-                if (!CollectionUtils.isEmpty(mainTb.getMultiColumns())) {
+                if (CollUtil.isNotEmpty(mainTb.getMultiColumns())) {
                     // 多维指标内部表关联
                     component.join.append(this.getSchemaCodeByTableId(mainTb.getSrcTableId()))
                             .append(SqlUtils.STR_POINT).append(mainTb.getSrcTableCode()).append(SqlUtils.STR_BLANK)
@@ -492,9 +492,6 @@ public abstract class AbstractSqlBuilderBase {
                     // 账期条件
                     this.appendPeriodCond(component.join, tempAlias, tempTb, periodMaps, needAppendPeriod);
                 }
-                if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo())) {
-                    appendOrgDetails(isPriv, hasOrgTable, component, tempAlias, hasAppend, tempTb, dimPath);
-                }
             } else {
                 if (null == tempTb.getTgtTableId()) {
                     continue;
@@ -510,9 +507,9 @@ public abstract class AbstractSqlBuilderBase {
                 // 账期条件
                 this.appendPeriodCond(component.join, tempAlias, tempTb, periodMaps, needAppendPeriod);
 
-                if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo())) {
-                    appendOrgDetails(isPriv, hasOrgTable, component, tempAlias, hasAppend, tempTb, dimPath);
-                }
+            }
+            if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo())) {
+                appendOrgDetails(isPriv, hasOrgTable, component, tempAlias, hasAppend, tempTb, dimPath);
             }
         }
         tempTableOutField(this.params, dimPath, objRelation, component.field, tempAlias, metric);
@@ -580,7 +577,7 @@ public abstract class AbstractSqlBuilderBase {
                     .filter(obj -> !Constants.APP_TYPE_METRICS.equals(obj.getAppType())
                             && !KeyValues.YES_VALUE_1.equals(obj.getIsAcct()) && dimPath.equals(obj.getPath()))
                     .toList();
-            if (!CollectionUtils.isEmpty(collectDim)) {
+            if (CollUtil.isNotEmpty(collectDim)) {
                 for (DatasetColumnQo columnQo : collectDim) {
                     if (orgDimColumn.getColumnId().equals(columnQo.getColumnId())) {
                         hasOrgId = true;
@@ -673,7 +670,7 @@ public abstract class AbstractSqlBuilderBase {
         }
         // 多表的层级汇总，需要补全id和name字段
         List<String> appendCols = collectDim.stream().map(DatasetColumnQo::getColumnCode).toList();
-        if (!CollectionUtils.isEmpty(iteratorColumnMap)) {
+        if (CollUtil.isNotEmpty(iteratorColumnMap)) {
             iteratorColumnMap.forEach((key, value) -> {
                 OrgDimension orgDimension = value.get(0);
                 if (!appendCols.contains(orgDimension.getOrgIdColumnCode())) {
@@ -695,7 +692,7 @@ public abstract class AbstractSqlBuilderBase {
         }
         // 2、全局条件中的字段
         List<DatasetConditionQo> condList = params.getCondList();
-        if (!CollectionUtils.isEmpty(condList)) {
+        if (CollUtil.isNotEmpty(condList)) {
             for (DatasetConditionQo cond : condList) {
                 String aliasName = tempAlias.get(String.valueOf(cond.getTableId()));
                 if (StringUtils.isNotBlank(aliasName) && StringUtils.isBlank(hasAppend.get(cond.getColumnId()))) {
@@ -707,7 +704,7 @@ public abstract class AbstractSqlBuilderBase {
         }
         // 3、度量上的过滤字段
         for (DatasetColumnQo metric : getMetrics()) {
-            if (!CollectionUtils.isEmpty(metric.getCondList())) {
+            if (CollUtil.isNotEmpty(metric.getCondList())) {
                 for (DatasetConditionQo columnQo : metric.getCondList()) {
                     String aliasName = tempAlias.get(String.valueOf(columnQo.getTableId()));
                     if (StringUtils.isNotBlank(aliasName)
@@ -866,7 +863,7 @@ public abstract class AbstractSqlBuilderBase {
                 dimExp.append("0");
                 fieldSql.append(dimExp).append(SqlUtils.SQL_AS).append(dimension.getAlias()).append(notes)
                         .append(SqlUtils.STR_DOT);
-            } else if (singleSql && !CollectionUtils.isEmpty(dimension.getColumnGroup())) {
+            } else if (singleSql && CollUtil.isNotEmpty(dimension.getColumnGroup())) {
                 String expression = SqlBuilderHelper.getColumnGroup(dimension.getColumnGroup(), expMap, null);
                 String convertMetric = this.metricIfNull("(" + SqlConvertUtils.divisionConvert(expression) + ")",
                         dimension);
@@ -1178,7 +1175,7 @@ public abstract class AbstractSqlBuilderBase {
             if (!dimensionType.equalsIgnoreCase(metric.getDimensionType())) {
                 continue;
             }
-            if (!CollectionUtils.isEmpty(metric.getCondList())) {
+            if (CollUtil.isNotEmpty(metric.getCondList())) {
                 List<DatasetConditionQo> collect = metric.getCondList().stream()
                         .filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct())).toList();
                 if (CollUtil.isNotEmpty(collect)) {

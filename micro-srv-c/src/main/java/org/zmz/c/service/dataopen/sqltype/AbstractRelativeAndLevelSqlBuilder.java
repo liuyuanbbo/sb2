@@ -1126,12 +1126,14 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                                                                   String dimensionType) {
         List<PeriodExpression> periodExpressionFromMetrics = new ArrayList<>();
         if (SqlBuilderHelper.isTotal(funcEnum)) {
-            periodExpressionFromMetrics = new ArrayList<>();
+            return periodExpressionFromMetrics;
         } else if (funcEnum == null) {
             List<DatasetColumnQo> metricList = metrics.stream()
-                    .filter(m -> !SqlBuilderHelper.isGrowthOrTotal(m.getFunc())).collect(Collectors.toList());
-            periodExpressionFromMetrics
-                    .addAll(this.getPeriodExpressionFromMetrics(metricList, acctConds, dimensionType));
+                    .filter(m -> SqlBuilderHelper.notGrowthOrTotal(m.getFunc()))
+                    .collect(Collectors.toList());
+            periodExpressionFromMetrics.addAll(
+                    this.getPeriodExpressionFromMetrics(metricList, acctConds, dimensionType)
+            );
         } else {
             periodExpressionFromMetrics = this.getPeriodExpressionFromMetrics(metrics, acctConds, dimensionType);
         }

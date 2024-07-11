@@ -461,6 +461,13 @@ public final class SqlBuilderHelper {
         return isGrowthOrTotal(funcEnum);
     }
 
+    /**
+     * 是否不存在时间计算，同环比年月累计
+     */
+    public static boolean notGrowthOrTotal(String func) {
+        return !isGrowthOrTotal(func);
+    }
+
     public static boolean isGrowthOrTotal(SqlFuncEnum funcEnum) {
         Set<SqlFuncEnum> growthOrTotalFuncEnums = Set.of(
                 SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth,
