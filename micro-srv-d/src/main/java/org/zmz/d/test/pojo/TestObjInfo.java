@@ -1,4 +1,4 @@
-package org.zmz.c.pojo.dataopen;
+package org.zmz.d.test.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @TableName(value = "obj_info")
-public class ObjInfo {
+public class TestObjInfo {
     @TableId
     public Long objectId;
     public Long parentId;

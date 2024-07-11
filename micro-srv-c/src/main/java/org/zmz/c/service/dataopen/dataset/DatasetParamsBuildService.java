@@ -3,6 +3,7 @@ package org.zmz.c.service.dataopen.dataset;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -440,7 +441,9 @@ public class DatasetParamsBuildService {
     private void firstNode(DatasetColumnQo metric, DatasetColumnQo dimension,
                            Map<Long, List<Column>> allPrimaryMapLists, List<MetricsDimensionPathVo> pathVoList) {
         // 虚拟对象
-        ObjInfo objInfo = objInfoMapper.selectById(metric.getObjectId());
+        QueryWrapper<ObjInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("object_id", metric.getObjectId());
+        ObjInfo objInfo = objInfoMapper.selectOne(wrapper);
         if (!metric.getTableId().equals(dimension.getTableId())
                 && !ObjCreateType.OBJ_CREATE_TYPE_VIRTUAL.equalsIgnoreCase(objInfo.getCreateType())) {
             ObjRelaTreeVo objRelaVo = new ObjRelaTreeVo();

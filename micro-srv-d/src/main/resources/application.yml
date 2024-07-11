@@ -1,0 +1,13 @@
+server:
+  port: 9524
+spring:
+  application:
+    name: micro-srv-d
+  config:
+    import:
+      #- conf/mysql-dev-dataopen-154.yml
+      - conf/mysql-dev-dataopen-156.yml
+logging:
+  level:
+    org.zmz.d: debug
+    org.mybatis: debug
