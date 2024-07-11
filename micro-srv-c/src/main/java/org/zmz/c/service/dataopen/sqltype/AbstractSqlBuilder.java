@@ -1092,8 +1092,8 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
     }
 
     @Override
-    public void haveOrgId(boolean have) {
-        this.isHaveOrgId = have;
+    public void haveOrgId() {
+        this.isHaveOrgId = true;
     }
 
     @Override

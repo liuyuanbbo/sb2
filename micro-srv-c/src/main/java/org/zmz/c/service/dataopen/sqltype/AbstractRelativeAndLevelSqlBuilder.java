@@ -3,10 +3,10 @@ package org.zmz.c.service.dataopen.sqltype;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 import org.zmz.c.qo.dataopen.Column;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.DatasetColumnQo;
@@ -345,17 +345,17 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         DatasetColumnQo orgDimColumn = SqlBuilderHelper.getOrgDimensionMinColumn(getDataPrivCtrlInfo());
         for (DatasetColumnQo dimension : dimensionList) {
             // 是否有拖到最细细度组织维度字段
-            if (!ObjectUtils.isEmpty(orgDimColumn) && orgDimColumn.getColumnId().equals(dimension.getColumnId())) {
+            if (ObjectUtils.isNotEmpty(orgDimColumn) && orgDimColumn.getColumnId().equals(dimension.getColumnId())) {
                 hasOrgId = true;
             }
         }
         if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo())) {
             // 为空、则没有拖到组织维度表的字段
-            if (!ObjectUtils.isEmpty(orgDimColumn) && !hasOrgId) {
+            if (ObjectUtils.isNotEmpty(orgDimColumn) && !hasOrgId) {
                 sql.append(mainTb).append(SqlUtils.STR_POINT).append(CUSTOM_ORG_ID_ALIAS).append(SqlUtils.STR_EQUAL)
                         .append(relativeTb).append(SqlUtils.STR_POINT).append(CUSTOM_ORG_ID_ALIAS);
             }
-            if (!ObjectUtils.isEmpty(orgDimColumn)) {
+            if (ObjectUtils.isNotEmpty(orgDimColumn)) {
                 if (!sql.isEmpty()) {
                     sql.append(SqlUtils.SQL_AND);
                 }
@@ -398,8 +398,8 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                     ? SqlBuilderHelper.fieldNotes(dimension.getDataName())
                     : "";
             // 是否有拖到最细细度组织维度字段
-            if (!ObjectUtils.isEmpty(orgDimColumn) && orgDimColumn.getColumnId().equals(dimension.getColumnId())) {
-                haveOrgId(true);
+            if (ObjectUtils.isNotEmpty(orgDimColumn) && orgDimColumn.getColumnId().equals(dimension.getColumnId())) {
+                haveOrgId();
             }
             if (Constants.YES_VALUE_1.equals(dimension.getIsAcct())) {
                 hasPeriod = true;
@@ -718,8 +718,8 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             String notes = !ignoreNotesTypeSets.contains(getDbType()) && singleSql ?
                     SqlBuilderHelper.fieldNotes(dimension.getDataName()) : "";
             // 是否有拖到最细细度组织维度字段
-            if (!ObjectUtils.isEmpty(orgDimColumn) && orgDimColumn.getColumnId().equals(dimension.getColumnId())) {
-                haveOrgId(true);
+            if (ObjectUtils.isNotEmpty(orgDimColumn) && orgDimColumn.getColumnId().equals(dimension.getColumnId())) {
+                haveOrgId();
             }
             if (Constants.YES_VALUE_1.equals(dimension.getIsAcct())) {
                 hasPeriod = true;
@@ -1152,7 +1152,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                                  boolean joinTimeSql) {
         // 权限控制，划小架构维度字段id拼接。维度拖到了组织维度表的字段，但是不包含组织id
         DatasetColumnQo orgDimColumn = SqlBuilderHelper.getOrgDimensionMinColumn(getDataPrivCtrlInfo());
-        if (!ObjectUtils.isEmpty(orgDimColumn) && !checkHaveOrgId()) {
+        if (ObjectUtils.isNotEmpty(orgDimColumn) && !checkHaveOrgId()) {
             String tbName = SqlBuilderHelper.getAliasName(aliasMap, orgDimColumn.getTableId(), orgDimColumn.getPath());
             StringBuilder sql = new StringBuilder();
             sql.append(tbName).append(SqlUtils.STR_POINT).append(orgDimColumn.getColumnCode()).append(SqlUtils.STR_DOT);
@@ -1208,47 +1208,6 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         String periodStr = AcctTimeUtil.getAcctValAddQuotOutPubMode(this.scheduleType, dimension.getCycleType(),
                 dimension.getColumnType(), outPutMode);
         fieldSql.append(periodStr);
-    }
-
-    /**
-     * 账期替换
-     *
-     * @param qo         虚拟账期字段
-     * @param paths      度量路径上的表参数
-     * @param tableAlias 表别名
-     * @return 全局条件账期
-     */
-    protected Map<String, String> condListPeriods(DatasetConditionQo qo, List<MetricsDimensionPathVo> paths,
-                                                  Map<String, String> tableAlias) {
-        Map<String, String> map = new HashMap<>();
-        StringBuilder strB;
-        for (MetricsDimensionPathVo path : paths) {
-            if (null != path.getSrcTableId() && null == map.get(String.valueOf(path.getSrcTableId()))) {
-                Column column = this.allPeriod.get(path.getSrcTableId());
-                if (null != column && column.getCycleType().equals(qo.getCycleType())) {
-                    strB = new StringBuilder();
-                    String value = replaceValues(qo, column);
-                    String tableName = tableAlias.get(String.valueOf(path.getSrcTableId()));
-                    strB.append(tableName).append(SqlUtils.STR_POINT).append(column.getColumnCode())
-                            .append(SqlUtils.STR_BLANK).append(qo.getCondOperator()).append(SqlUtils.STR_BLANK)
-                            .append(value);
-                    map.put(String.valueOf(path.getSrcTableId()), strB.toString());
-                }
-            }
-            if (null != path.getTgtTableId() && null == map.get(String.valueOf(path.getTgtTableId()))) {
-                Column column = this.allPeriod.get(path.getTgtTableId());
-                if (null != column && column.getCycleType().equals(qo.getCycleType())) {
-                    strB = new StringBuilder();
-                    String value = replaceValues(qo, column);
-                    String tableName = tableAlias.get(String.valueOf(path.getTgtTableId()));
-                    strB.append(tableName).append(SqlUtils.STR_POINT).append(column.getColumnCode())
-                            .append(SqlUtils.STR_BLANK).append(qo.getCondOperator()).append(SqlUtils.STR_BLANK)
-                            .append(value);
-                    map.put(String.valueOf(path.getTgtTableId()), strB.toString());
-                }
-            }
-        }
-        return map;
     }
 
     /**

@@ -5,9 +5,9 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 import org.zmz.c.qo.dataopen.Column;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.DataPrivCtrlVo;
@@ -279,7 +279,7 @@ public abstract class AbstractSqlBuilderBase {
                     .collect(Collectors.groupingBy(DatasetColumnQo::getFunc));
             funcGroups.forEach((key, values) -> {
                 // 有同环比或者月/年累计
-                subScheduleGrowthOrTotal(subSqlList, false, values, dimensionType, dimensionList, condList, result,
+                subScheduleGrowthOrTotal(subSqlList, values, dimensionType, dimensionList, condList, result,
                         cacheTempPath, replaceLevelColumn);
             });
             // 合并汇总表，组织层级字段已经取过别名
@@ -410,7 +410,7 @@ public abstract class AbstractSqlBuilderBase {
     private void joinOrgDetails(SqlComponent component, Map<String, String> dimAlias, Long tableId,
                                 Map<Long, String> hasAppend, boolean isPriv) {
         MetricsDimensionPathVo orgDetailsTgt = getDataPrivCtrlInfo().getOrgInfoPathsMap().get(tableId);
-        if (!ObjectUtils.isEmpty(orgDetailsTgt) && StringUtils.isBlank(hasAppend.get(tableId)) && isPriv) {
+        if (ObjectUtils.isNotEmpty(orgDetailsTgt) && StringUtils.isBlank(hasAppend.get(tableId)) && isPriv) {
             String orgName = joinOrgDetails(component.join, dimAlias, orgDetailsTgt);
             if (!component.where.isEmpty()) {
                 component.where.append(SqlUtils.SQL_AND);
@@ -542,7 +542,7 @@ public abstract class AbstractSqlBuilderBase {
             }
         }
 
-        if (!ObjectUtils.isEmpty(orgDetailsSrc) && !ObjectUtils.isEmpty(orgDimensionTable)
+        if (ObjectUtils.isNotEmpty(orgDetailsSrc) && ObjectUtils.isNotEmpty(orgDimensionTable)
                 && StringUtils.isBlank(hasAppend.get(path.getSrcTableId()))) {
             if (hasOrgTable && path.getSrcTableId().equals(orgDimensionTable.getMetaDataInfo().getMetaDataId())
                     && isPriv) {
@@ -557,7 +557,7 @@ public abstract class AbstractSqlBuilderBase {
         }
 
         MetricsDimensionPathVo orgDetailsTgt = getDataPrivCtrlInfo().getOrgInfoPathsMap().get(path.getTgtTableId());
-        if (!ObjectUtils.isEmpty(orgDetailsTgt) && !ObjectUtils.isEmpty(orgDimensionTable)
+        if (ObjectUtils.isNotEmpty(orgDetailsTgt) && ObjectUtils.isNotEmpty(orgDimensionTable)
                 && StringUtils.isBlank(hasAppend.get(path.getTgtTableId()))) {
             if (hasOrgTable && path.getTgtTableId().equals(orgDimensionTable.getMetaDataInfo().getMetaDataId())
                     && isPriv) {
@@ -576,7 +576,7 @@ public abstract class AbstractSqlBuilderBase {
         // 划小架构表最细粒度字段
         DatasetColumnQo orgDimColumn = SqlBuilderHelper.getOrgDimensionMinColumn(getDataPrivCtrlInfo());
         boolean hasOrgId = false;
-        if (!ObjectUtils.isEmpty(orgDimColumn)) {
+        if (ObjectUtils.isNotEmpty(orgDimColumn)) {
             List<DatasetColumnQo> collectDim = this.params.getColumnList().stream()
                     .filter(obj -> !Constants.APP_TYPE_METRICS.equals(obj.getAppType())
                             && !KeyValues.YES_VALUE_1.equals(obj.getIsAcct()) && dimPath.equals(obj.getPath()))
@@ -764,9 +764,15 @@ public abstract class AbstractSqlBuilderBase {
         }
     }
 
-    protected StringBuilder mergeField(boolean singleSql, List<DatasetColumnQo> metrics, String dimensionType,
-                                       List<DatasetColumnQo> dimensionList, Map<String, Map<String, String>> aliasMetric,
-                                       Map<String, String> temTableAlias, boolean hasOrgTable, String tmpTbName, OrgDimension replaceLevelColumn,
+    protected StringBuilder mergeField(boolean singleSql,
+                                       List<DatasetColumnQo> metrics,
+                                       String dimensionType,
+                                       List<DatasetColumnQo> dimensionList,
+                                       Map<String, Map<String, String>> aliasMetric,
+                                       Map<String, String> temTableAlias,
+                                       boolean hasOrgTable,
+                                       String tmpTbName,
+                                       OrgDimension replaceLevelColumn,
                                        SqlFuncEnum funcEnum) {
         StringBuilder fieldSql = new StringBuilder();
         // 划小架构表最细粒度字段
@@ -790,9 +796,9 @@ public abstract class AbstractSqlBuilderBase {
                     ? SqlBuilderHelper.fieldNotes(dimension.getDataName())
                     : "";
             // 是否有拖到最细细度组织维度字段
-            if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo()) && !ObjectUtils.isEmpty(orgDimColumn)
+            if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo()) && ObjectUtils.isNotEmpty(orgDimColumn)
                     && orgDimColumn.getColumnId().equals(dimension.getColumnId())) {
-                haveOrgId(true);
+                haveOrgId();
                 haveOrgId = true;
             }
             if (Constants.YES_VALUE_1.equals(dimension.getIsAcct())) {
@@ -879,7 +885,7 @@ public abstract class AbstractSqlBuilderBase {
         if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo())) {
             if (hasOrgTable) {
                 String privPathKey = metrics.get(0).getDataPrivPathKey();
-                if (StringUtils.isBlank(tmpTbName) && !ObjectUtils.isEmpty(orgDimColumn)) {
+                if (StringUtils.isBlank(tmpTbName) && ObjectUtils.isNotEmpty(orgDimColumn)) {
                     StringBuilder orgStr = new StringBuilder();
                     // 有组织维表，且所有表是被抽到了临时表了
                     MetricsDimensionPathVo orgDetailsSrc = getDataPrivCtrlInfo().getOrgInfoPathsMap()
@@ -1017,18 +1023,15 @@ public abstract class AbstractSqlBuilderBase {
         DatasetColumnQo orgDimColumn = SqlBuilderHelper.getOrgDimensionMinColumn(getDataPrivCtrlInfo());
 
         List<DatasetColumnQo> dimensions = dimensionList.stream()
-                .filter(entity -> Constants.APP_TYPE_DIMENSION.equals(entity.getAppType())).collect(Collectors.toList());
+                .filter(entity -> Constants.APP_TYPE_DIMENSION.equals(entity.getAppType())).toList();
         for (DatasetColumnQo dimension : dimensions) {
             // 是否有拖到最细细度组织维度字段
-            if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo()) && !ObjectUtils.isEmpty(orgDimColumn)
+            if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo()) && ObjectUtils.isNotEmpty(orgDimColumn)
                     && orgDimColumn.getColumnId().equals(dimension.getColumnId())) {
-                haveOrgId(true);
+                haveOrgId();
                 haveOrgId = true;
             }
             if (Constants.YES_VALUE_1.equals(dimension.getIsAcct())) {
-                /*
-                 * if (!"O".equals(this.scheduleType)) { // 周期性的账期维度不做分组 continue; }
-                 */
                 // 账期字段,前端只能拖一个虚拟的账期 账期字段出至于主干关联的表
                 Column periodColumn = getPeriodColumnFromMetric(metrics.get(0), dimension);
                 if (null != periodColumn) {
@@ -1054,7 +1057,7 @@ public abstract class AbstractSqlBuilderBase {
             }
         }
         if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo())) {
-            if (hasOrgTable && !ObjectUtils.isEmpty(orgDimColumn)) {
+            if (hasOrgTable && ObjectUtils.isNotEmpty(orgDimColumn)) {
                 String key = metrics.get(0).getDataPrivPathKey();
                 String aliasName;
                 // pathCode
@@ -1356,10 +1359,8 @@ public abstract class AbstractSqlBuilderBase {
 
     /**
      * 标记有组织字段
-     *
-     * @param have 设置是否有组织Id标识
      */
-    protected abstract void haveOrgId(boolean have);
+    protected abstract void haveOrgId();
 
     /**
      * 是否有组织字段
@@ -1408,9 +1409,13 @@ public abstract class AbstractSqlBuilderBase {
 
     protected abstract List<DatasetColumnQo> checkGrowthOrTotal(List<DatasetColumnQo> metrics, String dimensionType);
 
-    protected abstract void subScheduleGrowthOrTotal(List<SubQuerySqlQo> subSqlList, boolean singleSql,
-                                                     List<DatasetColumnQo> metricList, String dimensionType, List<DatasetColumnQo> dimensionList,
-                                                     List<DatasetConditionQo> condList, ResultSql result, Map<String, List<MetricsDimensionPathVo>> cacheTempPath,
+    protected abstract void subScheduleGrowthOrTotal(List<SubQuerySqlQo> subSqlList,
+                                                     List<DatasetColumnQo> metricList,
+                                                     String dimensionType,
+                                                     List<DatasetColumnQo> dimensionList,
+                                                     List<DatasetConditionQo> condList,
+                                                     ResultSql result,
+                                                     Map<String, List<MetricsDimensionPathVo>> cacheTempPath,
                                                      OrgDimension replaceLevelColumn);
 
     protected abstract String getDefultPeriod(Long tableId, Map<String, String> tableAlias);

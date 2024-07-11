@@ -122,7 +122,6 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
 
     @Override
     protected void subScheduleGrowthOrTotal(List<SubQuerySqlQo> subSqlList,
-                                            boolean singleSql,
                                             List<DatasetColumnQo> metricList,
                                             String dimensionType,
                                             List<DatasetColumnQo> dimensionList,
@@ -148,17 +147,17 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
 
         SqlFuncEnum funcEnum = SqlFuncEnum.getFuncByName(metrics0.getFunc());
 
-        StringBuilder fields = mergeField(singleSql, metricList, dimensionType, dimensionList, mainTbPathAlias,
+        StringBuilder fields = mergeField(false, metricList, dimensionType, dimensionList, mainTbPathAlias,
                 tempTbPathAlias, hasOrgTable, tmpTbName, replaceLevelColumn, funcEnum);
         component.field.append(fields);
 
         if (SqlBuilderHelper.isGrowth(funcEnum)) {
             // 同比、环比
-            this.appendWhere(singleSql, component.where, metricList, dimensionType, condList, mainTbPathAlias,
+            this.appendWhere(false, component.where, metricList, dimensionType, condList, mainTbPathAlias,
                     mainTbPaths, tempTbPathAlias, funcEnum);
         } else if (SqlBuilderHelper.isTotal(funcEnum)) {
             // 月/年累计 需要关联时间维表
-            this.appendWhere(singleSql, component.where, metricList, dimensionType, condList, mainTbPathAlias,
+            this.appendWhere(false, component.where, metricList, dimensionType, condList, mainTbPathAlias,
                     mainTbPaths, tempTbPathAlias, funcEnum);
         }
         this.mergeGroupBy(metricList, dimensionList, component.group, mainTbPathAlias, tempTbPathAlias, hasOrgTable,
