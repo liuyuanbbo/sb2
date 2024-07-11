@@ -1,0 +1,97 @@
+{
+  "accountType": "2",
+  "manageOrgs": [],
+  "manageRegions": [
+    {
+      "commonRegionId": 440100,
+      "parRegionId": 440000,
+      "pathCode": "-1.440000.440100",
+      "regionName": "广州市",
+      "regionNbr": "440100",
+      "statusCd": "1000"
+    }
+  ],
+  "organization": {
+    "comAcctId": 874,
+    "orgAddress": "",
+    "orgCode": "yndx",
+    "orgContact": "",
+    "orgDesc": "",
+    "orgId": 711,
+    "orgLevel": "0",
+    "orgName": "云南电信",
+    "orgSubtype": "1600",
+    "orgType": "1000",
+    "parentOrgId": -1,
+    "pathCode": "-1.711",
+    "regionId": 530000,
+    "statusCd": "1000",
+    "villageFlag": "1000"
+  },
+  "privInfos": [
+    {
+      "privCode": "DATASET_GROUP_OPER_PRIV",
+      "privId": 833,
+      "privName": "数据消费分组操作权限",
+      "privType": "J"
+    },
+    {
+      "privCode": "PrivPreIndexData",
+      "privId": 840,
+      "privName": "派生指标数据预览按钮权限",
+      "privType": "J"
+    },
+    {
+      "privCode": "PROJECT_BTN_CREATE",
+      "privId": 855,
+      "privName": "数据开发项目创建",
+      "privType": "J"
+    },
+    {
+      "privCode": "PrivAppSqlOnline",
+      "privId": 891,
+      "privName": "数据消费统计取数操作权限",
+      "privType": "J"
+    },
+    {
+      "privCode": "PrivAutoLevelUnion",
+      "privId": 897,
+      "privName": "数据集层级自动汇总权限",
+      "privType": "J"
+    },
+    {
+      "privCode": "PrivRelativeDim",
+      "privId": 898,
+      "privName": "相对维度权限",
+      "privType": "J"
+    }
+  ],
+  "shareBfmTeam": {},
+  "userInfo": {
+    "belongSystemCode": "",
+    "comAcctId": 874,
+    "comAcctName": "lyd",
+    "email": "",
+    "enabled": "true",
+    "integerType": "1",
+    "locked": "false",
+    "memo": "1236",
+    "orgId": 711,
+    "phone": "13800000001",
+    "privilegeType": "",
+    "projectId": 10002,
+    "roleCode": "adminGLY",
+    "roleId": 40,
+    "userCode": "lyd_test",
+    "userId": 1021,
+    "userName": "lyd"
+  },
+  "userRoles": [
+    {
+      "defaultRole": "Y",
+      "roleCode": "adminGLY",
+      "roleId": "40",
+      "roleName": "admin管理员"
+    }
+  ]
+}

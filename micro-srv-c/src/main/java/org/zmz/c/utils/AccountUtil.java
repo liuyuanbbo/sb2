@@ -6,11 +6,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.zmz.c.pojo.dataportal.Organization;
 import org.zmz.c.qo.dataopen.ShareBfmUser;
+import org.zmz.c.service.exception.BaseException;
 import org.zmz.c.vo.dataopen.common.BfmTeam;
 import org.zmz.c.vo.dataopen.common.CommonRegion;
 import org.zmz.c.vo.dataopen.common.LoginInfo;
@@ -20,6 +22,7 @@ import org.zmz.c.vo.dataopen.common.RoleInfo;
 import org.zmz.c.vo.dataopen.common.UserInfo;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,6 +78,13 @@ public class AccountUtil {
                     if (loginInfo != null) {
                         loginInfo.setManageRegions(manageRegionList);
                     }
+                }
+            } else {
+                ObjectMapper objMapper = new ObjectMapper();
+                try {
+                    loginInfo = objMapper.readValue(new ClassPathResource("loginInfo.json").getInputStream(), LoginInfo.class);
+                } catch (IOException e) {
+                    throw new BaseException("读取 loginInfo.json 文件出错");
                 }
             }
         }
