@@ -29,6 +29,7 @@ import org.zmz.c.utils.AcctTimeUtil;
 import org.zmz.c.utils.BuildSqlUtil;
 import org.zmz.c.utils.DealConditionParamUtils;
 import org.zmz.c.utils.KeyValues;
+import org.zmz.c.utils.MyStringUtil;
 import org.zmz.c.utils.OrganizationUtil;
 import org.zmz.c.utils.SqlConvertUtils;
 import org.zmz.c.utils.SqlUtils;
@@ -634,6 +635,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 tableAlias.putAll(publicAlias);
             }
             boolean isPriv = entry.getKey().equals(dataPrivPathKey);
+            // 拼接表 SQL
             appendTableSql(isPriv, entry, hasAppend, needAppendPeriod, hasOrgTable, tableAlias, component);
             SqlBuilderHelper.copyCommonAlias(tableAlias, pathVos, publicAlias);
             alias.put(pathKey, tableAlias);
@@ -985,9 +987,9 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                         }
 
                         // 度量上面的账期-- 度量条件受全局条件限制 -- 全局账期条件加上度量账期条件，or拼接
-                        if (!periodExpressionFromMetrics.isEmpty()) {
+                        if (CollUtil.isNotEmpty(periodExpressionFromMetrics)) {
                             List<String> periodMetricList = new ArrayList<>();
-                            if (!ids.isEmpty()) {
+                            if (CollUtil.isNotEmpty(ids)) {
                                 for (Long id : ids) {
                                     String tbName = getAlias(aliasMap, id);
                                     Column column = this.allPeriod.get(id);
@@ -1000,7 +1002,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                                 periodSql.append(SqlUtils.SQL_OR);
                             }
                             periodSql.append(SqlUtils.STR_LEFT_BRACKET);
-                            periodSql.append(StringUtils.join(" or ", periodMetricList.toArray(new String[0])));
+                            periodSql.append(MyStringUtil.join(" or ", periodMetricList.toArray(new String[0])));
                             periodSql.append(SqlUtils.STR_RIGHT_BRACKET);
                         }
                     } else {
@@ -1083,7 +1085,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                         periodMetricList.add(appendPrePeriod(tbName, column, expression, funcEnum));
                     }
                     sql.append(SqlUtils.STR_LEFT_BRACKET);
-                    sql.append(StringUtils.join(" or ", periodMetricList.toArray(new String[0])));
+                    sql.append(MyStringUtil.join(" or ", periodMetricList.toArray(new String[0])));
                     sql.append(SqlUtils.STR_RIGHT_BRACKET);
                 } else {
                     condPeriodExp = getMetricPeriodExpression(column, funcEnum);

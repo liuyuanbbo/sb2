@@ -73,4 +73,25 @@ public final class MyStringUtil {
         return StringUtils.join(strList.subList(start, end), split);
     }
 
+    /**
+     * 字符串的分隔
+     *
+     * @param seperator 分隔符
+     * @param strings   数组
+     */
+    public static String join(String seperator, String[] strings) {
+        if (strings == null) {
+            return "";
+        }
+        int length = strings.length;
+        if (length == 0) {
+            return "";
+        }
+        StringBuilder buf = new StringBuilder(length * strings[0].length()).append(strings[0]);
+        for (int i = 1; i < length; i++) {
+            buf.append(seperator).append(strings[i]);
+        }
+        return buf.toString();
+    }
+
 }

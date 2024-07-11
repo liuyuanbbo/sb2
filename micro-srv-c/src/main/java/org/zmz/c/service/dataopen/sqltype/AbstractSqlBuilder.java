@@ -558,23 +558,26 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                                   SqlComponent component) {
         String tbPrefix = "tb";
         // 全局条件中的账期值范围
-        Map<Long, String> periodMaps = getPeriodFromPathsAndCondList(entry.getValue());
-        for (MetricsDimensionPathVo path : entry.getValue()) {
+        List<MetricsDimensionPathVo> metricsDimensionPathVoList = entry.getValue();
+        Map<Long, String> periodMaps = getPeriodFromPathsAndCondList(metricsDimensionPathVoList);
+        for (MetricsDimensionPathVo path : metricsDimensionPathVoList) {
             // 过滤掉度量已经关联过的表、关联度量到维度之间的表
             Long srcTableId = path.getSrcTableId();
             Long tgtTableId = path.getTgtTableId();
-            if (
-                    StringUtils.isNoneBlank(tableAlias.get(String.valueOf(srcTableId))) &&
-                            StringUtils.isNoneBlank(tableAlias.get(String.valueOf(tgtTableId)))) {
+            String srcTableIdStr = String.valueOf(srcTableId);
+            String tgtTableIdStr = String.valueOf(tgtTableId);
+            String srcTableAlias = tableAlias.get(srcTableIdStr);
+            String tgtTableAlias = tableAlias.get(tgtTableIdStr);
+            if (StringUtils.isNoneBlank(srcTableAlias) && StringUtils.isNoneBlank(tgtTableAlias)) {
                 continue;
             }
             String srcSchemaCode = this.getSchemaCodeByTableId(srcTableId);
             // 首次拼接sql主表别名为空
-            if (ObjectUtils.isEmpty(tableAlias.get(String.valueOf(srcTableId)))) {
-                String srcName = tbPrefix.concat(String.valueOf(getIncrementTbIndex()));
-                tableAlias.put(String.valueOf(srcTableId), srcName);
+            if (ObjectUtils.isEmpty(srcTableAlias)) {
+                String srcName = tbPrefix + getIncrementTbIndex();
+                tableAlias.put(srcTableIdStr, srcName);
                 // 只有一张主表
-                if (entry.getValue().size() == 1 &&
+                if (metricsDimensionPathVoList.size() == 1 &&
                         (tgtTableId == null || path.getTgtTableCode() == null)
                 ) {
                     component.join.append(srcSchemaCode).append(SqlUtils.STR_POINT).append(path.getSrcTableCode())
@@ -592,34 +595,38 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                         appendProvince(true, table, component.join, component.where, srcName);
                     }
                     // 权限控制拼接组织明细表
+                    if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
+                        appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
+                    }
                 } else {
                     if (tgtTableId == null) {
                         continue;
                     }
                     String tgtSchemaCode = this.getSchemaCodeByTableId(tgtTableId);
-                    String tgtName = tableAlias.get(String.valueOf(tgtTableId));
+                    String tgtName = tgtTableAlias;
                     if (StringUtils.isBlank(tgtName)) {
-                        tgtName = tbPrefix.concat(String.valueOf(getIncrementTbIndex()));
-                        tableAlias.put(String.valueOf(tgtTableId), tgtName);
+                        tgtName = tbPrefix + getIncrementTbIndex();
+                        tableAlias.put(tgtTableIdStr, tgtName);
                     }
                     // schemaCode.表1 ta1 left join schemaCode.表2 tb2 on ta1.字段=ta2.字段
-                    if (!CollectionUtils.isEmpty(path.getMultiColumns())) {
+                    List<String> multiColumns = path.getMultiColumns();
+                    if (CollUtil.isNotEmpty(multiColumns)) {
                         // 多维指标内部表关联
-                        component.join.append(srcSchemaCode).append(SqlUtils.STR_POINT).append(path.getSrcTableCode())
-                                .append(SqlUtils.STR_BLANK).append(srcName).append(SqlUtils.SQL_INNER_JOIN)
-                                .append(tgtSchemaCode).append(SqlUtils.STR_POINT).append(path.getTgtTableCode())
-                                .append(SqlUtils.STR_BLANK).append(tgtName).append(SqlUtils.SQL_ON);
-                        for (String columnCode : path.getMultiColumns()) {
-                            component.join.append(SqlUtils.STR_BLANK).append(srcName).append(SqlUtils.STR_POINT)
-                                    .append(columnCode).append(SqlUtils.STR_EQUAL).append(tgtName)
-                                    .append(SqlUtils.STR_POINT).append(columnCode).append(" and");
+                        appendInnerJoinSql(component, srcSchemaCode, srcName, tgtSchemaCode, tgtName, path);
+                        for (String columnCode : multiColumns) {
+                            component.join.append(SqlUtils.STR_BLANK)
+                                    .append(srcName)
+                                    .append(SqlUtils.STR_POINT)
+                                    .append(columnCode)
+                                    .append(SqlUtils.STR_EQUAL)
+                                    .append(tgtName)
+                                    .append(SqlUtils.STR_POINT)
+                                    .append(columnCode)
+                                    .append(" and");
                         }
                         component.join.delete(component.join.lastIndexOf("and"), component.join.length());
                     } else {
-                        component.join.append(srcSchemaCode).append(SqlUtils.STR_POINT).append(path.getSrcTableCode())
-                                .append(SqlUtils.STR_BLANK).append(srcName).append(SqlUtils.SQL_INNER_JOIN)
-                                .append(tgtSchemaCode).append(SqlUtils.STR_POINT).append(path.getTgtTableCode())
-                                .append(SqlUtils.STR_BLANK).append(tgtName).append(SqlUtils.SQL_ON);
+                        appendInnerJoinSql(component, srcSchemaCode, srcName, tgtSchemaCode, tgtName, path);
                         this.appendKeyColumns(path.getKeyColumnRelas(), component.join, srcName, tgtName);
                     }
 
@@ -643,16 +650,19 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                         appendProvince(false, tgtTable, component.join, component.where, tgtName);
                     }
                     // 权限控制拼接组织明细表
+                    if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
+                        appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
+                    }
                 }
             } else {
                 // 拼接从表 表别名缓存
                 if (null == tgtTableId) {
                     continue;
                 }
-                String tgtName = tableAlias.get(String.valueOf(tgtTableId));
+                String tgtName = tgtTableAlias;
                 if (StringUtils.isBlank(tgtName)) {
                     tgtName = tbPrefix.concat(String.valueOf(getIncrementTbIndex()));
-                    tableAlias.put(String.valueOf(tgtTableId), tgtName);
+                    tableAlias.put(tgtTableIdStr, tgtName);
                 }
                 String tgtSchemaCode = this.getSchemaCodeByTableId(tgtTableId);
 
@@ -660,7 +670,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                 component.join.append(SqlUtils.SQL_INNER_JOIN).append(tgtSchemaCode).append(SqlUtils.STR_POINT)
                         .append(path.getTgtTableCode()).append(SqlUtils.STR_BLANK).append(tgtName).append(SqlUtils.SQL_ON);
                 this.appendKeyColumns(path.getKeyColumnRelas(), component.join,
-                        tableAlias.get(String.valueOf(srcTableId)), tgtName);
+                        srcTableAlias, tgtName);
 
                 // 关联两表的账期字段
                 this.appendPeriodCond(component.join, tableAlias, path, periodMaps, needAppendPeriod);
@@ -676,9 +686,9 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                     appendProvince(false, tgtTable, component.join, component.where, tgtName);
                 }
                 // 权限控制拼接组织明细表
-            }
-            if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
-                appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
+                if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
+                    appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
+                }
             }
         }
 
@@ -688,6 +698,26 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
             component.field.append("'").append(getDefOrgPathCode()).append("'").append(SqlUtils.SQL_AS)
                     .append(CUSTOM_PATH_CODE_ALIAS).append(SqlUtils.STR_DOT);
         }
+    }
+
+    private void appendInnerJoinSql(SqlComponent component,
+                                    String srcSchemaCode,
+                                    String srcName,
+                                    String tgtSchemaCode,
+                                    String tgtName,
+                                    MetricsDimensionPathVo path) {
+        component.join.append(srcSchemaCode)
+                .append(SqlUtils.STR_POINT)
+                .append(path.getSrcTableCode())
+                .append(SqlUtils.STR_BLANK)
+                .append(srcName)
+                .append(SqlUtils.SQL_INNER_JOIN)
+                .append(tgtSchemaCode)
+                .append(SqlUtils.STR_POINT)
+                .append(path.getTgtTableCode())
+                .append(SqlUtils.STR_BLANK)
+                .append(tgtName)
+                .append(SqlUtils.SQL_ON);
     }
 
     protected ModelInfo getOrgDimensionTable() {
@@ -816,7 +846,10 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
     /**
      * 添加省份where条件 province_id=xxx
      */
-    private void appendProvince(boolean isMain, ModelInfo table, StringBuilder joinSql, StringBuilder whereSql,
+    private void appendProvince(boolean isMain,
+                                ModelInfo table,
+                                StringBuilder joinSql,
+                                StringBuilder whereSql,
                                 String tableAlias) {
         String provinceField = table.getBussinessAttr().getProvinceField();
         if (StringUtils.isNotEmpty(provinceField)) {
