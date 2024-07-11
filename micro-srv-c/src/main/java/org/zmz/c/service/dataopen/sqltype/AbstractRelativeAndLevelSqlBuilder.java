@@ -262,13 +262,17 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
      * @return 组装的sql
      */
     @Override
-    protected String mergeRelativeDims(boolean singleSql, List<DatasetColumnQo> dimensionList, String mainSql,
-                                       List<SubQuerySqlQo> subSqlList, OrgDimension replaceLevelColumn, ResultSql result) {
+    protected String mergeRelativeDims(boolean singleSql,
+                                       List<DatasetColumnQo> dimensionList,
+                                       String mainSql,
+                                       List<SubQuerySqlQo> subSqlList,
+                                       OrgDimension replaceLevelColumn,
+                                       ResultSql result) {
         SqlComponent component = new SqlComponent();
         String mainTb = "tb" + getIncrementTbIndex();
         // 主视图sql
         String tmpName;
-        if (result != null && !CollectionUtils.isEmpty(subSqlList)) {
+        if (result != null && CollUtil.isNotEmpty(subSqlList)) {
             tmpName = generateSubTmpTableName(scheduleType);
             // 区分中间表，需要存放数据，因为LEFT JOIN拆分，需要创建临时表
             result.tmpTableNames.put(tmpName, tmpName);
@@ -301,7 +305,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             appendPathCode(on, mainTb, relativeTb, dimensionList);
             // 层级字段
             if (null != replaceLevelColumn) {
-                if (!on.isEmpty()) {
+                if (BuildSqlUtil.sbIsNotEmpty(on)) {
                     on.append(SqlUtils.SQL_AND);
                 }
                 on.append(mainTb).append(SqlUtils.STR_POINT).append(Constants.DATASET_AREA_ID)
@@ -318,7 +322,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                     // 汇总字段不需要重复拼到on条件
                     continue;
                 }
-                if (!on.isEmpty()) {
+                if (BuildSqlUtil.sbIsNotEmpty(on)) {
                     on.append(SqlUtils.SQL_AND);
                 }
                 on.append(mainTb).append(SqlUtils.STR_POINT).append(dimensionQo.getAlias()).append(SqlUtils.STR_EQUAL)
@@ -372,7 +376,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         DatasetColumnQo orgDimColumn = SqlBuilderHelper.getOrgDimensionMinColumn(getDataPrivCtrlInfo());
 
         DatasetColumnQo metric;
-        if (!CollectionUtils.isEmpty(subSqlList)) {
+        if (CollUtil.isNotEmpty(subSqlList)) {
             metric = subSqlList.get(0).getMetricList().get(0);
         } else {
             // subSqlList为空，临时fix
@@ -461,13 +465,13 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                     }
                 } else if (SqlBuilderHelper.isTotal(funcEnum)) {
                     // 月/年累计
-                    if (!CollectionUtils.isEmpty(subSqlList)) {
+                    if (CollUtil.isNotEmpty(subSqlList)) {
                         tabName = findRelativeAlias(dimension, subSqlList);
                     }
                     dimSb.append(tabName).append(SqlUtils.STR_POINT).append(dimension.getAlias());
                 } else if (!Constants.DimensionType.TYPE_MAIN.equalsIgnoreCase(dimension.getDimensionType())) {
                     // fix 表名null
-                    if (!CollectionUtils.isEmpty(subSqlList)) {
+                    if (CollUtil.isNotEmpty(subSqlList)) {
                         tabName = findRelativeAlias(dimension, subSqlList);
                     }
                     dimSb.append(tabName).append(SqlUtils.STR_POINT).append(dimension.getAlias());
@@ -486,7 +490,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         }
 
         // hive的账期维度放后面
-        if (!hivePeriodDim.isEmpty()) {
+        if (BuildSqlUtil.sbIsNotEmpty(hivePeriodDim)) {
             fields.append(hivePeriodDim);
         }
         if (SqlBuilderHelper.checkDataPriv(getDataPrivCtrlInfo())) {
@@ -564,7 +568,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
 
         // 生成同环比或者月/年累计的子查询、相同粒度下的同一统计函数
         List<SubQuerySqlQo> subSqlList = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(growthOrTotalsMetric)) {
+        if (CollUtil.isNotEmpty(growthOrTotalsMetric)) {
             Map<String, List<DatasetColumnQo>> funcGroups = growthOrTotalsMetric.stream()
                     .collect(Collectors.groupingBy(DatasetColumnQo::getFunc));
 
@@ -635,7 +639,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 tableAlias.putAll(publicAlias);
             }
             boolean isPriv = entry.getKey().equals(dataPrivPathKey);
-            // 拼接表 SQL
+            // 拼接表 SQL (主要是填充了 component.join)
             appendTableSql(isPriv, entry, hasAppend, needAppendPeriod, hasOrgTable, tableAlias, component);
             SqlBuilderHelper.copyCommonAlias(tableAlias, pathVos, publicAlias);
             alias.put(pathKey, tableAlias);
@@ -648,7 +652,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
     @Override
     protected void orderByColumnList(StringBuilder result, List<DatasetColumnQo> dimensionList,
                                      List<DatasetColumnQo> metrics, Map<String, Map<String, String>> alias) {
-        if (!CollectionUtils.isEmpty(dimensionList)) {
+        if (CollUtil.isNotEmpty(dimensionList)) {
             StringBuilder sql = new StringBuilder();
             for (DatasetColumnQo qo : dimensionList) {
                 if (StringUtils.isNoneBlank(qo.getSortOrder())) {
@@ -942,7 +946,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         // 读取度量上的账期范围
         List<PeriodExpression> periodExpressionFromMetrics = this.getPeriodExpressionFromMetrics(funcEnum, metrics,
                 acctConds, dimensionType);
-        if (!CollectionUtils.isEmpty(condList)) {
+        if (CollUtil.isNotEmpty(condList)) {
             AbstractSqlParser abstractSqlParser = SqlParserFactory.getViewSqlParser(this.getDbType());
             String isSql = OutPutMode.SQL.equals(this.outPutMode) ? Constants.YES_VALUE_1 : Constants.NO_VALUE_0;
             for (DatasetConditionQo conditionQo : condList) {

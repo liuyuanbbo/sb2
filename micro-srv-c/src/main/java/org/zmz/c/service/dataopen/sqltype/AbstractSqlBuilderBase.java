@@ -32,6 +32,7 @@ import org.zmz.c.service.dataopen.sqlfunc.AbstractFuncParser;
 import org.zmz.c.service.dataopen.sqlfunc.PeriodExpression;
 import org.zmz.c.service.dataopen.sqlfunc.SqlBuilderFactory;
 import org.zmz.c.utils.AcctTimeUtil;
+import org.zmz.c.utils.BuildSqlUtil;
 import org.zmz.c.utils.JsonUtil;
 import org.zmz.c.utils.KeyValues;
 import org.zmz.c.utils.OrganizationUtil;
@@ -946,7 +947,7 @@ public abstract class AbstractSqlBuilderBase {
         }
 
         // 删掉逗号
-        if (!fieldSql.isEmpty()) {
+        if (BuildSqlUtil.sbIsNotEmpty(fieldSql)) {
             fieldSql.deleteCharAt(fieldSql.length() - 1);
         }
     }

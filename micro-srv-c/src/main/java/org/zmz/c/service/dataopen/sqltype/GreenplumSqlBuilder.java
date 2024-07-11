@@ -1,7 +1,7 @@
 package org.zmz.c.service.dataopen.sqltype;
 
+import cn.hutool.core.collection.CollUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.DatasetColumnAndConditionQo;
@@ -48,7 +48,7 @@ public class GreenplumSqlBuilder extends AbstractSqlBuilder {
     protected String metricIfNull(String metric, DatasetColumnQo column) {
         StringBuilder outField = new StringBuilder();
         GpColumnTypeEnum typeEnum = GpColumnTypeEnum.valueOf(column.getColumnType().toUpperCase());
-        if (!CollectionUtils.isEmpty(column.getColumnGroup())) {
+        if (CollUtil.isNotEmpty(column.getColumnGroup())) {
             if (typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.DECIMAL.name())
                     || typeEnum.name().equalsIgnoreCase(GpColumnTypeEnum.NUMERIC.name())) {
                 outField.append("round(").append("COALESCE(").append("cast((").append(metric).append(") as ")

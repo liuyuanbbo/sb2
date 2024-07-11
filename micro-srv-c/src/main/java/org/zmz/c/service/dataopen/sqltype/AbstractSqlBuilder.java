@@ -210,11 +210,11 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
             dropSql.append(result.tmpTableNames.get(entry.getKey())).append(",");
         }
 
-        if (!result.sqlLists.isEmpty()) {
+        if (CollUtil.isNotEmpty(result.sqlLists)) {
             // 没有临时表的创建
             for (String sqlList : result.sqlLists) {
                 String sqlStr;
-                if (StringUtils.isNotBlank(this.scheduleType) && "O".equalsIgnoreCase(this.scheduleType)) {
+                if ("O".equalsIgnoreCase(this.scheduleType)) {
                     sqlStr = acctSqlService.formatAcct(sqlList, this.scheduleType);
                 } else {
                     sqlStr = sqlList;
@@ -595,9 +595,6 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                         appendProvince(true, table, component.join, component.where, srcName);
                     }
                     // 权限控制拼接组织明细表
-                    if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
-                        appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
-                    }
                 } else {
                     if (tgtTableId == null) {
                         continue;
@@ -650,9 +647,6 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                         appendProvince(false, tgtTable, component.join, component.where, tgtName);
                     }
                     // 权限控制拼接组织明细表
-                    if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
-                        appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
-                    }
                 }
             } else {
                 // 拼接从表 表别名缓存
@@ -686,9 +680,9 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                     appendProvince(false, tgtTable, component.join, component.where, tgtName);
                 }
                 // 权限控制拼接组织明细表
-                if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
-                    appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
-                }
+            }
+            if (SqlBuilderHelper.checkDataPriv(this.dataPrivCtrlInfo)) {
+                appendOrgDetailsTable(hasOrgTable, component, tableAlias, hasAppend, tbPrefix, path, isPriv);
             }
         }
 
@@ -901,39 +895,32 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
         if (CollUtil.isNotEmpty(condList)) {
             for (DatasetConditionQo qo : condList) {
                 if (KeyValues.YES_VALUE_1.equals(qo.getIsAcct()) && StringUtils.isNoneBlank(qo.getCycleType())) {
-                    StringBuilder strB;
                     for (MetricsDimensionPathVo path : paths) {
                         Long srcTableId = path.getSrcTableId();
-                        if (null != srcTableId && null == maps.get(srcTableId)) {
-                            Column column = this.allPeriod.get(srcTableId);
-                            if (null != column && column.getCycleType().equals(qo.getCycleType())) {
-                                strB = new StringBuilder();
-                                String value = replaceValues(qo, column);
-                                strB.append(column.getColumnCode())
-                                        .append(SqlUtils.STR_BLANK)
-                                        .append(qo.getCondOperator())
-                                        .append(value);
-                                maps.put(srcTableId, strB.toString());
-                            }
-                        }
+                        appendColumnCodeMap(maps, qo, srcTableId);
                         Long tgtTableId = path.getTgtTableId();
-                        if (null != tgtTableId && null == maps.get(tgtTableId)) {
-                            Column column = this.allPeriod.get(tgtTableId);
-                            if (null != column && column.getCycleType().equals(qo.getCycleType())) {
-                                strB = new StringBuilder();
-                                String value = replaceValues(qo, column);
-                                strB.append(column.getColumnCode())
-                                        .append(SqlUtils.STR_BLANK)
-                                        .append(qo.getCondOperator())
-                                        .append(value);
-                                maps.put(tgtTableId, strB.toString());
-                            }
-                        }
+                        appendColumnCodeMap(maps, qo, tgtTableId);
                     }
                 }
             }
         }
         return maps;
+    }
+
+    private void appendColumnCodeMap(Map<Long, String> maps, DatasetConditionQo qo, Long tableId) {
+        StringBuilder strB;
+        if (null != tableId && null == maps.get(tableId)) {
+            Column column = this.allPeriod.get(tableId);
+            if (null != column && column.getCycleType().equals(qo.getCycleType())) {
+                strB = new StringBuilder();
+                String value = replaceValues(qo, column);
+                strB.append(column.getColumnCode())
+                        .append(SqlUtils.STR_BLANK)
+                        .append(qo.getCondOperator())
+                        .append(value);
+                maps.put(tableId, strB.toString());
+            }
+        }
     }
 
     /**
