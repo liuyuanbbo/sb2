@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    mysql:
+      dev:
+        dataportal:
+          driverClassName: com.mysql.cj.jdbc.Driver
+          jdbcUrl: jdbc:mysql://172.21.72.157:8001/dataportal?serverTimezone=Asia/Shanghai
+          username: root
+          password: 'root'

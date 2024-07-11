@@ -1,5 +1,6 @@
 package org.zmz.c.pojo.dataportal;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@TableName(schema = "DC_SYSTEM_CONFIG_LIST")
+@TableName(value = "DC_SYSTEM_CONFIG_LIST")
 @ToString
 public class DcSystemConfigList implements Serializable {
     @TableId
@@ -26,8 +27,10 @@ public class DcSystemConfigList implements Serializable {
 
     private String stateCd;
 
+    @TableField(exist = false)
     private Integer isDef;
 
+    @TableField(exist = false)
     private Integer standIndex;
 
     private String standDisplayValueEn;

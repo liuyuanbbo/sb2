@@ -9,7 +9,8 @@ spring:
       - conf/pgsql-local.yml
       #- conf/mysql-dev-dataopen-154.yml
       - conf/mysql-dev-dataopen-156.yml
-      - conf/mysql-dev-dataportal.yml
+      #- conf/mysql-dev-dataportal-154.yml
+      - conf/mysql-dev-dataportal-156.yml
       - conf/pgsql-dev.yml
       # - conf/redis-dev-154.yml
       - conf/redis-dev-156.yml
@@ -20,3 +21,8 @@ spring:
 logging:
   level:
     org.zmz.c: debug
+
+management:
+  health:
+    db:
+      enabled: off

@@ -3,7 +3,6 @@ package org.zmz.c.service.dataopen.dataset;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -179,7 +178,6 @@ public class DatasetParamsBuildService {
                 List<MetricsDimensionPathVo> paths = metric.getPaths();
                 Map<String, List<ObjRelaTreeVo>> dimensionToMetricMap = getDimensionPathFromThread(metric);
 
-                // List<DatasetColumnQo> allDims = getAllDimension(metric, dimensionList);
                 List<DatasetColumnQo> allDims = metricDimensions.get(metric.getTableId());
                 List<DatasetColumnQo> newAllDims = new ArrayList<>();
                 // 防止同一个度量多次出现，path变化
@@ -259,7 +257,7 @@ public class DatasetParamsBuildService {
         List<DatasetColumnQo> totalMetricsList = new ArrayList<>(metricsList);
         // 处理数据权限路径
         this.handleDataPrivPath(totalMetricsList, params, tableIdToAllColumnMap);
-        log.info("权限控制之后的pathMap：{}", JsonUtil.toJson(params));
+        log.info("权限控制之后的pathMap：{}", JSONObject.toJSONString(params));
         // 用组织维度表路径组成临时表的路径
         // 各个度量关联的组织维表为起点到所有维度表的路径构建成一个临时表
         this.handleTempPath(totalMetricsList, params);
@@ -441,9 +439,7 @@ public class DatasetParamsBuildService {
     private void firstNode(DatasetColumnQo metric, DatasetColumnQo dimension,
                            Map<Long, List<Column>> allPrimaryMapLists, List<MetricsDimensionPathVo> pathVoList) {
         // 虚拟对象
-        QueryWrapper<ObjInfo> wrapper = new QueryWrapper<>();
-        wrapper.eq("object_id", metric.getObjectId());
-        ObjInfo objInfo = objInfoMapper.selectOne(wrapper);
+        ObjInfo objInfo = objInfoMapper.selectById(metric.getObjectId());
         if (!metric.getTableId().equals(dimension.getTableId())
                 && !ObjCreateType.OBJ_CREATE_TYPE_VIRTUAL.equalsIgnoreCase(objInfo.getCreateType())) {
             ObjRelaTreeVo objRelaVo = new ObjRelaTreeVo();
