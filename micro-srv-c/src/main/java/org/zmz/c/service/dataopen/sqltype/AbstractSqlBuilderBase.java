@@ -640,13 +640,25 @@ public abstract class AbstractSqlBuilderBase {
         return null;
     }
 
-    private void tempTableOutField(DatasetColumnAndConditionQo params, String dimPath,
-                                   MetricsDimensionPathVo objRelation, StringBuilder field, Map<String, String> tempAlias,
+    protected boolean neEquals(String v1, String v2) {
+        return !v1.equals(v2);
+    }
+
+    protected <T> boolean notContains(List<T> list, T t) {
+        return !list.contains(t);
+    }
+
+    private void tempTableOutField(DatasetColumnAndConditionQo params,
+                                   String dimPath,
+                                   MetricsDimensionPathVo objRelation,
+                                   StringBuilder field,
+                                   Map<String, String> tempAlias,
                                    DatasetColumnQo currMetric) {
+
         List<DatasetColumnQo> collectDim = new ArrayList<>();
         for (DatasetColumnQo columnQo : params.getColumnList()) {
-            if (!Constants.APP_TYPE_METRICS.equals(columnQo.getAppType())
-                    && !KeyValues.YES_VALUE_1.equals(columnQo.getIsAcct())) {
+            if (neEquals(Constants.APP_TYPE_METRICS, columnQo.getAppType()) &&
+                    neEquals(KeyValues.YES_VALUE_1, columnQo.getIsAcct())) {
                 String path;
                 if (currMetric.getTableId().equals(columnQo.getTableId())) {
                     path = currMetric.getPath();
@@ -661,83 +673,47 @@ public abstract class AbstractSqlBuilderBase {
 
         Map<Long, String> hasAppend = new HashMap<>();
         for (DatasetColumnQo columnQo : collectDim) {
-            if (null == tempAlias.get(String.valueOf(columnQo.getTableId()))) {
+            Long tableId = columnQo.getTableId();
+            String tableIdStr = String.valueOf(tableId);
+            if (null == tempAlias.get(tableIdStr)) {
                 continue;
             }
-            field.append(tempAlias.get(String.valueOf(columnQo.getTableId()))).append(SqlUtils.STR_POINT)
+            field.append(tempAlias.get(tableIdStr)).append(SqlUtils.STR_POINT)
                     .append(columnQo.getColumnCode()).append(SqlUtils.STR_DOT);
-            hasAppend.put(columnQo.getColumnId(), tempAlias.get(String.valueOf(columnQo.getTableId())));
+            hasAppend.put(columnQo.getColumnId(), tempAlias.get(tableIdStr));
         }
         // 多表的层级汇总，需要补全id和name字段
         List<String> appendCols = collectDim.stream().map(DatasetColumnQo::getColumnCode).toList();
         if (CollUtil.isNotEmpty(iteratorColumnMap)) {
             iteratorColumnMap.forEach((key, value) -> {
                 OrgDimension orgDimension = value.get(0);
-                if (!appendCols.contains(orgDimension.getOrgIdColumnCode())) {
-                    field.append(tempAlias.get(String.valueOf(orgDimension.getMetaDataId()))).append(SqlUtils.STR_POINT)
-                            .append(orgDimension.getOrgIdColumnCode()).append(SqlUtils.STR_DOT);
-                    this.modelInfoMap.get(orgDimension.getMetaDataId()).getColumnList().stream()
-                            .filter(c -> orgDimension.getOrgIdColumnCode().equalsIgnoreCase(c.getColumnCode())).findFirst().ifPresent(column -> hasAppend.put(column.getColumnId(),
-                                    tempAlias.get(String.valueOf(orgDimension.getMetaDataId()))));
-                }
-                if (!appendCols.contains(orgDimension.getOrgNameColumnCode())) {
-                    field.append(tempAlias.get(String.valueOf(orgDimension.getMetaDataId()))).append(SqlUtils.STR_POINT)
-                            .append(orgDimension.getOrgNameColumnCode()).append(SqlUtils.STR_DOT);
-                    this.modelInfoMap.get(orgDimension.getMetaDataId()).getColumnList().stream()
-                            .filter(c -> orgDimension.getOrgNameColumnCode().equalsIgnoreCase(c.getColumnCode()))
-                            .findFirst().ifPresent(column -> hasAppend.put(column.getColumnId(),
-                                    tempAlias.get(String.valueOf(orgDimension.getMetaDataId()))));
-                }
+                Long metaDataId = orgDimension.getMetaDataId();
+                String metaDataIdStr = String.valueOf(metaDataId);
+
+                String orgIdColumnCode = orgDimension.getOrgIdColumnCode();
+                putNeHasAppendMap(field, tempAlias, hasAppend, appendCols, metaDataId, metaDataIdStr, orgIdColumnCode);
+
+                String orgNameColumnCode = orgDimension.getOrgNameColumnCode();
+                putNeHasAppendMap(field, tempAlias, hasAppend, appendCols, metaDataId, metaDataIdStr, orgNameColumnCode);
             });
         }
         // 2、全局条件中的字段
         List<DatasetConditionQo> condList = params.getCondList();
-        if (CollUtil.isNotEmpty(condList)) {
-            for (DatasetConditionQo cond : condList) {
-                String aliasName = tempAlias.get(String.valueOf(cond.getTableId()));
-                if (StringUtils.isNotBlank(aliasName) && StringUtils.isBlank(hasAppend.get(cond.getColumnId()))) {
-                    field.append(aliasName).append(SqlUtils.STR_POINT).append(cond.getColumnCode())
-                            .append(SqlUtils.STR_DOT);
-                    hasAppend.put(cond.getColumnId(), aliasName);
-                }
-            }
-        }
+        aaaa(condList, tempAlias, hasAppend, field);
         // 3、度量上的过滤字段
         for (DatasetColumnQo metric : getMetrics()) {
-            if (CollUtil.isNotEmpty(metric.getCondList())) {
-                for (DatasetConditionQo columnQo : metric.getCondList()) {
-                    String aliasName = tempAlias.get(String.valueOf(columnQo.getTableId()));
-                    if (StringUtils.isNotBlank(aliasName)
-                            && StringUtils.isBlank(hasAppend.get(columnQo.getColumnId()))) {
-                        field.append(aliasName).append(SqlUtils.STR_POINT).append(columnQo.getColumnCode())
-                                .append(SqlUtils.STR_DOT);
-                        hasAppend.put(columnQo.getColumnId(), aliasName);
-                    }
-                }
-            }
+            aaaa(metric.getCondList(), tempAlias, hasAppend, field);
         }
         // 4、维度临时表与度量主干表的关联字段
         List<ObjRelaTreeColumnVo> relaColumns = objRelation.getRelaColumns();
         if (relaColumns.isEmpty()) {
             List<ObjKeyColumnRelaVo> keyColumnRelas = objRelation.getKeyColumnRelas();
             for (ObjKeyColumnRelaVo keyColumnRela : keyColumnRelas) {
-                if (null != keyColumnRela.getRelaColumnId()
-                        && StringUtils.isBlank(hasAppend.get(keyColumnRela.getRelaColumnId()))) {
-                    String aliasName = tempAlias.get(String.valueOf(objRelation.getTgtTableId()));
-                    field.append(aliasName).append(SqlUtils.STR_POINT).append(keyColumnRela.getRelaColumnCode())
-                            .append(SqlUtils.STR_DOT);
-                    hasAppend.put(keyColumnRela.getRelaColumnId(), aliasName);
-                }
+                bbbb(objRelation, field, tempAlias, hasAppend, keyColumnRela.getRelaColumnId(), keyColumnRela.getRelaColumnCode());
             }
         } else {
             for (ObjRelaTreeColumnVo relaColumn : relaColumns) {
-                if (null != relaColumn.getRelaColumnId()
-                        && StringUtils.isBlank(hasAppend.get(relaColumn.getRelaColumnId()))) {
-                    String aliasName = tempAlias.get(String.valueOf(objRelation.getTgtTableId()));
-                    field.append(aliasName).append(SqlUtils.STR_POINT).append(relaColumn.getRelaColumnCode())
-                            .append(SqlUtils.STR_DOT);
-                    hasAppend.put(relaColumn.getRelaColumnId(), aliasName);
-                }
+                bbbb(objRelation, field, tempAlias, hasAppend, relaColumn.getRelaColumnId(), relaColumn.getRelaColumnCode());
             }
         }
         // 数据权限管理，可能team_id被别名为consume_org_id,需要判断
@@ -755,8 +731,54 @@ public abstract class AbstractSqlBuilderBase {
         }
 
         // 删除逗号
-        if (!field.isEmpty()) {
+        if (BuildSqlUtil.sbIsNotEmpty(field)) {
             field.deleteCharAt(field.length() - 1);
+        }
+    }
+
+    private void bbbb(MetricsDimensionPathVo objRelation, StringBuilder field,
+                      Map<String, String> tempAlias, Map<Long, String> hasAppend,
+                      Long columnId, String columnCode) {
+        if (null != columnId && StringUtils.isBlank(hasAppend.get(columnId))) {
+            String aliasName = tempAlias.get(String.valueOf(objRelation.getTgtTableId()));
+            field.append(aliasName).append(SqlUtils.STR_POINT).append(columnCode)
+                    .append(SqlUtils.STR_DOT);
+            hasAppend.put(columnId, aliasName);
+        }
+    }
+
+    private static void aaaa(List<DatasetConditionQo> metric,
+                             Map<String, String> tempAlias,
+                             Map<Long, String> hasAppend,
+                             StringBuilder field) {
+        if (CollUtil.isNotEmpty(metric)) {
+            for (DatasetConditionQo columnQo : metric) {
+                String aliasName = tempAlias.get(String.valueOf(columnQo.getTableId()));
+                if (StringUtils.isNotBlank(aliasName) &&
+                        StringUtils.isBlank(hasAppend.get(columnQo.getColumnId()))
+                ) {
+                    field.append(aliasName)
+                            .append(SqlUtils.STR_POINT)
+                            .append(columnQo.getColumnCode())
+                            .append(SqlUtils.STR_DOT);
+                    hasAppend.put(columnQo.getColumnId(), aliasName);
+                }
+            }
+        }
+    }
+
+    private void putNeHasAppendMap(StringBuilder field, Map<String, String> tempAlias,
+                                   Map<Long, String> hasAppend, List<String> appendCols,
+                                   Long metaDataId, String metaDataIdStr, String columnCode) {
+        if (notContains(appendCols, columnCode)) {
+            field.append(tempAlias.get(metaDataIdStr))
+                    .append(SqlUtils.STR_POINT)
+                    .append(columnCode)
+                    .append(SqlUtils.STR_DOT);
+            this.modelInfoMap.get(metaDataId).getColumnList().stream()
+                    .filter(c -> columnCode.equalsIgnoreCase(c.getColumnCode()))
+                    .findFirst()
+                    .ifPresent(column -> hasAppend.put(column.getColumnId(), tempAlias.get(metaDataIdStr)));
         }
     }
 
@@ -1192,9 +1214,8 @@ public abstract class AbstractSqlBuilderBase {
                 exp.setOperator("=");
                 exp.setIsDynamic(Constants.YES_VALUE_1);
                 String func = metric.getFunc();
-                String period = StringUtils.isNotEmpty(func)
-                        ? SqlBuilderFactory.getFuncParser(func).getDateOffset(cycleType)
-                        : AcctTimeUtil.getAcctValOutPubMode(this.scheduleType, cycleType, outPutMode);
+                String period = StringUtils.isNotEmpty(func) ? SqlBuilderFactory.getFuncParser(func).getDateOffset(cycleType) :
+                        AcctTimeUtil.getAcctValOutPubMode(this.scheduleType, cycleType, outPutMode);
                 exp.setPeriodScope(Collections.singletonList(period));
                 list.add(exp);
             }
@@ -1342,22 +1363,17 @@ public abstract class AbstractSqlBuilderBase {
 
     /**
      * 是否月和日账期混用
-     *
      * @return 是/否
      */
     protected abstract boolean checkMixed();
 
     /**
      * 获取表别名索引
-     *
-     * @return 表索引值
      */
     protected abstract int getIncrementTbIndex();
 
     /**
-     * 获取度量
-     *
-     * @return 所有度量参数
+     * 获取所有度量参数
      */
     protected abstract List<DatasetColumnQo> getMetrics();
 
@@ -1368,8 +1384,6 @@ public abstract class AbstractSqlBuilderBase {
 
     /**
      * 是否有组织字段
-     *
-     * @return 获取是否有组织标识
      */
     protected abstract boolean checkHaveOrgId();
 
@@ -1383,15 +1397,11 @@ public abstract class AbstractSqlBuilderBase {
 
     /**
      * 获取权限相关参数
-     *
-     * @return 权限信息
      */
     protected abstract DataPrivCtrlVo getDataPrivCtrlInfo();
 
     /**
      * 获取数据源类型
-     *
-     * @return 数据源类型
      */
     public abstract String getDbType();
 

@@ -92,10 +92,8 @@ public class AcctTimeUtil {
         cycleInfoMap.put("Y", new CycleInfo("Y", I18nUtil.get("Y"), Constants.ACCT_CODE_Y, "yyyy"));
         cycleInfoMap.put("M", new CycleInfo("M", I18nUtil.get("M"), Constants.ACCT_CODE_M, "yyyyMM"));
         cycleInfoMap.put("D", new CycleInfo("D", I18nUtil.get("D"), Constants.ACCT_CODE_D, "yyyyMMdd"));
-        cycleInfoMap.put("H",
-                new CycleInfo("H", I18nUtil.get("H"), Constants.ACCT_CODE_H, "yyyyMMddHH"));
-        cycleInfoMap.put("F",
-                new CycleInfo("F", I18nUtil.get("F"), Constants.ACCT_CODE_F, "yyyyMMddHHmm"));
+        cycleInfoMap.put("H", new CycleInfo("H", I18nUtil.get("H"), Constants.ACCT_CODE_H, "yyyyMMddHH"));
+        cycleInfoMap.put("F", new CycleInfo("F", I18nUtil.get("F"), Constants.ACCT_CODE_F, "yyyyMMddHHmm"));
         cycleInfoMap.put("O", new CycleInfo("O", I18nUtil.get("O"), "", ""));
         return cycleInfoMap;
     }
