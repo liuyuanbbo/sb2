@@ -551,18 +551,14 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             this.appendOutField(single, metrics, dimensionType, dimensionList, alias, component.field,
                     replaceLevelColumn, null, false);
         }
-        log.info("549 行 field append完毕之后的 sql: {}", component.field);
         this.appendWhere(single, component.where, metrics, dimensionType, condList, alias, null, null, null);
-        //log.info("551 行 where append完毕之后的 sql: {}", component.where);
         if (result.isGroupBy) {
             this.appendGroupBy(metrics, dimensionList, component.group, alias, replaceLevelColumn, false);
         }
-        //log.info("555 行 group append完毕之后的 sql: {}", component.group);
         if (single) {
             // 排序
             orderByColumnList(component.order, metrics, dimensionList, alias);
             StringBuilder sql = acctSqlService.joinTimeDimension(params, component.swapSql());
-            // this.getPage(sql);
             return sql.toString();
         }
 
@@ -573,10 +569,10 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                     .collect(Collectors.groupingBy(DatasetColumnQo::getFunc));
 
             // 按同环比分类，比上期/比上期%，统计账期条件一样的，应该分为一组
-            funcGroups.forEach((key, values) -> {
+            for (Map.Entry<String, List<DatasetColumnQo>> entry : funcGroups.entrySet()) {
                 // 有同环比或者月/年累计
-                subSqlGrowthOrTotal(subSqlList, values, dimensionType, dimensionList, condList, needAppendPeriod, replaceLevelColumn, scheduleType);
-            });
+                subSqlGrowthOrTotal(subSqlList, entry.getValue(), dimensionType, dimensionList, condList, needAppendPeriod, replaceLevelColumn, scheduleType);
+            }
             // 年累计/月累计，没有其他表字段时，不需要left join两段子查询
             if (growthOrTotalsMetric.size() == metrics.size()) {
                 Set<String> totalSet = new HashSet<>();
@@ -620,6 +616,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         return false;
     }
 
+    // 主要逻辑是 生成 SqlComponent 中的 join (主表以及 子查询中都是通用类似的逻辑)
     @Override
     protected Map<String, Map<String, String>> joinTables(Map<String, List<MetricsDimensionPathVo>> pathsMap,
                                                           String dataPrivPathKey,
@@ -982,7 +979,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                             }
                         }
                         if (!periodConds.isEmpty()) {
-                            if (!periodSql.isEmpty()) {
+                            if (BuildSqlUtil.sbIsNotEmpty(periodSql)) {
                                 periodSql.append(SqlUtils.SQL_AND);
                             }
                             periodSql.append(SqlUtils.STR_LEFT_BRACKET);
@@ -1002,7 +999,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                                     }
                                 }
                             }
-                            if (!periodSql.isEmpty()) {
+                            if (BuildSqlUtil.sbIsNotEmpty(periodSql)) {
                                 periodSql.append(SqlUtils.SQL_OR);
                             }
                             periodSql.append(SqlUtils.STR_LEFT_BRACKET);
@@ -1017,14 +1014,14 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                         }
                         List<String> periodConds = new ArrayList<>();
                         // 主从表的账期
-                        if (!ids.isEmpty()) {
+                        if (CollUtil.isNotEmpty(ids)) {
                             for (Long id : ids) {
                                 periodConds.add(appendPrePeriod(getAlias(aliasMap, id), this.allPeriod.get(id), condPeriodExp, funcEnum));
                             }
                         }
                         DealConditionParamUtils.splicingConditionParam(periodConds, periodSql);
                     }
-                    if (!periodSql.isEmpty()) {
+                    if (BuildSqlUtil.sbIsNotEmpty(periodSql)) {
                         sql.append(periodSql);
                     } else {
                         sql.append("1=1");
@@ -1081,7 +1078,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                     );
                     set.addAll(periodExpressionFromMetrics);
 
-                    if (!sql.isEmpty()) {
+                    if (BuildSqlUtil.sbIsNotEmpty(sql)) {
                         sql.append(SqlUtils.SQL_AND);
                     }
                     List<String> periodMetricList = new ArrayList<>();
@@ -1112,7 +1109,8 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         }
 
         // 拼接其他的条件
-        if (!sqlWhere.isEmpty() && !sql.isEmpty()) {
+
+        if (BuildSqlUtil.sbIsNotEmpty(sqlWhere) && BuildSqlUtil.sbIsNotEmpty(sql)) {
             sqlWhere.append(SqlUtils.SQL_AND).append(sql);
         } else {
             sqlWhere.append(sql);

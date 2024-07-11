@@ -46,7 +46,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1172,7 +1171,8 @@ public abstract class AbstractSqlBuilderBase {
      * @param dimensionType 度量类型
      */
     protected List<PeriodExpression> getPeriodExpressionFromMetrics(List<DatasetColumnQo> metrics,
-                                                                    List<DatasetConditionQo> acctConds, String dimensionType) {
+                                                                    List<DatasetConditionQo> acctConds,
+                                                                    String dimensionType) {
         List<PeriodExpression> list = new ArrayList<>();
         for (DatasetColumnQo metric : metrics) {
             if (!dimensionType.equalsIgnoreCase(metric.getDimensionType())) {
@@ -1181,15 +1181,8 @@ public abstract class AbstractSqlBuilderBase {
             if (!CollectionUtils.isEmpty(metric.getCondList())) {
                 List<DatasetConditionQo> collect = metric.getCondList().stream()
                         .filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct())).toList();
-                if (!collect.isEmpty()) {
-                    DatasetConditionQo conditionQo = collect.get(0);
-                    PeriodExpression exp = new PeriodExpression();
-                    exp.setCycleType(conditionQo.getCycleType());
-                    exp.setIsDynamic(conditionQo.getIsDynamic());
-                    exp.setOperator(conditionQo.getCondOperator());
-                    String[] split = conditionQo.getCondValue().contains("~") ? conditionQo.getCondValue().split("~")
-                            : conditionQo.getCondValue().split(",");
-                    exp.setPeriodScope(new LinkedList<>(Arrays.asList(split)));
+                if (CollUtil.isNotEmpty(collect)) {
+                    PeriodExpression exp = getPeriodExpression(collect);
                     list.add(exp);
                 }
             }
@@ -1197,17 +1190,31 @@ public abstract class AbstractSqlBuilderBase {
             else if (CollectionUtils.isEmpty(acctConds)) {
                 // 增加默认账期条件
                 PeriodExpression exp = new PeriodExpression();
-                exp.setCycleType(metric.getCycleType());
+                String cycleType = metric.getCycleType();
+                exp.setCycleType(cycleType);
                 exp.setOperator("=");
                 exp.setIsDynamic(Constants.YES_VALUE_1);
-                String period = StringUtils.isNotEmpty(metric.getFunc())
-                        ? SqlBuilderFactory.getFuncParser(metric.getFunc()).getDateOffset(metric.getCycleType())
-                        : AcctTimeUtil.getAcctValOutPubMode(this.scheduleType, metric.getCycleType(), outPutMode);
-                exp.setPeriodScope(new LinkedList<>(Collections.singletonList(period)));
+                String func = metric.getFunc();
+                String period = StringUtils.isNotEmpty(func)
+                        ? SqlBuilderFactory.getFuncParser(func).getDateOffset(cycleType)
+                        : AcctTimeUtil.getAcctValOutPubMode(this.scheduleType, cycleType, outPutMode);
+                exp.setPeriodScope(Collections.singletonList(period));
                 list.add(exp);
             }
         }
         return list;
+    }
+
+    private static PeriodExpression getPeriodExpression(List<DatasetConditionQo> collect) {
+        DatasetConditionQo conditionQo = collect.get(0);
+        PeriodExpression exp = new PeriodExpression();
+        exp.setCycleType(conditionQo.getCycleType());
+        exp.setIsDynamic(conditionQo.getIsDynamic());
+        exp.setOperator(conditionQo.getCondOperator());
+        String condValue = conditionQo.getCondValue();
+        String[] split = condValue.contains("~") ? condValue.split("~") : condValue.split(",");
+        exp.setPeriodScope(Arrays.asList(split));
+        return exp;
     }
 
     /**

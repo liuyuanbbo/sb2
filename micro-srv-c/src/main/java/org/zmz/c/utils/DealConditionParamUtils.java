@@ -7,13 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public final class DealConditionParamUtils {
-
-    private DealConditionParamUtils() {
-
-    }
 
     public static Set<Long> getTableIdsByMap(Map<String, Map<String, String>> aliasMap, Map<Long, ?> map) {
         Set<Long> ids = new HashSet<>();
@@ -31,11 +26,11 @@ public final class DealConditionParamUtils {
 
     public static void splicingConditionParam(List<String> list, StringBuilder sql) {
         if (CollUtil.isNotEmpty(list)) {
-            if (!sql.isEmpty()) {
+            if (BuildSqlUtil.sbIsNotEmpty(sql)) {
                 sql.append(SqlUtils.SQL_AND);
             }
             sql.append(SqlUtils.STR_LEFT_BRACKET);
-            sql.append(list.stream().collect(Collectors.joining(SqlUtils.SQL_AND)));
+            sql.append(String.join(SqlUtils.SQL_AND, list));
             sql.append(SqlUtils.STR_RIGHT_BRACKET);
         }
     }

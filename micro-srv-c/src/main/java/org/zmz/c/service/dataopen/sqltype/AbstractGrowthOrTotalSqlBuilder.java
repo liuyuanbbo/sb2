@@ -63,18 +63,20 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
                                        String scheduleType) {
 
         SqlComponent component = new SqlComponent();
-        Map<String, List<MetricsDimensionPathVo>> pathsMap = metricList.get(0).getPathsMap();
-        String dataPrivPathKey = metricList.get(0).getDataPrivPathKey();
+        DatasetColumnQo metrics0 = metricList.get(0);
+        Map<String, List<MetricsDimensionPathVo>> pathsMap = metrics0.getPathsMap();
+        String dataPrivPathKey = metrics0.getDataPrivPathKey();
         Map<String, Map<String, String>> alias = joinTables(pathsMap, dataPrivPathKey, needAppendPeriod, component);
         // 度量函数
-        SqlFuncEnum funcEnum = SqlFuncEnum.getFuncByName(metricList.get(0).getFunc());
+        SqlFuncEnum funcEnum = SqlFuncEnum.getFuncByName(metrics0.getFunc());
 
         // 判断是否需要关联时间维表
         boolean joinTimeSql = false;
-        DatasetColumnQo acctDimension = dimensionList.stream().filter(d -> Constants.YES_VALUE_1.equals(d.getIsAcct()))
+        DatasetColumnQo acctDimension = dimensionList.stream()
+                .filter(d -> Constants.YES_VALUE_1.equals(d.getIsAcct()))
                 .findFirst().orElse(null);
         if (Constants.SCHEDULE_LOOP_TYPE_O.equalsIgnoreCase(scheduleType) && acctDimension != null) {
-            Column periodColumn = getPeriodColumnFromMetric(metricList.get(0), acctDimension);
+            Column periodColumn = getPeriodColumnFromMetric(metrics0, acctDimension);
             if (null != periodColumn) {
                 // 一次性有账期维度的年月累计需要关联时间维表
                 joinTimeSql = SqlBuilderHelper.isTotal(funcEnum);
@@ -107,8 +109,7 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
 
         if (SqlBuilderHelper.isGrowthOrTotal(funcEnum)) {
             // 同比、环比
-            this.appendWhere(false, component.where, metricList, dimensionType, condList, alias, null, null,
-                    funcEnum);
+            this.appendWhere(false, component.where, metricList, dimensionType, condList, alias, null, null, funcEnum);
         }
 
         this.appendGroupBy(metricList, dimensionList, component.group, alias, replaceLevelColumn, joinTimeSql);
