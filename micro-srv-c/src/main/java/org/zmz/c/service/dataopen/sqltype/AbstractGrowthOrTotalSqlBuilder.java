@@ -60,7 +60,8 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
                                        List<DatasetConditionQo> condList,
                                        boolean needAppendPeriod,
                                        OrgDimension replaceLevelColumn,
-                                       String scheduleType) {
+                                       String scheduleType,
+                                       Map<SqlFuncEnum, SubQuerySqlQo> growthSubMap) {
 
         SqlComponent component = new SqlComponent();
         DatasetColumnQo metrics0 = metricList.get(0);
@@ -69,6 +70,11 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         Map<String, Map<String, String>> alias = joinTables(pathsMap, dataPrivPathKey, needAppendPeriod, component);
         // 度量函数
         SqlFuncEnum funcEnum = SqlFuncEnum.getFuncByName(metrics0.getFunc());
+        SubQuerySqlQo cacheSubQueryQo = growthSubMap.get(funcEnum);
+        if (cacheSubQueryQo != null) {
+            cacheSubQueryQo.getMetricList().add(metrics0);
+            return;
+        }
 
         // 判断是否需要关联时间维表
         boolean joinTimeSql = false;
@@ -115,10 +121,16 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         this.appendGroupBy(metricList, dimensionList, component.group, alias, replaceLevelColumn, joinTimeSql);
         SubQuerySqlQo relativeDimension = new SubQuerySqlQo();
         relativeDimension.setDimensionList(dimensionList);
-        relativeDimension.setSql(component.swapSql().toString());
+        String sql = component.swapSql().toString();
+        relativeDimension.setSql(sql);
         relativeDimension.setMetricList(metricList);
         relativeDimension.setDimensionType(dimensionType);
         subSqlList.add(relativeDimension);
+        growthSubMap.put(funcEnum, relativeDimension);
+        SqlFuncEnum sqlSameEnum = SqlFuncEnum.mergeSameFuncEnum(funcEnum);
+        if (sqlSameEnum != null) {
+            growthSubMap.put(sqlSameEnum, relativeDimension);
+        }
     }
 
     @Override

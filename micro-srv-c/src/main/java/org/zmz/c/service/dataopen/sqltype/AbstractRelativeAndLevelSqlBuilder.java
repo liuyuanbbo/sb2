@@ -334,6 +334,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             }
             component.join.append(on);
         }
+        // 合并主表输出结果字段
         mergeRelativeOutField(singleSql, mainTb, component.field, dimensionList, subSqlList, replaceLevelColumn);
         return component.swapSql().toString();
     }
@@ -512,10 +513,12 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
     }
 
     private String findRelativeAlias(DatasetColumnQo dimension, List<SubQuerySqlQo> subSqlList) {
+        String dimensionType = dimension.getDimensionType();
+        String dimensionAlias = dimension.getAlias();
         for (SubQuerySqlQo subQuerySqlQo : subSqlList) {
             for (DatasetColumnQo columnQo : subQuerySqlQo.getMetricList()) {
-                if (dimension.getDimensionType().equals(subQuerySqlQo.getDimensionType())
-                        && columnQo.getAlias().equals(dimension.getAlias())) {
+                if (dimensionType.equals(subQuerySqlQo.getDimensionType()) &&
+                        columnQo.getAlias().equals(dimensionAlias)) {
                     return subQuerySqlQo.getTbAlisa();
                 }
             }
@@ -565,15 +568,17 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
 
         // 生成同环比或者月/年累计的子查询、相同粒度下的同一统计函数
         List<SubQuerySqlQo> subSqlList = new ArrayList<>();
+        ResultSql subQueryToTmpResult = subQueryToTmTab ? result : null;
         if (CollUtil.isNotEmpty(growthOrTotalsMetric)) {
             Map<String, List<DatasetColumnQo>> funcGroups = growthOrTotalsMetric.stream()
                     .collect(Collectors.groupingBy(DatasetColumnQo::getFunc));
 
+            Map<SqlFuncEnum, SubQuerySqlQo> growthSubMap = new HashMap<>();
             // 按同环比分类，比上期/比上期%，统计账期条件一样的，应该分为一组
             for (Map.Entry<String, List<DatasetColumnQo>> entry : funcGroups.entrySet()) {
                 // 有同环比或者月/年累计
                 List<DatasetColumnQo> value = entry.getValue();
-                subSqlGrowthOrTotal(subSqlList, value, dimensionType, dimensionList, condList, needAppendPeriod, replaceLevelColumn, scheduleType);
+                subSqlGrowthOrTotal(subSqlList, value, dimensionType, dimensionList, condList, needAppendPeriod, replaceLevelColumn, scheduleType, growthSubMap);
             }
             // 年累计/月累计，没有其他表字段时，不需要left join两段子查询
             if (growthOrTotalsMetric.size() == metrics.size()) {
@@ -583,12 +588,13 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 // 同比、环比
                 if (totalSet.containsAll(funcGroups.keySet())) {
                     int subSqlSize = subSqlList.size();
+                    String sql0 = subSqlList.get(0).getSql();
                     if (subSqlSize == 1) {
-                        return subSqlList.get(0).getSql();
+                        return sql0;
                     }
                     // 合并月年累计
-                    return mergeRelativeDims(singleSql, dimensionList, subSqlList.get(0).getSql(),
-                            subSqlList.subList(0, subSqlSize - 1), replaceLevelColumn, subQueryToTmTab ? result : null);
+                    List<SubQuerySqlQo> subSqlListLast = subSqlList.subList(0, subSqlSize - 1);
+                    return mergeRelativeDims(singleSql, dimensionList, sql0, subSqlListLast, replaceLevelColumn, subQueryToTmpResult);
                 }
             }
             // 合并汇总表，组织层级字段已经取过别名
@@ -598,12 +604,12 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         }
 
         // 层级向上汇总，可以少嵌套一层
+        String beforeMergeSql = component.swapSql().toString();
         if (CollectionUtils.isEmpty(growthOrTotalsMetric) && autoLevelGroup) {
-            return component.swapSql().toString();
+            return beforeMergeSql;
         }
         // 合并同环比或者月年累计
-        return mergeRelativeDims(singleSql, dimensionList, component.swapSql().toString(), subSqlList,
-                replaceLevelColumn, subQueryToTmTab ? result : null);
+        return mergeRelativeDims(singleSql, dimensionList, beforeMergeSql, subSqlList, replaceLevelColumn, subQueryToTmpResult);
     }
 
     /**

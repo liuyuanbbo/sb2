@@ -70,4 +70,16 @@ public enum SqlFuncEnum {
         }
         return Native;
     }
+
+    public static SqlFuncEnum mergeSameFuncEnum(SqlFuncEnum sqlFuncEnum) {
+        return switch (sqlFuncEnum) {
+            case pp -> SqlFuncEnum.momGrowth;
+            case yoy -> SqlFuncEnum.yoyGrowth;
+            case yearEnd -> SqlFuncEnum.yearEndGrowth;
+            case momGrowth -> SqlFuncEnum.pp;
+            case yoyGrowth -> SqlFuncEnum.yoy;
+            case yearEndGrowth -> SqlFuncEnum.yearEnd;
+            default -> null;
+        };
+    }
 }

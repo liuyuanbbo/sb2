@@ -13,9 +13,7 @@ import org.zmz.c.qo.dataopen.ModelInfo;
 import org.zmz.c.service.dataopen.dataset.SqlFuncEnum;
 import org.zmz.c.utils.SqlUtils;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -480,10 +478,11 @@ public final class SqlBuilderHelper {
     }
 
     public static boolean isGrowth(SqlFuncEnum funcEnum) {
-        Set<SqlFuncEnum> growthOrTotalFuncs = new HashSet<>(
-                Arrays.asList(SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth, SqlFuncEnum.pp, SqlFuncEnum.momGrowth, SqlFuncEnum.mm,
-                        SqlFuncEnum.mmGrowth, SqlFuncEnum.yearEnd, SqlFuncEnum.yearEndGrowth));
-        return growthOrTotalFuncs.contains(funcEnum);
+        Set<SqlFuncEnum> growthOrTotalFuncEnums = Set.of(SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth,
+                SqlFuncEnum.pp, SqlFuncEnum.momGrowth,
+                SqlFuncEnum.mm, SqlFuncEnum.mmGrowth,
+                SqlFuncEnum.yearEnd, SqlFuncEnum.yearEndGrowth);
+        return growthOrTotalFuncEnums.contains(funcEnum);
     }
 
     public static boolean isTotal(SqlFuncEnum funcEnum) {
