@@ -272,6 +272,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         String mainTb = "tb" + getIncrementTbIndex();
         // 主视图sql
         String tmpName;
+        // 对于 非 TASK 的 SQL 类型 result 总为 null
         if (result != null && CollUtil.isNotEmpty(subSqlList)) {
             tmpName = generateSubTmpTableName(scheduleType);
             // 区分中间表，需要存放数据，因为LEFT JOIN拆分，需要创建临时表
@@ -571,7 +572,8 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             // 按同环比分类，比上期/比上期%，统计账期条件一样的，应该分为一组
             for (Map.Entry<String, List<DatasetColumnQo>> entry : funcGroups.entrySet()) {
                 // 有同环比或者月/年累计
-                subSqlGrowthOrTotal(subSqlList, entry.getValue(), dimensionType, dimensionList, condList, needAppendPeriod, replaceLevelColumn, scheduleType);
+                List<DatasetColumnQo> value = entry.getValue();
+                subSqlGrowthOrTotal(subSqlList, value, dimensionType, dimensionList, condList, needAppendPeriod, replaceLevelColumn, scheduleType);
             }
             // 年累计/月累计，没有其他表字段时，不需要left join两段子查询
             if (growthOrTotalsMetric.size() == metrics.size()) {

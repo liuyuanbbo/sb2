@@ -263,6 +263,11 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
             sqlArr.add(component.unionSql(tbName));
         }
         sqlArr.add(dropSql.toString());
+        sqlArr.forEach(e -> {
+            log.info("===============================================================================================");
+            log.info("{}", e);
+            log.info("===============================================================================================");
+        });
         return StringUtils.join(sqlArr, ";");
     }
 

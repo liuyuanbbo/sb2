@@ -286,7 +286,7 @@ public abstract class AbstractSqlBuilderBase {
                 replaceLevelColumn.setAlias(true);
             }
         }
-        // 合并同环比或者月年累计
+        // 合并同环比或者月年累计 (针对非 SQL TASK 类型 subQueryToTmTab 值为 false)
         return mergeRelativeDims(singleSql, dimensionList, component.swapSql().toString(), subSqlList,
                 replaceLevelColumn, subQueryToTmTab ? result : null);
     }
