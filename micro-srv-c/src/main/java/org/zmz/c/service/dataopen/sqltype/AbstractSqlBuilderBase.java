@@ -1149,7 +1149,9 @@ public abstract class AbstractSqlBuilderBase {
                                      SqlFuncEnum funcEnum) {
         String cond;
         // 如果sql输出类型的，且为动态条件，不需要拼引号 静态的可能需要拼引号
-        if (OutPutMode.SQL.equalsIgnoreCase(outPutMode) && Constants.YES_VALUE_1.equals(condPeriodExp.getIsDynamic())) {
+        if (OutPutMode.SQL.equalsIgnoreCase(outPutMode) &&
+                Constants.YES_VALUE_1.equals(condPeriodExp.getIsDynamic())
+        ) {
             condPeriodExp.setPeriodScope(condPeriodExp.getPeriodScope(), false);
         } else {
             // 字符型的账期需要加单引号
@@ -1157,26 +1159,27 @@ public abstract class AbstractSqlBuilderBase {
                     SqlBuilderHelper.isStringType(getDbType(), column.getColumnType()));
         }
 
-        if (condPeriodExp.getOperator().toUpperCase().contains("BETWEEN")) {
+        String condExpOperator = condPeriodExp.getOperator();
+        String periodScope0 = condPeriodExp.getPeriodScope().get(0);
+        if (condExpOperator.toUpperCase().contains("BETWEEN")) {
             // 动态账期条件
-            String condOperator = condPeriodExp.getOperator().contains("_dynamic")
-                    ? condPeriodExp.getOperator().replace("_dynamic", "")
-                    : condPeriodExp.getOperator();
-            cond = condOperator + SqlUtils.STR_BLANK + condPeriodExp.getPeriodScope().get(0) + SqlUtils.SQL_AND
+            String condOperator = condExpOperator.contains("_dynamic") ?
+                    condExpOperator.replace("_dynamic", "") : condExpOperator;
+            cond = condOperator + SqlUtils.STR_BLANK + periodScope0 + SqlUtils.SQL_AND
                     + condPeriodExp.getPeriodScope().get(1);
-        } else if (condPeriodExp.getOperator().toUpperCase().contains("IN")) {
-            cond = condPeriodExp.getOperator() + SqlUtils.STR_LEFT_BRACKET
+        } else if (condExpOperator.toUpperCase().contains("IN")) {
+            cond = condExpOperator + SqlUtils.STR_LEFT_BRACKET
                     + String.join(",", condPeriodExp.getPeriodScope()) + SqlUtils.STR_RIGHT_BRACKET;
-        } else if ("EXPRESSION".equalsIgnoreCase(condPeriodExp.getOperator())) {
-            cond = condPeriodExp.getPeriodScope().get(0);
-        } else if ("SQL".equalsIgnoreCase(condPeriodExp.getOperator())) {
-            cond = SqlUtils.STR_LEFT_BRACKET + condPeriodExp.getPeriodScope().get(0) + SqlUtils.STR_RIGHT_BRACKET;
+        } else if ("EXPRESSION".equalsIgnoreCase(condExpOperator)) {
+            cond = periodScope0;
+        } else if ("SQL".equalsIgnoreCase(condExpOperator)) {
+            cond = SqlUtils.STR_LEFT_BRACKET + periodScope0 + SqlUtils.STR_RIGHT_BRACKET;
         } else {
-            cond = condPeriodExp.getOperator() + condPeriodExp.getPeriodScope().get(0);
+            cond = condExpOperator + periodScope0;
         }
-        if ("SQL".equalsIgnoreCase(condPeriodExp.getOperator())) {
+        if ("SQL".equalsIgnoreCase(condExpOperator)) {
             // SQL类型不需要拼接字段
-            log.info("SQL类型条件：{}", condPeriodExp.getPeriodScope().get(0));
+            log.info("SQL类型条件：{}", periodScope0);
             return SqlUtils.STR_BLANK + cond;
         }
         String columnExp = tbName + SqlUtils.STR_POINT + column.getColumnCode();
@@ -1363,6 +1366,7 @@ public abstract class AbstractSqlBuilderBase {
 
     /**
      * 是否月和日账期混用
+     *
      * @return 是/否
      */
     protected abstract boolean checkMixed();

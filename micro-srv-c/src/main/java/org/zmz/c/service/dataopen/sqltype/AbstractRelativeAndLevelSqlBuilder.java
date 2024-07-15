@@ -1185,20 +1185,23 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 // 虚拟对象
                 this.replaceVColumn(dimension, metrics.get(0));
                 Map<String, String> alias = SqlBuilderHelper.getAliasMap(metrics.get(0), dimension, aliasMap, !params.judgeIndexView());
+                Long tableId = dimension.getTableId();
+                String tableIdStr = String.valueOf(tableId);
+                String columnCode = dimension.getColumnCode();
                 if (autoLevelGroup && isLevelColumn(dimension)) {
-                    if (dimension.getTableId().equals(replaceLevelColumn.getMetaDataId())
-                            && (dimension.getColumnCode().equals(replaceLevelColumn.getOrgIdColumnCode())
-                            || dimension.getColumnCode().equals(replaceLevelColumn.getOrgNameColumnCode()))) {
+                    if (tableId.equals(replaceLevelColumn.getMetaDataId())
+                            && (columnCode.equals(replaceLevelColumn.getOrgIdColumnCode())
+                            || columnCode.equals(replaceLevelColumn.getOrgNameColumnCode()))) {
                         appendLevelColumnGroup(groupSql, replaceLevelColumn,
-                                alias.get(String.valueOf(dimension.getTableId())));
+                                alias.get(tableIdStr));
                     }
                 } else {
-                    groupSql.append(alias.get(String.valueOf(dimension.getTableId()))).append(SqlUtils.STR_POINT)
-                            .append(dimension.getColumnCode()).append(SqlUtils.STR_DOT);
+                    groupSql.append(alias.get(tableIdStr)).append(SqlUtils.STR_POINT)
+                            .append(columnCode).append(SqlUtils.STR_DOT);
                 }
             }
         }
-        if (!groupSql.isEmpty()) {
+        if (BuildSqlUtil.sbIsNotEmpty(groupSql)) {
             groupSql.deleteCharAt(groupSql.length() - 1);
         }
     }
@@ -1237,8 +1240,8 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
      * 替换条件
      */
     private void replaceVColumn(DatasetColumnQo dimension, DatasetColumnQo metric) {
-        if (dimension.getObjectId() != null
-                && Constants.OBJ_TREE_RELA_TYPE_V.equalsIgnoreCase(dimension.getRelaType())) {
+        if (dimension.getObjectId() != null &&
+                Constants.OBJ_TREE_RELA_TYPE_V.equalsIgnoreCase(dimension.getRelaType())) {
             DatasetColumnQo virtualObjColumn = metric.getVirtualObjColumnMap().get(dimension.getObjectId());
             if (virtualObjColumn != null) {
                 dimension.setTableId(virtualObjColumn.getTableId());
@@ -1277,15 +1280,17 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 .append(SqlUtils.STR_BLANK).append(mainTb);
         for (DatasetColumnQo q : dimensionList) {
             // 不是维度/是主表/虚拟维度的不需要追加left join
-            if (!Constants.APP_TYPE_DIMENSION.equals(q.getAppType()) || tableId.equals(q.getTableId())) {
+            Long qTableId = q.getTableId();
+            if (!Constants.APP_TYPE_DIMENSION.equals(q.getAppType()) || tableId.equals(qTableId)) {
                 continue;
             }
+            String qTableIdStr = qTableId.toString();
             if (Constants.OBJ_TREE_RELA_TYPE_V.equalsIgnoreCase(q.getRelaType())) {
-                if (!alias.containsKey(q.getTableId().toString())) {
+                if (!alias.containsKey(qTableIdStr)) {
                     alia = new HashMap<>(2);
-                    alia.put(q.getTableId().toString(), mainTb);
+                    alia.put(qTableIdStr, mainTb);
                     alia.put("srcTableId", tableId.toString());
-                    alias.put(q.getTableId().toString(), alia);
+                    alias.put(qTableIdStr, alia);
                 }
                 continue;
             }
@@ -1293,12 +1298,12 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             if (relVo == null || CollectionUtils.isEmpty(relVo.getKeyColumnRelas())) {
                 continue;
             }
-            if (!alias.containsKey(q.getTableId().toString())) {
+            if (!alias.containsKey(qTableIdStr)) {
                 alia = new HashMap<>(2);
                 fromTableName = "tb" + getIncrementTbIndex();
-                alia.put(q.getTableId().toString(), fromTableName);
-                alias.put(q.getTableId().toString(), alia);
-                component.join.append(SqlUtils.SQL_LEFT_JOIN).append(getTableName(q.getTableCode(), q.getTableId()))
+                alia.put(qTableIdStr, fromTableName);
+                alias.put(qTableIdStr, alia);
+                component.join.append(SqlUtils.SQL_LEFT_JOIN).append(getTableName(q.getTableCode(), qTableId))
                         .append(SqlUtils.STR_BLANK).append(fromTableName).append(SqlUtils.SQL_ON)
                         .append(getLeftJoinOn(relVo.getKeyColumnRelas(), mainTb, fromTableName));
             }
@@ -1317,7 +1322,8 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
     private String getLeftJoinOn(List<ObjKeyColumnRelaVo> relList, String t1, String t2) {
         StringBuilder on = new StringBuilder();
         for (ObjKeyColumnRelaVo v : relList) {
-            on.append(t1).append(SqlUtils.STR_POINT).append(v.getColumnCode()).append(SqlUtils.STR_EQUAL).append(t2)
+            on.append(t1)
+                    .append(SqlUtils.STR_POINT).append(v.getColumnCode()).append(SqlUtils.STR_EQUAL).append(t2)
                     .append(SqlUtils.STR_POINT).append(v.getRelaColumnCode()).append(SqlUtils.SQL_AND);
         }
         // 移除最后一个" AND "
