@@ -5,7 +5,6 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.zmz.c.mapper.dataopen.DatasetObjMapper;
 import org.zmz.c.qo.dataopen.BusinessAttr;
@@ -23,6 +22,7 @@ import org.zmz.c.qo.dataopen.OrgDimension;
 import org.zmz.c.service.dataopen.dataset.SqlComponent;
 import org.zmz.c.utils.AccountUtil;
 import org.zmz.c.utils.AcctTimeUtil;
+import org.zmz.c.utils.BuildSqlUtil;
 import org.zmz.c.utils.KeyValues;
 import org.zmz.c.utils.SqlConvertUtils;
 import org.zmz.c.utils.SqlUtils;
@@ -80,14 +80,16 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
     @Override
     public String sqlParse() {
         ResultSql result = new ResultSql();
+        String paramsSqlMode = params.getSqlMode();
+        boolean taskSqlMode = Constants.SQL_TASK.equals(paramsSqlMode);
         if (CollUtil.isNotEmpty(this.metrics)) {
             // 按度量归属表进行分组
             result.metricsGroup = this.metrics.stream().collect(Collectors.groupingBy(DatasetColumnQo::getTableId));
             // 计算字段不能single
             result.isSingle = result.metricsGroup.size() == 1;
             // 调度模式的sql。1、生成维度临时表多个，2、维度临时表与度量关联
-            if (Constants.SQL_TASK.equals(params.getSqlMode())) {
-                result.isSingle = !this.hasCalMetric(params.getColumnList());
+            if (taskSqlMode) {
+                result.isSingle = !this.hasCalMetric(this.params.getColumnList());
                 if (CollUtil.isNotEmpty(this.params.getTempTablesMap())) {
                     // 临时表不为空
                     this.scheduleSqlBuilder(result);
@@ -97,7 +99,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
         }
         result.isGroupBy = CollUtil.isNotEmpty(this.metrics);
         generalSqlBuilder(result);
-        if (Constants.SQL_TASK.equals(params.getSqlMode())) {
+        if (taskSqlMode) {
             return scheduleSql(result);
         }
         return previewSql(result);
@@ -109,27 +111,37 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
      * @param result 返回参数引用
      */
     protected void scheduleSqlBuilder(ResultSql result) {
+        List<DatasetColumnQo> columnList = this.params.getColumnList();
+        List<DatasetConditionQo> condList = this.params.getCondList();
         if (autoLevelGroup) {
             DatasetColumnQo currLevelColumn = maxLevelColumn(this.dimensions);
             // 多表的层级字段
             if (iteratorColumnMap.size() > 1) {
                 result.isSingle = false;
-                iteratorColumnMap.forEach((key, value) -> scheduleSqlAppend(result, this.params.getColumnList(), params.getCondList(), value.get(0)));
+                for (Map.Entry<Long, List<OrgDimension>> entry : iteratorColumnMap.entrySet()) {
+                    OrgDimension orgDimension0 = entry.getValue().get(0);
+                    scheduleSqlAppend(result, columnList, condList, orgDimension0);
+                }
                 return;
             }
             // 单表层级字段
             List<OrgDimension> orgDimensions = iteratorColumnMap.get(currLevelColumn.getTableId());
             result.isSingle = orgDimensions.size() == 1;
-            orgDimensions.forEach(t -> scheduleSqlAppend(result, this.params.getColumnList(), params.getCondList(), t));
+            for (OrgDimension t : orgDimensions) {
+                scheduleSqlAppend(result, columnList, condList, t);
+            }
             return;
         }
-        scheduleSqlAppend(result, this.params.getColumnList(), params.getCondList(), null);
+        scheduleSqlAppend(result, columnList, condList, null);
     }
 
     /**
      * 没有临时表的调度sql构建、如果是单个sql就需要添加上输出字段的注释(度量归属表分组只有一个、层级字段一个)
      */
     private void generalSqlBuilder(ResultSql result) {
+        List<DatasetColumnQo> columnList = params.getColumnList();
+        List<DatasetConditionQo> condList = params.getCondList();
+        List<DatasetColumnQo> customMetrics = params.getCustomMetrics();
         if (autoLevelGroup) {
             // 有层级字段
             DatasetColumnQo currLevelColumn = maxLevelColumn(this.dimensions);
@@ -139,16 +151,17 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                     if (iteratorColumnMap.size() > 1) {
                         result.isSingle = false;
                         // 多表的层级字段
-                        iteratorColumnMap.forEach(
-                                (key, value) -> appendRelativeMetric(result, entry.getValue(), params.getColumnList(), params.getCondList(), value.get(0))
-                        );
+                        for (Map.Entry<Long, List<OrgDimension>> columnEntry : iteratorColumnMap.entrySet()) {
+                            OrgDimension orgDimension0 = columnEntry.getValue().get(0);
+                            appendRelativeMetric(result, entry.getValue(), columnList, condList, orgDimension0);
+                        }
                         return;
                     }
                     // 单表的层级字段
                     List<OrgDimension> orgDimensions = iteratorColumnMap.get(currLevelColumn.getTableId());
                     result.isSingle = (result.isSingle && result.metricsGroup.size() == 1 && orgDimensions.size() == 1);
                     for (OrgDimension t : orgDimensions) {
-                        appendRelativeMetric(result, entry.getValue(), params.getColumnList(), params.getCondList(), t);
+                        appendRelativeMetric(result, entry.getValue(), columnList, condList, t);
                     }
                 }
                 return;
@@ -157,17 +170,18 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
             if (iteratorColumnMap.size() > 1) {
                 result.isSingle = false;
                 // 多表的层级字段
-                iteratorColumnMap.forEach(
-                        (key, value) -> appendRelativeMetric(result, params.getCustomMetrics(), params.getColumnList(), params.getCondList(), value.get(0))
-                );
+                for (Map.Entry<Long, List<OrgDimension>> columnEntry : iteratorColumnMap.entrySet()) {
+                    OrgDimension orgDimension0 = columnEntry.getValue().get(0);
+                    appendRelativeMetric(result, customMetrics, columnList, condList, orgDimension0);
+                }
                 return;
             }
             // 单表的层级字段、没有度量 一般不会有这样的配置
             List<OrgDimension> orgDimensions = iteratorColumnMap.get(currLevelColumn.getTableId());
             result.isSingle = (result.isSingle && orgDimensions.size() == 1);
-            orgDimensions.forEach(
-                    t -> appendRelativeMetric(result, params.getCustomMetrics(), params.getColumnList(), params.getCondList(), t)
-            );
+            for (OrgDimension t : orgDimensions) {
+                appendRelativeMetric(result, customMetrics, columnList, condList, t);
+            }
             return;
         }
 
@@ -175,13 +189,13 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
         if (MapUtil.isNotEmpty(result.metricsGroup)) {
             // 有度量 没有层级字段
             result.isSingle = (result.isSingle && result.metricsGroup.size() == 1);
-            result.metricsGroup.forEach(
-                    (key, value) -> appendRelativeMetric(result, value, params.getColumnList(), params.getCondList(), null)
-            );
+            for (Map.Entry<Long, List<DatasetColumnQo>> metricsEntry : result.metricsGroup.entrySet()) {
+                appendRelativeMetric(result, metricsEntry.getValue(), columnList, condList, null);
+            }
             return;
         }
         // 没有度量 没有层级字段，此时不需要group by
-        appendRelativeMetric(result, params.getCustomMetrics(), params.getColumnList(), params.getCondList(), null);
+        appendRelativeMetric(result, customMetrics, columnList, condList, null);
     }
 
     /**
@@ -333,7 +347,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
             groupSql.insert(0, privCtrl);
         }
 
-        if (!CollectionUtils.isEmpty(this.dimensions) && !CollectionUtils.isEmpty(this.metrics)) {
+        if (CollUtil.isNotEmpty(this.dimensions) && CollUtil.isNotEmpty(this.metrics)) {
             boolean hasAppenedLevel = false;
             for (DatasetColumnQo dimension : this.dimensions) {
                 if (Constants.YES_VALUE_1.equals(dimension.getIsAcct()) && !"O".equals(this.scheduleType)) {
@@ -384,7 +398,8 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
      * 调度模式的sql，维度没有账期字段则默认拼接
      */
     private void checkScheduleType(StringBuilder outFields) {
-        if (Constants.SQL_TASK.equals(params.getSqlMode()) && !"O".equalsIgnoreCase(this.scheduleType)) {
+        String paramsSqlMode = params.getSqlMode();
+        if (Constants.SQL_TASK.equals(paramsSqlMode) && BuildSqlUtil.notEqZero(this.scheduleType)) {
             // O是一次性
             boolean hasPeriod = false;
             for (DatasetColumnQo dimension : this.dimensions) {
@@ -395,15 +410,12 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
             }
             if (!hasPeriod) {
                 // 没有账期
-                String periodStr;
                 CycleInfo cycleInfo = AcctTimeUtil.getCycleInfo().get(this.scheduleType);
-                periodStr = cycleInfo.getCycleVal() + " as " + cycleInfo.getCycleExp();
-                if (null != periodStr) {
-                    if (getDbType().equals(KeyValues.DS_HIVE)) {
-                        outFields.append(",").append(periodStr);
-                    } else {
-                        outFields.insert(0, periodStr + ",");
-                    }
+                String periodStr = cycleInfo.getCycleVal() + " as " + cycleInfo.getCycleExp();
+                if (KeyValues.DS_HIVE.equals(getDbType())) {
+                    outFields.append(",").append(periodStr);
+                } else {
+                    outFields.insert(0, periodStr + ",");
                 }
             }
         }
@@ -419,25 +431,28 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                 continue;
             }
             StringBuilder fieldsAppends = new StringBuilder();
-            String notes = !getDbType().equals(KeyValues.DS_HIVE) ? SqlBuilderHelper.fieldNotes(columnQo.getDataName())
-                    : "";
+            boolean isHiveDbType = KeyValues.DS_HIVE.equals(getDbType());
+            boolean notHiveDbType = !isHiveDbType;
+            // Hive 数据源类型无需拼接 SQL 注释
+            String notes = notHiveDbType ? SqlBuilderHelper.fieldNotes(columnQo.getDataName()) : "";
+            String columnQoAlias = columnQo.getAlias();
             if (Constants.YES_VALUE_1.equals(columnQo.getIsAcct())) {
                 // hive数据源的账期字段抽取出来放到所有字段最后面
-                if (getDbType().equals(KeyValues.DS_HIVE) && !"O".equals(this.scheduleType)) {
+                if (isHiveDbType && !"O".equals(this.scheduleType)) {
                     columnQoHive = columnQo;
                 } else {
                     if (!"O".equals(this.scheduleType)) {
                         // 周期性,账期要引号
                         CycleInfo cycleInfo = AcctTimeUtil.getCycleInfo().get(columnQo.getCycleType());
                         fieldsAppends.append(cycleInfo.getCycleVal());
-                        outFields.append(cycleInfo.getCycleVal()).append(SqlUtils.SQL_AS).append(columnQo.getAlias())
+                        outFields.append(cycleInfo.getCycleVal()).append(SqlUtils.SQL_AS).append(columnQoAlias)
                                 .append(notes).append(SqlUtils.STR_DOT);
-                        expMap.put(columnQo.getAlias(), fieldsAppends);
+                        expMap.put(columnQoAlias, fieldsAppends);
                     } else {
-                        fieldsAppends.append(tbName).append(SqlUtils.STR_POINT).append(columnQo.getAlias());
-                        outFields.append(fieldsAppends).append(SqlUtils.SQL_AS).append(columnQo.getAlias())
+                        fieldsAppends.append(tbName).append(SqlUtils.STR_POINT).append(columnQoAlias);
+                        outFields.append(fieldsAppends).append(SqlUtils.SQL_AS).append(columnQoAlias)
                                 .append(notes).append(SqlUtils.STR_DOT);
-                        expMap.put(columnQo.getAlias(), fieldsAppends);
+                        expMap.put(columnQoAlias, fieldsAppends);
                     }
                 }
             } else if (Constants.APP_TYPE_DIMENSION.equals(columnQo.getAppType())) {
@@ -450,7 +465,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                     ModelInfo modelInfo = modelInfoMap.get(maxLevelColumn.getTableId());
                     // 区域id
                     Column idColumn = modelInfo.findColumn(orgDimension.getOrgIdColumnCode());
-                    String idNote = (!getDbType().equals(KeyValues.DS_HIVE)
+                    String idNote = (notHiveDbType
                             && StringUtils.isNotBlank(idColumn.getColumnName()))
                             ? SqlBuilderHelper.fieldNotes(idColumn.getColumnName())
                             : "";
@@ -459,7 +474,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                             .append(SqlUtils.STR_DOT);
                     // 区域名称
                     Column nameColumn = modelInfo.findColumn(orgDimension.getOrgNameColumnCode());
-                    String nameNote = (!getDbType().equals(KeyValues.DS_HIVE)
+                    String nameNote = (notHiveDbType
                             && StringUtils.isNotBlank(nameColumn.getColumnName()))
                             ? SqlBuilderHelper.fieldNotes(nameColumn.getColumnName())
                             : "";
@@ -471,33 +486,33 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
                             .append(SqlUtils.SQL_AS).append(Constants.DATASET_AREA_LEVEL).append(SqlUtils.STR_DOT);
                     hasAppenedLevel = true;
                 } else {
-                    fieldsAppends.append(tbName).append(SqlUtils.STR_POINT).append(columnQo.getAlias());
-                    outFields.append(fieldsAppends).append(SqlUtils.SQL_AS).append(columnQo.getAlias()).append(notes)
+                    fieldsAppends.append(tbName).append(SqlUtils.STR_POINT).append(columnQoAlias);
+                    outFields.append(fieldsAppends).append(SqlUtils.SQL_AS).append(columnQoAlias).append(notes)
                             .append(SqlUtils.STR_DOT);
                 }
 
-                expMap.put(columnQo.getAlias(), fieldsAppends);
+                expMap.put(columnQoAlias, fieldsAppends);
             } else if (Constants.APP_TYPE_METRICS.equals(columnQo.getAppType())
-                    && CollectionUtils.isEmpty(columnQo.getColumnGroup())) {
+                    && CollUtil.isEmpty(columnQo.getColumnGroup())) {
                 if ("MAX".equalsIgnoreCase(columnQo.getFunc()) || "MIN".equalsIgnoreCase(columnQo.getFunc())) {
                     outFields.append(columnQo.getFunc());
                 } else {
                     outFields.append("SUM");
                 }
-                fieldsAppends.append(tbName).append(SqlUtils.STR_POINT).append(columnQo.getAlias());
+                fieldsAppends.append(tbName).append(SqlUtils.STR_POINT).append(columnQoAlias);
                 outFields.append(SqlUtils.STR_LEFT_BRACKET.trim()).append(tbName).append(SqlUtils.STR_POINT)
-                        .append(columnQo.getAlias()).append(SqlUtils.STR_RIGHT_BRACKET.trim()).append(SqlUtils.SQL_AS)
-                        .append(columnQo.getAlias()).append(notes).append(SqlUtils.STR_DOT);
-                expMap.put(columnQo.getAlias(), fieldsAppends);
+                        .append(columnQoAlias).append(SqlUtils.STR_RIGHT_BRACKET.trim()).append(SqlUtils.SQL_AS)
+                        .append(columnQoAlias).append(notes).append(SqlUtils.STR_DOT);
+                expMap.put(columnQoAlias, fieldsAppends);
             } else {
                 List<DatasetColumnQo> columnGroup = columnQo.getColumnGroup();
                 String expression = SqlBuilderHelper.getColumnGroup(columnGroup, expMap, tbName);
                 String divisionConvert = SqlConvertUtils.divisionConvert(expression);
                 String convertMetric = this.metricIfNull("(" + divisionConvert + ")", columnQo);
                 fieldsAppends.append(convertMetric);
-                outFields.append(fieldsAppends).append(SqlUtils.SQL_AS).append(columnQo.getAlias()).append(notes)
+                outFields.append(fieldsAppends).append(SqlUtils.SQL_AS).append(columnQoAlias).append(notes)
                         .append(SqlUtils.STR_DOT);
-                expMap.put(columnQo.getAlias(), fieldsAppends);
+                expMap.put(columnQoAlias, fieldsAppends);
             }
         }
         if (null != columnQoHive) {
@@ -515,7 +530,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
      * 字段输出排序
      */
     private void orderByColumnList(StringBuilder result, String bName) {
-        if (!CollectionUtils.isEmpty(this.params.getColumnList())) {
+        if (CollUtil.isNotEmpty(this.params.getColumnList())) {
             StringBuilder sql = new StringBuilder();
             for (DatasetColumnQo qo : this.params.getColumnList()) {
                 if (StringUtils.isNoneBlank(qo.getSortOrder())) {
@@ -809,7 +824,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
 
     @Override
     protected boolean needAppendPathCode(Long tableId) {
-        if (!CollectionUtils.isEmpty(this.dataPrivCtrlInfo.getDataPrivModelList())) {
+        if (CollUtil.isNotEmpty(this.dataPrivCtrlInfo.getDataPrivModelList())) {
             for (ModelInfo modelInfo : this.dataPrivCtrlInfo.getDataPrivModelList()) {
                 if (tableId.equals(modelInfo.getMetaDataInfo().getMetaDataId())) {
                     return true;
@@ -1006,7 +1021,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
         vo.setTimeGranularity(busi.getTimeGranularity());
         vo.setTimeGranularityColumn(busi.getTimeGranularityColumn());
         vo.setTimeGranularityValueColumn(busi.getTimeGranularityValueColumn());
-        if (!CollectionUtils.isEmpty(m.getColumnList())) {
+        if (CollUtil.isNotEmpty(m.getColumnList())) {
             for (Column c : m.getColumnList()) {
                 if (c.getColumnCode().equalsIgnoreCase(vo.getTimeGranularityColumn())) {
                     vo.getColumnMap().put("timeFreq", c);
@@ -1040,7 +1055,7 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
         List<DatasetColumnQo> columns = params.getColumnList();
         for (DatasetColumnQo column : columns) {
             if (Constants.APP_TYPE_METRICS.equals(column.getAppType())) {
-                if (CollectionUtils.isEmpty(column.getColumnGroup())) {
+                if (CollUtil.isEmpty(column.getColumnGroup())) {
                     metrics.add(column);
                 } else {
                     isCal = true;
@@ -1119,10 +1134,11 @@ public abstract class AbstractSqlBuilder extends AbstractRelativeAndLevelSqlBuil
     public String castColumnType(Column column, String columnExp, String columnType) {
         StringBuilder fieldSql = new StringBuilder();
         fieldSql.append(columnExp);
-        if (!column.getColumnType().equalsIgnoreCase(columnType)) {
-            fieldSql.insert(0, SqlUtils.STR_LEFT_BRACKET).insert(0, SqlUtils.STR_FUNC_CAST).append(SqlUtils.SQL_AS)
-                    .append(columnType).append(SqlUtils.STR_RIGHT_BRACKET);
+        if (column.getColumnType().equalsIgnoreCase(columnType)) {
+            return fieldSql.toString();
         }
+        fieldSql.insert(0, SqlUtils.STR_LEFT_BRACKET).insert(0, SqlUtils.STR_FUNC_CAST).append(SqlUtils.SQL_AS)
+                .append(columnType).append(SqlUtils.STR_RIGHT_BRACKET);
         return fieldSql.toString();
     }
 

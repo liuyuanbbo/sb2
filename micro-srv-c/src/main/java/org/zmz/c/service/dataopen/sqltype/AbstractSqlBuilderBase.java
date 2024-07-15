@@ -276,11 +276,11 @@ public abstract class AbstractSqlBuilderBase {
         if (CollUtil.isNotEmpty(growthOrTotalsMetric)) {
             Map<String, List<DatasetColumnQo>> funcGroups = growthOrTotalsMetric.stream()
                     .collect(Collectors.groupingBy(DatasetColumnQo::getFunc));
-            funcGroups.forEach((key, values) -> {
+            for (Map.Entry<String, List<DatasetColumnQo>> entry : funcGroups.entrySet()) {
                 // 有同环比或者月/年累计
-                subScheduleGrowthOrTotal(subSqlList, values, dimensionType, dimensionList, condList, result,
-                        cacheTempPath, replaceLevelColumn);
-            });
+                subScheduleGrowthOrTotal(subSqlList, entry.getValue(), dimensionType, dimensionList,
+                        condList, result, cacheTempPath, replaceLevelColumn);
+            }
             // 合并汇总表，组织层级字段已经取过别名
             if (replaceLevelColumn != null) {
                 replaceLevelColumn.setAlias(true);
@@ -954,7 +954,7 @@ public abstract class AbstractSqlBuilderBase {
         if (singleSql &&
                 Constants.SQL_TASK.equals(this.sqlMode) &&
                 !hasPeriod &&
-                !"O".equalsIgnoreCase(this.scheduleType)) {
+                BuildSqlUtil.notEqZero(scheduleType)) {
             // 没有账期
             String periodStr;
             if ("D".equals(this.scheduleType)) {
@@ -1261,9 +1261,9 @@ public abstract class AbstractSqlBuilderBase {
      */
     public boolean needSlaveTablePeriod(List<DatasetColumnQo> metrics, List<DatasetColumnQo> columnList) {
         for (DatasetColumnQo columnQo : columnList) {
+            boolean isAcct = KeyValues.YES_VALUE_1.equals(columnQo.getIsAcct());
             // 有账期作维度
-            if (Constants.APP_TYPE_DIMENSION.equalsIgnoreCase(columnQo.getAppType()) &&
-                    KeyValues.YES_VALUE_1.equals(columnQo.getIsAcct())) {
+            if (Constants.APP_TYPE_DIMENSION.equalsIgnoreCase(columnQo.getAppType()) && isAcct) {
                 return false;
             }
         }

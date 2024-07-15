@@ -415,4 +415,8 @@ public final class BuildSqlUtil {
     public static boolean sbIsNotEmpty(StringBuilder sb) {
         return !sb.isEmpty();
     }
+
+    public static boolean notEqZero(String str) {
+        return !"0".equals(str);
+    }
 }

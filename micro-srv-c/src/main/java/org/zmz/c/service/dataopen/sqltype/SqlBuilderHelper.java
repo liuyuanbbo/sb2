@@ -4,7 +4,6 @@ import cn.hutool.core.map.MapUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.zmz.c.qo.dataopen.Column;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.DataPrivCtrlVo;
 import org.zmz.c.qo.dataopen.DatasetColumnQo;
@@ -136,20 +135,6 @@ public final class SqlBuilderHelper {
         return false;
     }
 
-    public static boolean hasOrgTable(DataPrivCtrlVo dataPrivCtrlInfo, List<MetricsDimensionPathVo> paths) {
-        ModelInfo modelInfo = dataPrivCtrlInfo.getOrgDimensionModelInfo();
-        if (null == modelInfo || CollectionUtils.isEmpty(paths)) {
-            return false;
-        }
-        for (MetricsDimensionPathVo path : paths) {
-            if (path.getSrcTableId().equals(modelInfo.getMetaDataInfo().getMetaDataId())
-                    || path.getTgtTableId().equals(modelInfo.getMetaDataInfo().getMetaDataId())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static String getAliasName(Map<String, Map<String, String>> alias, Long srcTableId) {
         for (Map.Entry<String, Map<String, String>> mapEntry : alias.entrySet()) {
             if (StringUtils.isNotBlank(mapEntry.getValue().get(String.valueOf(srcTableId)))) {
@@ -168,33 +153,6 @@ public final class SqlBuilderHelper {
             }
         }
         return getAliasName(alias, srcTableId);
-    }
-
-    /**
-     * 从度量路径里面获取别名
-     *
-     * @param period    账期字段
-     * @param dimension 维度
-     * @param alias     路径别名集合
-     * @return 别别名
-     */
-    public static String getAliasFromMetricPath(Column period, DatasetColumnQo dimension,
-                                                Map<String, Map<String, String>> alias) {
-        if (!CollectionUtils.isEmpty(alias)) {
-            for (Map.Entry<String, Map<String, String>> entry : alias.entrySet()) {
-                String tableAlias = null;
-                if (null != period) {
-                    tableAlias = entry.getValue().get(String.valueOf(period.getMetaDataId()));
-
-                } else {
-                    tableAlias = entry.getValue().get(String.valueOf(dimension.getTableId()));
-                }
-                if (StringUtils.isNotBlank(tableAlias)) {
-                    return tableAlias;
-                }
-            }
-        }
-        return null;
     }
 
     public static String getAliasFromMetricOrTemp(DatasetColumnQo metric, Map<String, Map<String, String>> aliasMap,
@@ -478,7 +436,8 @@ public final class SqlBuilderHelper {
     }
 
     public static boolean isGrowth(SqlFuncEnum funcEnum) {
-        Set<SqlFuncEnum> growthOrTotalFuncEnums = Set.of(SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth,
+        Set<SqlFuncEnum> growthOrTotalFuncEnums = Set.of(
+                SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth,
                 SqlFuncEnum.pp, SqlFuncEnum.momGrowth,
                 SqlFuncEnum.mm, SqlFuncEnum.mmGrowth,
                 SqlFuncEnum.yearEnd, SqlFuncEnum.yearEndGrowth);

@@ -168,7 +168,8 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
             // 同比、环比
             this.appendWhere(false, component.where, metricList, dimensionType, condList, mainTbPathAlias,
                     mainTbPaths, tempTbPathAlias, funcEnum);
-        } else if (SqlBuilderHelper.isTotal(funcEnum)) {
+        }
+        if (SqlBuilderHelper.isTotal(funcEnum)) {
             // 月/年累计 需要关联时间维表
             this.appendWhere(false, component.where, metricList, dimensionType, condList, mainTbPathAlias,
                     mainTbPaths, tempTbPathAlias, funcEnum);

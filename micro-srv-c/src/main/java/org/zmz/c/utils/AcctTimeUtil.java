@@ -146,6 +146,6 @@ public class AcctTimeUtil {
     }
 
     public static boolean isCycle(String dataCycle) {
-        return StringUtils.isNotEmpty(dataCycle) && !"O".equalsIgnoreCase(dataCycle);
+        return StringUtils.isNotEmpty(dataCycle) && BuildSqlUtil.notEqZero(dataCycle);
     }
 }
