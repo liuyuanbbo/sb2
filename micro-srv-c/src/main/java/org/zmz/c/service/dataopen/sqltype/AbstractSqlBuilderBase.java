@@ -122,39 +122,45 @@ public abstract class AbstractSqlBuilderBase {
         dataCommonService = SpringUtil.getBean(DataCommonService.class);
     }
 
-    protected void scheduleSqlAppend(ResultSql result, List<DatasetColumnQo> columnList,
-                                     List<DatasetConditionQo> condList, OrgDimension replaceLevelColumn) {
+    protected void scheduleSqlAppend(ResultSql result,
+                                     List<DatasetColumnQo> columnList,
+                                     List<DatasetConditionQo> condList,
+                                     OrgDimension replaceLevelColumn) {
         // 缓存临时表路径对象集合
         Map<String, List<MetricsDimensionPathVo>> cacheTempPath = new HashMap<>();
         // 分组过后的度量的path路径参数是一样的,一个分组一个子查询
-        result.isSingle = result.isSingle && result.metricsGroup.size() == 1;
+        result.isSingle = (result.isSingle && result.metricsGroup.size() == 1);
         for (Map.Entry<Long, List<DatasetColumnQo>> entry : result.metricsGroup.entrySet()) {
             // 以相对维度字段进行分组 目前最多两组(包含/include,排除/exclude)
-            Map<List<String>, List<DatasetColumnQo>> dimGroup = getRelativeDimensionGroup(entry.getValue(), columnList);
-            // 单条sql有临时表时，临时表也要抽取出来
-            // 多分组时不能单条sql，会导致拼接任务sql不正确
-            String mainSql = appendScheduleSql(
-                    result.isSingle && dimGroup.isEmpty() && this.params.getTempTablesMap().isEmpty(), entry.getValue(),
-                    Constants.DimensionType.TYPE_MAIN, columnList, condList, result, cacheTempPath, replaceLevelColumn);
+            List<DatasetColumnQo> value = entry.getValue();
+            // 对维度进行分组
+            Map<List<String>, List<DatasetColumnQo>> dimGroup = getRelativeDimensionGroup(value, columnList);
+            // 是否单条 SQL
+            boolean isSingleSql = result.isSingle && dimGroup.isEmpty() && this.params.getTempTablesMap().isEmpty();
+            // 单条sql有临时表时,临时表也要抽取出来
+            // 多分组时不能单条sql,会导致拼接任务sql不正确
+            String mainSql = appendScheduleSql(isSingleSql, value, Constants.DimensionType.TYPE_MAIN,
+                    columnList, condList, result, cacheTempPath, replaceLevelColumn);
             if (MapUtil.isNotEmpty(dimGroup)) {
                 List<SubQuerySqlQo> subSqlList = new ArrayList<>();
                 for (Map.Entry<List<String>, List<DatasetColumnQo>> dimGroupEntry : dimGroup.entrySet()) {
                     String dimensionType = dimGroupEntry.getValue().get(0).getDimensionType();
-                    List<DatasetColumnQo> relativedimensionLists = columnList.stream()
+                    List<DatasetColumnQo> relativeDimensionList = columnList.stream()
                             .filter(t -> dimGroupEntry.getKey().contains(t.getAlias())).collect(Collectors.toList());
                     List<DatasetColumnQo> metricGroup = dimGroupEntry.getValue();
-                    String subSql = appendScheduleSql(false, metricGroup, dimensionType, relativedimensionLists,
+                    String subSql = appendScheduleSql(false, metricGroup, dimensionType, relativeDimensionList,
                             condList, result, cacheTempPath, replaceLevelColumn);
                     SubQuerySqlQo relativeDimension = new SubQuerySqlQo();
-                    relativeDimension.setDimensionList(relativedimensionLists);
+                    relativeDimension.setDimensionList(relativeDimensionList);
                     relativeDimension.setSql(subSql);
                     relativeDimension.setMetricList(metricGroup);
                     relativeDimension.setDimensionType(dimensionType);
                     subSqlList.add(relativeDimension);
                 }
+                ResultSql subQueryToTmpResultSql = subQueryToTmTab ? result : null;
                 // 主视图与相对维度视图合并
-                result.mergeSqls.add(mergeRelativeDims(false, columnList, mainSql, subSqlList, replaceLevelColumn,
-                        subQueryToTmTab ? result : null));
+                String res = mergeRelativeDims(false, columnList, mainSql, subSqlList, replaceLevelColumn, subQueryToTmpResultSql);
+                result.mergeSqls.add(res);
             } else {
                 // 没有相对维度视图
                 result.mergeSqls.add(mainSql);
@@ -265,10 +271,11 @@ public abstract class AbstractSqlBuilderBase {
         // 检查是否有同环比和月/年累计
         List<DatasetColumnQo> growthOrTotalsMetric = checkGrowthOrTotal(metricList, dimensionType);
         boolean single = singleSql && CollectionUtils.isEmpty(growthOrTotalsMetric);
+        String componentSql = component.swapSql().toString();
         if (single) {
             // 排序
             orderByColumnList(component.order, metricList, dimensionList, mainTbPathAlias);
-            return component.swapSql().toString();
+            return componentSql;
         }
 
         // 生成同环比或者月/年累计的子查询、相同粒度下的同一统计函数
@@ -286,8 +293,8 @@ public abstract class AbstractSqlBuilderBase {
                 replaceLevelColumn.setAlias(true);
             }
         }
-        // 合并同环比或者月年累计 (针对非 SQL TASK 类型 subQueryToTmTab 值为 false)
-        return mergeRelativeDims(singleSql, dimensionList, component.swapSql().toString(), subSqlList,
+        // 合并同环比或者月年累计 (针对非 SQL TASK 类型 subQueryToTmTab 值总为 false)
+        return mergeRelativeDims(singleSql, dimensionList, componentSql, subSqlList,
                 replaceLevelColumn, subQueryToTmTab ? result : null);
     }
 
@@ -345,14 +352,16 @@ public abstract class AbstractSqlBuilderBase {
 
     private void joinSrcAndTgt(SqlComponent component, Map<String, String> dimAlias, MetricsDimensionPathVo mainTb,
                                Map<Long, String> hasAppend, Map<Long, String> periodMaps, boolean needAppendPeriod, boolean isPriv) {
-        if (StringUtils.isBlank(dimAlias.get(String.valueOf(mainTb.getSrcTableId())))) {
+        Long srcTableId = mainTb.getSrcTableId();
+        String srcTableIdStr = String.valueOf(srcTableId);
+        if (StringUtils.isBlank(dimAlias.get(srcTableIdStr))) {
             // 主表
             String srcName = createTableAlias();
-            dimAlias.put(String.valueOf(mainTb.getSrcTableId()), srcName);
-            component.join.append(this.getSchemaCodeByTableId(mainTb.getSrcTableId())).append(SqlUtils.STR_POINT)
+            dimAlias.put(srcTableIdStr, srcName);
+            component.join.append(this.getSchemaCodeByTableId(srcTableId)).append(SqlUtils.STR_POINT)
                     .append(mainTb.getSrcTableCode()).append(SqlUtils.STR_BLANK).append(srcName);
             // 权限过滤条件
-            this.joinOrgDetails(component, dimAlias, mainTb.getSrcTableId(), hasAppend, isPriv);
+            this.joinOrgDetails(component, dimAlias, srcTableId, hasAppend, isPriv);
 
             // 从表
             if (null != mainTb.getTgtTableId()
@@ -365,7 +374,7 @@ public abstract class AbstractSqlBuilderBase {
 
                 if (CollUtil.isNotEmpty(mainTb.getMultiColumns())) {
                     // 多维指标内部表关联
-                    component.join.append(this.getSchemaCodeByTableId(mainTb.getSrcTableId()))
+                    component.join.append(this.getSchemaCodeByTableId(srcTableId))
                             .append(SqlUtils.STR_POINT).append(mainTb.getSrcTableCode()).append(SqlUtils.STR_BLANK)
                             .append(srcName).append(SqlUtils.SQL_INNER_JOIN)
                             .append(this.getSchemaCodeByTableId(mainTb.getTgtTableId())).append(SqlUtils.STR_POINT)
@@ -390,7 +399,7 @@ public abstract class AbstractSqlBuilderBase {
         } else {
             if (null != mainTb.getTgtTableId()
                     && StringUtils.isBlank(dimAlias.get(String.valueOf(mainTb.getTgtTableId())))) {
-                String srcName = dimAlias.get(String.valueOf(mainTb.getSrcTableId()));
+                String srcName = dimAlias.get(srcTableIdStr);
                 String tgtName = createTableAlias();
                 dimAlias.put(String.valueOf(mainTb.getTgtTableId()), tgtName);
                 component.join.append(SqlUtils.SQL_INNER_JOIN)
