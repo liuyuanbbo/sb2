@@ -37,7 +37,8 @@ public class DatasetSqlService {
         }
     }
 
-    public String buildPreviewGroupSql(DatasetDetail params, Map<DatasetColumnAndConditionQo, String> groupSql,
+    public String buildPreviewGroupSql(DatasetDetail params,
+                                       Map<DatasetColumnAndConditionQo, String> groupSql,
                                        String acctColumnCode) {
         // 最细粒度，用来关联字段
         List<DatasetColumnQo> smallestDimensions = datasetGroupService.getSmallestDimensions(params);
@@ -51,7 +52,7 @@ public class DatasetSqlService {
         StringBuilder sqlSb = new StringBuilder();
         sqlSb.append(SqlUtils.SQL_FROM);
 
-        // 多分组也可能有层级维度汇总 todo
+        // 多分组也可能有层级维度汇总
 
         // 每个分组都有consumeOrgId，且最细粒度包含组织字段才需要分组关联
         boolean groupByConsumeOrgId = datasetDataPrivService.getDataPrivGroupCount(params) == params.getGroups().size()
@@ -62,13 +63,14 @@ public class DatasetSqlService {
             String sql = entry.getValue();
 
             for (DatasetColumnQo columnQo : groupQo.getColumnList()) {
-                if (!columnQo.isHide() && allColCodes.add(columnQo.getAlias())) {
-                    allCols.add(TABLE_ALIAS_PREFIX + i + "." + columnQo.getAlias());
-                    // 维度枚举值字段
+                String columnQoAlias = columnQo.getAlias();
+                if (!columnQo.isHide() && allColCodes.add(columnQoAlias)) {
+                    allCols.add(TABLE_ALIAS_PREFIX + i + "." + columnQoAlias);
                 }
             }
             // 组织字段，组织路径
             DataPrivCtrlVo dataPrivCtrlInfo = groupQo.getDataPrivCtrlInfo();
+            // 需要组织权限控制
             if (dataPrivCtrlInfo.isDataPrivCtrl()) {
                 // 取到有组织权限字段，则添加到输出，只取一次
                 if (allColCodes.add(Constants.DATA_PRIV_PATH_CODE)) {
@@ -79,14 +81,16 @@ public class DatasetSqlService {
                             // 增加的组织id字段约定别名为consume_org_id
                             allCols.add(0, TABLE_ALIAS_PREFIX + i + "." + Constants.DATA_PRIV_ORG_FIELD_CODE);
                         }
-                    } else if (dataPrivCtrlInfo.getExistOrgDimensionColumn() != null) {
-                        if (allColCodes.add(dataPrivCtrlInfo.getExistOrgDimensionColumn().getAlias())) {
-                            allCols.add(0, TABLE_ALIAS_PREFIX + i + "."
-                                    + dataPrivCtrlInfo.getExistOrgDimensionColumn().getAlias());
-                        }
                     } else {
-                        if (allColCodes.add(Constants.DATA_PRIV_ORG_FIELD_CODE)) {
-                            allCols.add(0, TABLE_ALIAS_PREFIX + i + "." + Constants.DATA_PRIV_ORG_FIELD_CODE);
+                        DatasetColumnQo existOrgDimensionColumn = dataPrivCtrlInfo.getExistOrgDimensionColumn();
+                        if (existOrgDimensionColumn != null) {
+                            if (allColCodes.add(existOrgDimensionColumn.getAlias())) {
+                                allCols.add(0, TABLE_ALIAS_PREFIX + i + "." + existOrgDimensionColumn.getAlias());
+                            }
+                        } else {
+                            if (allColCodes.add(Constants.DATA_PRIV_ORG_FIELD_CODE)) {
+                                allCols.add(0, TABLE_ALIAS_PREFIX + i + "." + Constants.DATA_PRIV_ORG_FIELD_CODE);
+                            }
                         }
                     }
                 }

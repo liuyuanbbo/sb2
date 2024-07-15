@@ -62,14 +62,18 @@ public class DataSetService {
         Map<Long, ModelInfo> modelInfoMap = datasetModelService.getModelInfoMap(params);
         // 额外设置库表类型
         params.setTableType(modelInfoMap.entrySet().iterator().next().getValue().getMetaDataInfo().getTableType());
-        if (Constants.SQL_PREVIEW.equalsIgnoreCase(params.getSqlMode()) && params.getGroups().size() == 1) {
-            params.getGroups().get(0).setOperType(params.getOperType());
-            res = previewSql(params.getGroups().get(0), modelInfoMap);
-            if (params.getPageSize() != null && params.getPageSize() > 0) {
+        String operType = params.getOperType();
+        String paramsSqlMode = params.getSqlMode();
+        if (Constants.SQL_PREVIEW.equalsIgnoreCase(paramsSqlMode) && groups.size() == 1) {
+            DatasetColumnAndConditionQo groups0 = groups.get(0);
+            groups0.setOperType(operType);
+            res = previewSql(groups0, modelInfoMap);
+            Integer pageSize = params.getPageSize();
+            if (pageSize != null && pageSize > 0) {
                 StringBuilder sqlSb = new StringBuilder(res);
                 // 单分组sql分页
                 AbstractSqlParser sqlParser = SqlParserFactory.getViewSqlParser(params.getTableType());
-                sqlParser.getPage(sqlSb, params.getPageIndex(), params.getPageSize());
+                sqlParser.getPage(sqlSb, params.getPageIndex(), pageSize);
                 return sqlSb.toString();
             }
             return res;
@@ -78,9 +82,9 @@ public class DataSetService {
         // 保持有序
         Map<DatasetColumnAndConditionQo, String> groupSql = new LinkedHashMap<>();
         // 多分组在最外层分页
-        for (DatasetColumnAndConditionQo groupQo : params.getGroups()) {
+        for (DatasetColumnAndConditionQo groupQo : groups) {
             groupQo.setPageSize(0);
-            groupQo.setOperType(params.getOperType());
+            groupQo.setOperType(operType);
             res = previewSql(groupQo, modelInfoMap);
             groupSql.put(groupQo, res);
         }

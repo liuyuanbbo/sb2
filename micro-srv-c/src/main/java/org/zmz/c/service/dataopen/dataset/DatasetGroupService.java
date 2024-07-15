@@ -37,51 +37,55 @@ public class DatasetGroupService {
         List<DatasetColumnQo> dimensionListV = dimByRelaTypeMap.get(Constants.OBJ_TREE_RELA_TYPE_V);
 
         // n端对象
-        if (CollUtil.isNotEmpty(dimensionListN)) {
-            List<DatasetColumnQo> pkColumnsN = dimensionListN.stream()
-                    .filter(datasetColumnQo -> Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
-                    .collect(Collectors.toList());
-            if (CollUtil.isNotEmpty(pkColumnsN)) {
-                return pkColumnsN;
-            } else {
-                measureDimensions.addAll(dimensionListN);
-            }
+        List<DatasetColumnQo> datasetColumnQosN = calcEnd(measureDimensions, dimensionListN);
+        if (datasetColumnQosN != null) {
+            return datasetColumnQosN;
         }
-        if (CollUtil.isNotEmpty(dimensionList2)) {
-            List<DatasetColumnQo> pkColumns2 = dimensionList2.stream()
-                    .filter(datasetColumnQo -> Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
-                    .collect(Collectors.toList());
-            if (CollUtil.isNotEmpty(pkColumns2)) {
-                return pkColumns2;
-            } else {
-                measureDimensions.addAll(dimensionList2);
-            }
+        // 2端对象
+        List<DatasetColumnQo> datasetColumnQos2 = calcEnd(measureDimensions, dimensionList2);
+        if (datasetColumnQos2 != null) {
+            return datasetColumnQos2;
         }
-        // 主分析对象
-        if (CollUtil.isNotEmpty(dimensionList0)) {
-            List<DatasetColumnQo> pkColumns0 = dimensionList0.stream()
-                    .filter(datasetColumnQo -> Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
-                    .collect(Collectors.toList());
-            if (CollUtil.isNotEmpty(pkColumns0)) {
-                return pkColumns0;
-            } else {
-                measureDimensions.addAll(dimensionList0);
-            }
+        // 0端(主分析)对象
+        List<DatasetColumnQo> datasetColumnQos0 = calcEnd(measureDimensions, dimensionList0);
+        if (datasetColumnQos0 != null) {
+            return datasetColumnQos0;
         }
         // 一端对象
         if (CollUtil.isNotEmpty(dimensionList1)) {
             // 按路径分组,分组后保留list顺序
-            Map<String, List<DatasetColumnQo>> samePathColumnsMap = dimensionList1.stream().collect(Collectors
-                    .groupingBy(columnQo -> columnQo.getPath().split(",")[0], LinkedHashMap::new, Collectors.toList()));
+            Map<String, List<DatasetColumnQo>> samePathColumnsMap = dimensionList1.stream()
+                    .collect(
+                            Collectors.groupingBy(columnQo -> columnQo.getPath().split(",")[0],
+                                    LinkedHashMap::new, Collectors.toList())
+                    );
             for (List<DatasetColumnQo> samePathColumns : samePathColumnsMap.values()) {
                 getSmallestDimensions(samePathColumns, measureDimensions);
             }
         }
-        // 虚拟对象，有其他维度时忽略，只有虚拟维度对象时作为最细粒度
+        // 虚拟对象,有其他维度时忽略,只有虚拟维度对象时作为最细粒度
         if (CollUtil.isEmpty(measureDimensions) && CollUtil.isNotEmpty(dimensionListV)) {
             measureDimensions.addAll(dimensionListV);
         }
         return measureDimensions;
+    }
+
+    /**
+     * 计算 N端 2端 0端
+     */
+    private List<DatasetColumnQo> calcEnd(List<DatasetColumnQo> measureDimensions, List<DatasetColumnQo> dimensionList) {
+        // n端对象
+        if (CollUtil.isNotEmpty(dimensionList)) {
+            List<DatasetColumnQo> pkColumns = dimensionList.stream()
+                    .filter(datasetColumnQo -> Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
+                    .collect(Collectors.toList());
+            if (CollUtil.isNotEmpty(pkColumns)) {
+                return pkColumns;
+            } else {
+                measureDimensions.addAll(pkColumns);
+            }
+        }
+        return null;
     }
 
     public void getSmallestDimensions(List<DatasetColumnQo> dimensionList, List<DatasetColumnQo> measureDimensions) {
@@ -94,7 +98,7 @@ public class DatasetGroupService {
             // 起点对象的字段
             List<DatasetColumnQo> startDimensions = dimensionList.stream()
                     .filter(datasetColumnQo -> startObjectId.equals(datasetColumnQo.getObjectId()))
-                    .collect(Collectors.toList());
+                    .toList();
             // 起点对象的主键
             List<DatasetColumnQo> pkColumns = startDimensions.stream()
                     .filter(datasetColumnQo -> Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
@@ -102,7 +106,7 @@ public class DatasetGroupService {
             if (CollUtil.isEmpty(pkColumns)) {
                 List<DatasetColumnQo> notPkColumns = startDimensions.stream()
                         .filter(datasetColumnQo -> !Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
-                        .collect(Collectors.toList());
+                        .toList();
                 measureDimensions.addAll(notPkColumns);
                 // 取差集
                 List<DatasetColumnQo> diffDimensionList = dimensionList.stream()
