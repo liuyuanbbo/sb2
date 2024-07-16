@@ -70,11 +70,6 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         Map<String, Map<String, String>> alias = joinTables(pathsMap, dataPrivPathKey, needAppendPeriod, component);
         // 度量函数
         SqlFuncEnum funcEnum = SqlFuncEnum.getFuncByName(metrics0.getFunc());
-        SubQuerySqlQo cacheSubQueryQo = growthSubMap.get(funcEnum);
-        if (cacheSubQueryQo != null) {
-            cacheSubQueryQo.getMetricList().add(metrics0);
-            return;
-        }
 
         // 判断是否需要关联时间维表
         boolean joinTimeSql = false;
@@ -125,12 +120,18 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         relativeDimension.setSql(sql);
         relativeDimension.setMetricList(metricList);
         relativeDimension.setDimensionType(dimensionType);
-        subSqlList.add(relativeDimension);
-        growthSubMap.put(funcEnum, relativeDimension);
-        SqlFuncEnum sqlSameEnum = SqlFuncEnum.mergeSameFuncEnum(funcEnum);
-        if (sqlSameEnum != null) {
-            growthSubMap.put(sqlSameEnum, relativeDimension);
+        SubQuerySqlQo cacheSubQueryQo = growthSubMap.get(funcEnum);
+        if (cacheSubQueryQo != null) {
+            cacheSubQueryQo.getMetricList().add(metrics0);
+        } else {
+            subSqlList.add(relativeDimension);
+            growthSubMap.put(funcEnum, relativeDimension);
+            SqlFuncEnum sqlSameEnum = SqlFuncEnum.mergeSameFuncEnum(funcEnum);
+            if (sqlSameEnum != null) {
+                growthSubMap.put(sqlSameEnum, relativeDimension);
+            }
         }
+
     }
 
     @Override

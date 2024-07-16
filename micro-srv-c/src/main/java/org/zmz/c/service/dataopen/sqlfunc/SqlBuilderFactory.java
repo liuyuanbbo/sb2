@@ -29,7 +29,8 @@ public class SqlBuilderFactory {
         if (datasetColumnQo == null) {
             return null;
         }
-        return getFuncParser(datasetColumnQo.getFunc());
+        String func = datasetColumnQo.getFunc();
+        return getFuncParser(func);
     }
 
     public static AbstractFuncParser getFuncParser(String func) {

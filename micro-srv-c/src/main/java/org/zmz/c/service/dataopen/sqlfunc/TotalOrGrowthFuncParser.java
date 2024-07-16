@@ -1,7 +1,7 @@
 package org.zmz.c.service.dataopen.sqlfunc;
 
+import cn.hutool.core.collection.CollUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 import org.zmz.c.service.dataopen.sqltype.SqlBuilderHelper;
 import org.zmz.c.utils.KeyValues;
 import org.zmz.c.utils.SqlUtils;
@@ -10,7 +10,7 @@ public class TotalOrGrowthFuncParser extends AbstractFuncParser {
     @Override
     public void setOutField(StringBuilder sql) {
         StringBuilder exp = new StringBuilder();
-        if (!CollectionUtils.isEmpty(currMetric.getCondList())) {
+        if (CollUtil.isNotEmpty(currMetric.getCondList())) {
             exp.append("SUM").append(SqlUtils.STR_LEFT_BRACKET.trim()).append("CASE WHEN (").append(condListParser());
             // 当前度量条件上没有账期、则追加全局条件上的账期
             if (!hasPeriod(currMetric.getCondList())) {

@@ -812,12 +812,12 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
                 // 虚拟字段
                 replaceVCondition(metric);
 
-                List<String> funs = metrics.stream().map(DatasetColumnQo::getFunc).toList();
-                List<Long> columnIds = metrics.stream().map(DatasetColumnQo::getColumnId).toList();
-                List<String> columnCodes = metrics.stream().map(DatasetColumnQo::getColumnCode).toList();
-                List<Long> tablesIds = metrics.stream().map(DatasetColumnQo::getTableId).toList();
+                Set<String> funcSet = metrics.stream().map(DatasetColumnQo::getFunc).collect(Collectors.toSet());
+                Set<Long> columnIds = metrics.stream().map(DatasetColumnQo::getColumnId).collect(Collectors.toSet());
+                Set<String> columnCodes = metrics.stream().map(DatasetColumnQo::getColumnCode).collect(Collectors.toSet());
+                Set<Long> tablesIds = metrics.stream().map(DatasetColumnQo::getTableId).collect(Collectors.toSet());
                 // 度量字段，没有的用0输出
-                if (funs.contains(dimension.getFunc()) &&
+                if (funcSet.contains(dimension.getFunc()) &&
                         columnIds.contains(dimension.getColumnId()) &&
                         columnCodes.contains(dimension.getColumnCode()) &&
                         tablesIds.contains(dimension.getTableId())) {
