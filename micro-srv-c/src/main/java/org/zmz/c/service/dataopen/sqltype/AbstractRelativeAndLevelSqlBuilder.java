@@ -572,9 +572,25 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             Map<String, List<DatasetColumnQo>> funcGroups = growthOrTotalsMetric.stream()
                     .collect(Collectors.groupingBy(DatasetColumnQo::getFunc));
 
+            Map<String, List<DatasetColumnQo>> tmpMap = new LinkedHashMap<>();
+            for (DatasetColumnQo datasetColumnQo : growthOrTotalsMetric) {
+                String funcName = datasetColumnQo.getFunc();
+                SqlFuncEnum sqlfuncEnum = SqlFuncEnum.getFuncByName(funcName);
+                List<DatasetColumnQo> tmpQoList = tmpMap.getOrDefault(funcName, new ArrayList<>());
+                if (CollUtil.isEmpty(tmpQoList)) {
+                    tmpMap.put(funcName, tmpQoList);
+                    SqlFuncEnum sameSqlFuncEnum = SqlFuncEnum.mergeSameFuncEnum(sqlfuncEnum);
+                    if (sameSqlFuncEnum != null) {
+                        String sameFunName = sameSqlFuncEnum.name();
+                        tmpMap.put(sameFunName, tmpQoList);
+                    }
+                }
+                tmpQoList.add(datasetColumnQo);
+            }
+
             Map<SqlFuncEnum, SubQuerySqlQo> growthSubMap = new HashMap<>();
             // 按同环比分类，比上期/比上期%，统计账期条件一样的，应该分为一组
-            for (Map.Entry<String, List<DatasetColumnQo>> entry : funcGroups.entrySet()) {
+            for (Map.Entry<String, List<DatasetColumnQo>> entry : tmpMap.entrySet()) {
                 // 有同环比或者月/年累计
                 List<DatasetColumnQo> value = entry.getValue();
                 subSqlGrowthOrTotal(subSqlList, value, dimensionType, dimensionList, condList, needAppendPeriod, replaceLevelColumn, scheduleType, growthSubMap);
