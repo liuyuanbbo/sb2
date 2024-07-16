@@ -34,13 +34,13 @@ public class GreenplumSqlBuilder extends AbstractSqlBuilder {
 
     @Override
     public void getPage(StringBuilder sql) {
-        if (null != params.getPageSize() && null != params.getPageIndex() && params.getPageSize() > 0
-                && params.getPageIndex() >= 0) {
-            int index = params.getPageIndex();
-            Integer size = params.getPageSize();
+        Integer pageSize = params.getPageSize();
+        Integer pageIndex = params.getPageIndex();
+        if (null != pageSize && null != pageIndex && pageSize > 0 && pageIndex >= 0) {
             sql.append(SqlUtils.SQL_LIMIT);
-            Integer offset = (index > 0) ? (index - 1) * size : 0;
-            sql.append(size).append(SqlUtils.SQL_OFFSET).append(offset);
+            boolean pageIndexThanZero = pageIndex > 0;
+            Integer offset = pageIndexThanZero ? (pageIndex - 1) * pageSize : 0;
+            sql.append(pageSize).append(SqlUtils.SQL_OFFSET).append(offset);
         }
     }
 

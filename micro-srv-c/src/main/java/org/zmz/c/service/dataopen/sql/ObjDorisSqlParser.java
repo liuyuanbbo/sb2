@@ -9,7 +9,6 @@ import org.zmz.c.qo.dataopen.Partition;
 import org.zmz.c.service.dataopen.dataset.ColumnType;
 import org.zmz.c.service.dataopen.sqlenum.DorisColumnTypeEnum;
 import org.zmz.c.utils.KeyValues;
-import org.zmz.c.utils.SqlUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -125,11 +124,7 @@ public final class ObjDorisSqlParser extends AbstractSqlParser {
      */
     @Override
     public void getPage(StringBuilder sql, Integer pageIndex, Integer pageSize) {
-        if (null != pageSize && null != pageIndex && pageSize > 0 && pageIndex >= 0) {
-            sql.append(SqlUtils.SQL_LIMIT);
-            Integer offset = (pageIndex > 0) ? (pageIndex - 1) * pageSize : 0;
-            sql.append(pageSize).append(SqlUtils.SQL_OFFSET).append(offset);
-        }
+        super.getPage(sql, pageIndex, pageSize);
     }
 
     /**

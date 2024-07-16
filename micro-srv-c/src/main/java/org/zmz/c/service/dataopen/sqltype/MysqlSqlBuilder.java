@@ -25,12 +25,7 @@ public class MysqlSqlBuilder extends AbstractSqlBuilder {
 
     @Override
     public void getPage(StringBuilder sql) {
-        if (null != params.getPageSize() && null != params.getPageIndex() && params.getPageSize() > 0
-                && params.getPageIndex() >= 0) {
-            sql.append(SqlUtils.SQL_LIMIT);
-            Integer offset = (params.getPageIndex() > 0) ? (params.getPageIndex() - 1) * params.getPageSize() : 0;
-            sql.append(offset).append(SqlUtils.STR_DOT).append(params.getPageSize());
-        }
+        super.getPage(sql);
     }
 
     @Override

@@ -54,9 +54,9 @@ public class DatasetSqlService {
 
         // 多分组也可能有层级维度汇总
 
-        // 每个分组都有consumeOrgId，且最细粒度包含组织字段才需要分组关联
-        boolean groupByConsumeOrgId = datasetDataPrivService.getDataPrivGroupCount(params) == params.getGroups().size()
-                && smallestDimensions.stream().anyMatch(DatasetColumnQo::isOrgDimensionCol);
+        // 每个分组都有consumeOrgId,且最细粒度包含组织字段才需要分组关联
+        boolean groupByConsumeOrgId = datasetDataPrivService.getDataPrivGroupCount(params) == params.getGroups().size() &&
+                smallestDimensions.stream().anyMatch(DatasetColumnQo::isOrgDimensionCol);
 
         for (Map.Entry<DatasetColumnAndConditionQo, String> entry : groupSql.entrySet()) {
             DatasetColumnAndConditionQo groupQo = entry.getKey();
@@ -75,7 +75,7 @@ public class DatasetSqlService {
                 // 取到有组织权限字段，则添加到输出，只取一次
                 if (allColCodes.add(Constants.DATA_PRIV_PATH_CODE)) {
                     allCols.add(0, TABLE_ALIAS_PREFIX + i + "." + Constants.DATA_PRIV_PATH_CODE);
-                    // 组织id，优先addOrgDimensionColumn，其次existOrgDimensionColumn
+                    // 组织id,优先addOrgDimensionColumn,其次existOrgDimensionColumn
                     if (dataPrivCtrlInfo.getAddOrgDimensionColumn() != null) {
                         if (allColCodes.add(Constants.DATA_PRIV_ORG_FIELD_CODE)) {
                             // 增加的组织id字段约定别名为consume_org_id
@@ -84,8 +84,9 @@ public class DatasetSqlService {
                     } else {
                         DatasetColumnQo existOrgDimensionColumn = dataPrivCtrlInfo.getExistOrgDimensionColumn();
                         if (existOrgDimensionColumn != null) {
-                            if (allColCodes.add(existOrgDimensionColumn.getAlias())) {
-                                allCols.add(0, TABLE_ALIAS_PREFIX + i + "." + existOrgDimensionColumn.getAlias());
+                            String alias = existOrgDimensionColumn.getAlias();
+                            if (allColCodes.add(alias)) {
+                                allCols.add(0, TABLE_ALIAS_PREFIX + i + "." + alias);
                             }
                         } else {
                             if (allColCodes.add(Constants.DATA_PRIV_ORG_FIELD_CODE)) {
@@ -105,9 +106,10 @@ public class DatasetSqlService {
                 sqlSb.append(SqlUtils.SQL_ON);
                 for (DatasetColumnQo smallestDimension : smallestDimensions) {
                     // 最细粒度字段不允许修改和删除
+                    String smallestDimensionAlias = smallestDimension.getAlias();
                     sqlSb.append(TABLE_ALIAS_PREFIX).append(i - 1).append(SqlUtils.STR_POINT)
-                            .append(smallestDimension.getAlias()).append(SqlUtils.STR_EQUAL).append(TABLE_ALIAS_PREFIX)
-                            .append(i).append(SqlUtils.STR_POINT).append(smallestDimension.getAlias())
+                            .append(smallestDimensionAlias).append(SqlUtils.STR_EQUAL).append(TABLE_ALIAS_PREFIX)
+                            .append(i).append(SqlUtils.STR_POINT).append(smallestDimensionAlias)
                             .append(SqlUtils.SQL_AND);
                 }
                 // 如果是组织层级字段非主键，要加上主键关联条件
@@ -131,10 +133,11 @@ public class DatasetSqlService {
         sqlSb.insert(0, StrUtil.join(",", allCols));
         sqlSb.insert(0, SqlUtils.SQL_SELECT);
 
-        if (params.getPageSize() != null && params.getPageSize() > 0) {
+        Integer pageSize = params.getPageSize();
+        if (pageSize != null && pageSize > 0) {
             // 分页
             AbstractSqlParser sqlParser = SqlParserFactory.getViewSqlParser(params.getTableType());
-            sqlParser.getPage(sqlSb, params.getPageIndex(), params.getPageSize());
+            sqlParser.getPage(sqlSb, params.getPageIndex(), pageSize);
         }
 
         return sqlSb.toString();

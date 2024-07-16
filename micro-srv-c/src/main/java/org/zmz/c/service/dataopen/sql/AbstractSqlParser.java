@@ -18,7 +18,6 @@ import org.zmz.c.utils.KeyValues;
 import org.zmz.c.utils.SqlUtils;
 import org.zmz.c.vo.dataopen.dataset.CycleInfo;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -89,7 +88,7 @@ public abstract class AbstractSqlParser {
         if (CollUtil.isNotEmpty(partitionCols)) {
             for (Partition partitionCol : partitionCols) {
                 // 若分区字段未拼接，则拼接进SQL
-                if (!codeInColumnList(partitionCol.getColumnCode(), columnList)) {
+                if (codeNotInColumnList(partitionCol.getColumnCode(), columnList)) {
                     Column metaColumn = new Column();
                     BeanUtils.copyProperties(partitionCol, metaColumn);
                     addCreateColumnSql(builder, metaColumn);
@@ -111,24 +110,27 @@ public abstract class AbstractSqlParser {
      * CREATE TABLE XX.XX AS SELECT ...
      */
     public String getCreateAsSql(String schemaCode, String tableCode, String selectSql) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("CREATE TABLE ").append(schemaCode).append(".").append(tableCode).append(" AS ")
-                .append(Constants.NEW_LINE_STR).append(selectSql).append(";");
-        return builder.toString();
+        return "CREATE TABLE " + schemaCode + "." + tableCode + " AS " +
+                Constants.NEW_LINE_STR + selectSql + ";";
     }
 
     /**
      * 生成插入数据sql
      *
-     * @param schemaCode 库
-     * @param tableCode  表
-     * @param columnList 物理表字段列表
-     * @param columnList 字段列表
-     * @param columnList 字段列表
+     * @param schemaCode       库
+     * @param tableCode        表
+     * @param physicColumnList 物理表字段列表
+     * @param columnList       字段列表
+     * @param partitionList    分区列表
      * @return 插入数据SQL
      */
-    public String getInsertSql(String schemaCode, String tableCode, List<Column> physicColumnList,
-                               List<Column> columnList, List<Partition> partitionList, String tempTableCode, String selectSql) {
+    public String getInsertSql(String schemaCode,
+                               String tableCode,
+                               List<Column> physicColumnList,
+                               List<Column> columnList,
+                               List<Partition> partitionList,
+                               String tempTableCode,
+                               String selectSql) {
         StringBuilder builder = new StringBuilder();
         builder.append("INSERT INTO ").append(schemaCode).append(".").append(tableCode);
         if (CollUtil.isNotEmpty(columnList)) {
@@ -235,14 +237,8 @@ public abstract class AbstractSqlParser {
         deleteSql.append("DELETE FROM ").append(schemaCode).append(".").append(tableCode);
 
         if (MapUtil.isNotEmpty(whereMap)) {
-            Iterator<Map.Entry<String, String>> iterator = whereMap.entrySet().iterator();
             // 移除空的key
-            while (iterator.hasNext()) {
-                Map.Entry<String, String> entry = iterator.next();
-                if (StrUtil.isBlank(entry.getKey())) {
-                    iterator.remove();
-                }
-            }
+            whereMap.entrySet().removeIf(entry -> StrUtil.isBlank(entry.getKey()));
             if (MapUtil.isNotEmpty(whereMap)) {
                 deleteSql.append(" WHERE ");
                 int i = 0;
@@ -369,10 +365,17 @@ public abstract class AbstractSqlParser {
     }
 
     /**
+     * 字段编码不存在字段列表中
+     */
+    private static boolean codeNotInColumnList(String columnCode, List<Column> columnList) {
+        return !codeInColumnList(columnCode, columnList);
+    }
+
+    /**
      * 从map中获取拼接分区名称 MONTH_ID_202201
      *
-     * @param partitionMap MAP，key为分区字段名称MONTH_ID，value为分区字段值202201
-     * @return 分区名称MONTH_ID_202201
+     * @param partitionMap MAP, key为分区字段名称 MONTH_ID,value为分区字段值 202201
+     * @return 分区名称 MONTH_ID_202201
      */
     String getPartitionName(Map<String, String> partitionMap) {
         Object ptKey = partitionMap.keySet().toArray()[0];
@@ -466,8 +469,6 @@ public abstract class AbstractSqlParser {
 
     /**
      * 分页
-     *
-     * @param sql
      */
     public void getPage(StringBuilder sql, Integer pageIndex, Integer pageSize) {
         if (null != pageSize && null != pageIndex && pageSize > 0 && pageIndex >= 0) {
@@ -478,14 +479,15 @@ public abstract class AbstractSqlParser {
     }
 
     /**
-     * 默认值为0
+     * 默认值为 0
      */
     public String getIfNull(Column column) {
-        StringBuffer outField = new StringBuffer();
+        StringBuilder outField = new StringBuilder();
         outField.append(" IFNULL(").append(column.getColumnCode()).append(",0) ");
-        if (column.getColumnAccuracy() != null && column.getColumnAccuracy() != 0) {
+        Integer columnAccuracy = column.getColumnAccuracy();
+        if (columnAccuracy != null && columnAccuracy != 0) {
             outField.insert(0, " ROUND(");
-            outField.append(",").append(column.getColumnAccuracy()).append(") ");
+            outField.append(",").append(columnAccuracy).append(") ");
         }
         return outField.toString();
     }

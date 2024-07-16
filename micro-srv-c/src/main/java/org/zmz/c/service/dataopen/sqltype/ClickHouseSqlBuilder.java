@@ -177,14 +177,13 @@ public class ClickHouseSqlBuilder extends AbstractSqlBuilder {
         if (Constants.SCHEDULE_LOOP_TYPE_M.equalsIgnoreCase(cycleType)) {
             // 包含结尾日期应该多+1
             timeSql.append("SELECT ");
-            timeSql.append(" toYearMonth(addMonths(toDate(concat('" + startAcct + "','01')),number)) AS acct ");
-            timeSql.append("  FROM numbers(dateDiff('month',toDate(concat('" + startAcct + "','01')),toDate(concat('"
-                    + endAcct + "','01')))+1)");
+            timeSql.append(" toYearMonth(addMonths(toDate(concat('").append(startAcct).append("','01')),number)) AS acct ");
+            timeSql.append("  FROM numbers(dateDiff('month',toDate(concat('").append(startAcct).append("','01')),toDate(concat('").append(endAcct).append("','01')))+1)");
         } else {
             // 包含结尾日期应该多+1
             timeSql.append("SELECT ");
-            timeSql.append(" toYYYYMMDD(toDate('" + startAcct + "') + number) AS acct ");
-            timeSql.append(" FROM numbers(dateDiff('day',toDate('" + startAcct + "'),toDate('" + endAcct + "'))+1)");
+            timeSql.append(" toYYYYMMDD(toDate('").append(startAcct).append("') + number) AS acct ");
+            timeSql.append(" FROM numbers(dateDiff('day',toDate('").append(startAcct).append("'),toDate('").append(endAcct).append("'))+1)");
         }
         return timeSql;
     }

@@ -1,6 +1,6 @@
 package org.zmz.c.service.dataopen.sqlfunc;
 
-import org.springframework.util.CollectionUtils;
+import cn.hutool.core.collection.CollUtil;
 import org.zmz.c.qo.dataopen.DatasetColumnAndConditionQo;
 import org.zmz.c.qo.dataopen.DatasetColumnQo;
 import org.zmz.c.qo.dataopen.ModelInfo;
@@ -90,7 +90,7 @@ public class SqlBuilderFactory {
 
     public static AbstractSqlBuilder getSqlBuilder(DatasetColumnAndConditionQo params,
                                                    Map<Long, ModelInfo> modelInfoMap) {
-        if (!CollectionUtils.isEmpty(params.getColumnList()) && modelInfoMap.isEmpty()) {
+        if (CollUtil.isNotEmpty(params.getColumnList()) && modelInfoMap.isEmpty()) {
             // 缺少必要参数
             throw new IllegalArgumentException("缺少必要参数");
         }

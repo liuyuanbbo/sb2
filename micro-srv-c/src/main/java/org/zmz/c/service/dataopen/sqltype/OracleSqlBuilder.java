@@ -39,16 +39,9 @@ public class OracleSqlBuilder extends AbstractSqlBuilder {
 
     @Override
     public void getPage(StringBuilder result) {
-        if (null != params.getPageSize() && null != params.getPageIndex() && params.getPageSize() > 0
-                && params.getPageIndex() >= 0) {
-            Integer size = params.getPageSize();
-            Integer page = params.getPageIndex();
-            // SELECT *
-            // FROM (SELECT ROWNUM AS rowno,r.*
-            // FROM(sql) r
-            // where ROWNUM <= page*size
-            // ) table_alias
-            // WHERE table_alias.rowno > (page-1)*size;
+        Integer size = params.getPageSize();
+        Integer page = params.getPageIndex();
+        if (null != size && null != page && size > 0 && page >= 0) {
             StringBuilder sql = new StringBuilder();
             sql.append(SqlUtils.SQL_SELECT).append(SqlUtils.SQL_ALL).append(SqlUtils.SQL_FROM)
                     .append(SqlUtils.STR_LEFT_BRACKET).append(SqlUtils.SQL_SELECT).append(SqlUtils.SQL_ROWNUM)
@@ -100,9 +93,9 @@ public class OracleSqlBuilder extends AbstractSqlBuilder {
 
     @Override
     public String getDateOffset(String cycleType, String col, Integer offset, String type) {
-        StringBuffer funcDateOffset = new StringBuffer();
-        String dateFormat = Constants.SCHEDULE_LOOP_TYPE_M.equalsIgnoreCase(cycleType) ? DateUtil.DATE_FORMAT_6
-                : DateUtil.DATE_FORMAT_8;
+        StringBuilder funcDateOffset = new StringBuilder();
+        String dateFormat = Constants.SCHEDULE_LOOP_TYPE_M.equalsIgnoreCase(cycleType) ?
+                DateUtil.DATE_FORMAT_6 : DateUtil.DATE_FORMAT_8;
 
         if ("year".equalsIgnoreCase(type)) {
             funcDateOffset.append("to_char(add_years(to_date(").append(col).append(",'").append(dateFormat)

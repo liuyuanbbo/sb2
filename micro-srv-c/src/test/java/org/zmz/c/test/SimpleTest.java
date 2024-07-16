@@ -267,4 +267,29 @@ public class SimpleTest {
         log.info("{}", c);
     }
 
+
+    String getPartitionName(Map<String, String> partitionMap) {
+        Object ptKey = partitionMap.keySet().toArray()[0];
+        Object ptValue = partitionMap.get(ptKey);
+        return ptKey.toString().toLowerCase() + "_" + ptValue.toString().toLowerCase();
+    }
+
+    String getPartitionNameV2(Map<String, String> partitionMap) {
+        for (Map.Entry<String, String> entry : partitionMap.entrySet()) {
+            return entry.getKey().toLowerCase() + "_" + entry.getValue().toLowerCase();
+        }
+        return "No Element";
+    }
+
+    @Test
+    public void t13() {
+        Map<String, String> partitionMap = new HashMap<>();
+        partitionMap.put("MONTH_20240716", "1");
+        partitionMap.put("MONTH_20240717", "2");
+        partitionMap.put("MONTH_20240718", "3");
+
+        String partitionName = getPartitionNameV2(partitionMap);
+        log.info("{}", partitionName);
+    }
+
 }
