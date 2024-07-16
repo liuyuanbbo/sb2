@@ -1,9 +1,15 @@
 package org.zmz.c.test.obj;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Slf4j
 public class ObjTest {
@@ -28,5 +34,28 @@ public class ObjTest {
         boolean c = list_1.equals(list_3);
         log.info("list_1 是否等于 list_2 {}", b);
         log.info("list_1 是否等于 list_3 {}", c);
+    }
+
+    @Test
+    public void tt2() {
+        List<OrgDimension> list = new ArrayList<>();
+        IntStream.rangeClosed(1, 12).forEach(i -> list.add(new OrgDimension(String.valueOf(i))));
+
+        list.sort(
+                Comparator.comparingInt((OrgDimension e) -> Integer.parseInt(e.getOrgLevel()))
+        );
+
+        list.forEach(e -> log.info("orgLevel: {}", e.getOrgLevel()));
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    static class OrgDimension {
+        private String orgLevel;
+
+        public OrgDimension(String orgLevel) {
+            this.orgLevel = orgLevel;
+        }
     }
 }
