@@ -289,7 +289,7 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             subQuerySqlQo.setTbAlisa(relativeTb);
             if (result != null) {
                 tmpName = generateSubTmpTableName(scheduleType);
-                // 区分中间表，需要存放数据，因为LEFT JOIN拆分，需要创建临时表
+                // 区分中间表，需要存放数据，因为 LEFT JOIN 拆分，需要创建临时表
                 result.tmpTableNames.put(tmpName, tmpName);
                 result.tmpTableSql.put(tmpName, subQuerySqlQo.getSql());
                 component.join.append(SqlUtils.SQL_LEFT_JOIN).append(SqlUtils.STR_BLANK).append(tmpName)
@@ -396,9 +396,8 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
             StringBuilder dimSb = new StringBuilder();
             String dbType = getDbType();
             // 单个sql的时候需要注释
-            String notes = !ignoreNotesTypeSets.contains(dbType) && singleSql
-                    ? SqlBuilderHelper.fieldNotes(dimension.getDataName())
-                    : "";
+            String notes = neContains(ignoreNotesTypeSets, dbType) && singleSql ?
+                    SqlBuilderHelper.fieldNotes(dimension.getDataName()) : "";
             // 是否有拖到最细细度组织维度字段
             if (ObjectUtils.isNotEmpty(orgDimColumn) && orgDimColumn.getColumnId().equals(dimension.getColumnId())) {
                 haveOrgId();

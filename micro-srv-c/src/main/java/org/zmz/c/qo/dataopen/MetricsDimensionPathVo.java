@@ -55,7 +55,6 @@ public class MetricsDimensionPathVo implements Serializable {
 
     private List<ObjRelaTreeColumnVo> relaColumns = new ArrayList<>();
 
-
     private List<ObjKeyColumnRelaVo> keyColumnRelas = new ArrayList<>();
 
     @Override
@@ -67,11 +66,14 @@ public class MetricsDimensionPathVo implements Serializable {
             return false;
         }
         MetricsDimensionPathVo that = (MetricsDimensionPathVo) o;
-        return Objects.equals(srcObjectId, that.srcObjectId) && Objects.equals(srcTableId, that.srcTableId)
-                && Objects.equals(srcTableCode, that.srcTableCode) && Objects.equals(tgtObjectId, that.tgtObjectId)
-                && Objects.equals(tgtTableId, that.tgtTableId) && Objects.equals(tgtTableCode, that.tgtTableCode)
-                && CollUtil.isEqualList(multiColumns, that.multiColumns)
-                && CollUtil.isEqualList(keyColumnRelas, that.keyColumnRelas);
+        return Objects.equals(srcObjectId, that.srcObjectId) &&
+                Objects.equals(srcTableId, that.srcTableId) &&
+                Objects.equals(srcTableCode, that.srcTableCode) &&
+                Objects.equals(tgtObjectId, that.tgtObjectId) &&
+                Objects.equals(tgtTableId, that.tgtTableId) &&
+                Objects.equals(tgtTableCode, that.tgtTableCode) &&
+                CollUtil.isEqualList(multiColumns, that.multiColumns) &&
+                CollUtil.isEqualList(keyColumnRelas, that.keyColumnRelas);
     }
 
     @Override

@@ -124,10 +124,12 @@ public final class SqlBuilderHelper {
         Long metaDataId = modelInfo.getMetaDataInfo().getMetaDataId();
         for (Map.Entry<String, List<MetricsDimensionPathVo>> entry : pathsMap.entrySet()) {
             for (MetricsDimensionPathVo path : entry.getValue()) {
-                if ((null != path.getSrcTableId() && path.getSrcTableId().equals(metaDataId))) {
+                Long srcTableId = path.getSrcTableId();
+                if ((null != srcTableId && srcTableId.equals(metaDataId))) {
                     return true;
                 }
-                if ((null != path.getTgtTableId() && path.getTgtTableId().equals(metaDataId))) {
+                Long tgtTableId = path.getTgtTableId();
+                if ((null != tgtTableId && tgtTableId.equals(metaDataId))) {
                     return true;
                 }
             }

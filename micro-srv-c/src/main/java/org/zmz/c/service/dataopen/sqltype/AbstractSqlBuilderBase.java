@@ -43,6 +43,7 @@ import org.zmz.c.vo.dataopen.dataset.TimeGranularityVo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -171,12 +172,15 @@ public abstract class AbstractSqlBuilderBase {
     /**
      * 调度关联表拼接
      */
-    protected String subJoinTables(SqlComponent component, Map<String, Map<String, String>> mainTbPathAlias,
-                                   Map<String, String> tempTbPathAlias, boolean hasOrgTable, ResultSql result, DatasetColumnQo metric,
+    protected String subJoinTables(SqlComponent component,
+                                   Map<String, Map<String, String>> mainTbPathAlias,
+                                   Map<String, String> tempTbPathAlias,
+                                   boolean hasOrgTable, ResultSql result, DatasetColumnQo metric,
                                    Map<String, List<MetricsDimensionPathVo>> cacheTempPath,
                                    Map<String, Map<String, List<MetricsDimensionPathVo>>> tempTablesMap,
                                    Map<String, Map<String, MetricsDimensionPathVo>> mainTablesToTempTablesMap,
-                                   Map<String, Map<String, List<MetricsDimensionPathVo>>> mainTablesMap, boolean needAppendPeriod) {
+                                   Map<String, Map<String, List<MetricsDimensionPathVo>>> mainTablesMap,
+                                   boolean needAppendPeriod) {
         // 度量的所有到维度路径上抽出来的临时表
         String path = metric.getPath();
         Map<String, List<MetricsDimensionPathVo>> tempTbPaths = tempTablesMap.get(path);
@@ -231,8 +235,8 @@ public abstract class AbstractSqlBuilderBase {
                 }
             } else {
                 List<MetricsDimensionPathVo> mains = CollUtil.isNotEmpty(mainTbs) ? mainTbs : tempTbs;
-                metricTableJoin(hasJoinList, component, dimTbAlias, mains, hasAppend, periodMaps, needAppendPeriod,
-                        isPriv);
+                metricTableJoin(hasJoinList, component, dimTbAlias, mains,
+                        hasAppend, periodMaps, needAppendPeriod, isPriv);
             }
             SqlBuilderHelper.copyCommonAlias(dimTbAlias, pathEntry.getValue(), publicAlias);
             mainTbPathAlias.put(dimPath, dimTbAlias);
@@ -240,9 +244,14 @@ public abstract class AbstractSqlBuilderBase {
         return tmpTbName;
     }
 
-    private String appendScheduleSql(boolean singleSql, List<DatasetColumnQo> metricList, String dimensionType,
-                                     List<DatasetColumnQo> dimensionList, List<DatasetConditionQo> condList, ResultSql result,
-                                     Map<String, List<MetricsDimensionPathVo>> cacheTempPath, OrgDimension replaceLevelColumn) {
+    private String appendScheduleSql(boolean singleSql,
+                                     List<DatasetColumnQo> metricList,
+                                     String dimensionType,
+                                     List<DatasetColumnQo> dimensionList,
+                                     List<DatasetConditionQo> condList,
+                                     ResultSql result,
+                                     Map<String, List<MetricsDimensionPathVo>> cacheTempPath,
+                                     OrgDimension replaceLevelColumn) {
         Map<String, Map<String, String>> mainTbPathAlias = new HashMap<>();
         Map<String, String> tempTbPathAlias = new HashMap<>();
 
@@ -250,14 +259,15 @@ public abstract class AbstractSqlBuilderBase {
         Map<String, Map<String, MetricsDimensionPathVo>> mainTablesToTempTablesMap = this.params
                 .getMainTablesToTempTablesMap();
         Map<String, Map<String, List<MetricsDimensionPathVo>>> mainTablesMap = this.params.getMainTablesMap();
-        boolean hasOrgTable = SqlBuilderHelper.hasOrgTable(getDataPrivCtrlInfo(), metricList.get(0).getPathsMap());
+        DatasetColumnQo metrics0 = metricList.get(0);
+        boolean hasOrgTable = SqlBuilderHelper.hasOrgTable(getDataPrivCtrlInfo(), metrics0.getPathsMap());
         boolean mainSlaveTabPeriod = needSlaveTablePeriod(metricList, dimensionList);
 
         SqlComponent component = new SqlComponent();
         String tmpTbName = subJoinTables(component, mainTbPathAlias, tempTbPathAlias, hasOrgTable, result,
-                metricList.get(0), cacheTempPath, tempTablesMap, mainTablesToTempTablesMap, mainTablesMap,
+                metrics0, cacheTempPath, tempTablesMap, mainTablesToTempTablesMap, mainTablesMap,
                 mainSlaveTabPeriod);
-        Map<String, List<MetricsDimensionPathVo>> mainTbPaths = mainTablesMap.get(metricList.get(0).getPath());
+        Map<String, List<MetricsDimensionPathVo>> mainTbPaths = mainTablesMap.get(metrics0.getPath());
 
         StringBuilder fields = mergeField(singleSql, metricList, dimensionType, dimensionList, mainTbPathAlias,
                 tempTbPathAlias, hasOrgTable, tmpTbName, replaceLevelColumn, null);
@@ -294,8 +304,8 @@ public abstract class AbstractSqlBuilderBase {
             }
         }
         // 合并同环比或者月年累计 (针对非 SQL TASK 类型 subQueryToTmTab 值总为 false)
-        return mergeRelativeDims(singleSql, dimensionList, componentSql, subSqlList,
-                replaceLevelColumn, subQueryToTmTab ? result : null);
+        ResultSql subQueryResultSql = subQueryToTmTab ? result : null;
+        return mergeRelativeDims(singleSql, dimensionList, componentSql, subSqlList, replaceLevelColumn, subQueryResultSql);
     }
 
     protected void metricTempTableJoin(List<MetricsDimensionPathVo> hasJoinList, SqlComponent component,
@@ -465,9 +475,16 @@ public abstract class AbstractSqlBuilderBase {
     /**
      * 临时表构建
      */
-    private void tempTableJoin(boolean hasOrgTable, Map<Long, String> hasAppend, String metricPath, String dimPath,
-                               List<MetricsDimensionPathVo> tempTbs, MetricsDimensionPathVo objRelation, Map<String, String> tmpTableSql,
-                               Map<String, String> tmpTableNames, DatasetColumnQo metric, Map<Long, String> periodMaps,
+    private void tempTableJoin(boolean hasOrgTable,
+                               Map<Long, String> hasAppend,
+                               String metricPath,
+                               String dimPath,
+                               List<MetricsDimensionPathVo> tempTbs,
+                               MetricsDimensionPathVo objRelation,
+                               Map<String, String> tmpTableSql,
+                               Map<String, String> tmpTableNames,
+                               DatasetColumnQo metric,
+                               Map<Long, String> periodMaps,
                                boolean needAppendPeriod, boolean isPriv) {
         Map<String, String> tempAlias = new HashMap<>();
         SqlComponent component = new SqlComponent();
@@ -639,8 +656,10 @@ public abstract class AbstractSqlBuilderBase {
      * @return metricKeyAndDimKey 已经有临时表的度量和维度path相加
      */
     private String checkTempTablePath(Map<String, List<MetricsDimensionPathVo>> cacheTempPath,
-                                      List<MetricsDimensionPathVo> pathVos, String metricKeyAndDimKey) {
+                                      List<MetricsDimensionPathVo> pathVos,
+                                      String metricKeyAndDimKey) {
         for (Map.Entry<String, List<MetricsDimensionPathVo>> entry : cacheTempPath.entrySet()) {
+            // MetricsDimensionPathVo 需要重写 equals hashCode
             if (entry.getValue().equals(pathVos)) {
                 return entry.getKey();
             }
@@ -653,8 +672,8 @@ public abstract class AbstractSqlBuilderBase {
         return !v1.equals(v2);
     }
 
-    protected <T> boolean notContains(List<T> list, T t) {
-        return !list.contains(t);
+    protected <T> boolean neContains(Collection<T> coll, T t) {
+        return !coll.contains(t);
     }
 
     private void tempTableOutField(DatasetColumnAndConditionQo params,
@@ -779,7 +798,7 @@ public abstract class AbstractSqlBuilderBase {
     private void putNeHasAppendMap(StringBuilder field, Map<String, String> tempAlias,
                                    Map<Long, String> hasAppend, List<String> appendCols,
                                    Long metaDataId, String metaDataIdStr, String columnCode) {
-        if (notContains(appendCols, columnCode)) {
+        if (neContains(appendCols, columnCode)) {
             field.append(tempAlias.get(metaDataIdStr))
                     .append(SqlUtils.STR_POINT)
                     .append(columnCode)

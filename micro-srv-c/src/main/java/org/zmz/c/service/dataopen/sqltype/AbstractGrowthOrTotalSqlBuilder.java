@@ -149,13 +149,14 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
         Map<String, Map<String, MetricsDimensionPathVo>> mainTablesToTempTablesMap = this.params.getMainTablesToTempTablesMap();
         Map<String, Map<String, List<MetricsDimensionPathVo>>> mainTablesMap = this.params.getMainTablesMap();
         DatasetColumnQo metrics0 = metricList.get(0);
+        // 检查度量路径上是否有组织维表
         boolean hasOrgTable = SqlBuilderHelper.hasOrgTable(getDataPrivCtrlInfo(), metrics0.getPathsMap());
         boolean mainSlaveTabPeriod = needSlaveTablePeriod(metricList, dimensionList);
 
         SqlComponent component = new SqlComponent();
-        String tmpTbName = subJoinTables(component, mainTbPathAlias, tempTbPathAlias, hasOrgTable, result,
-                metrics0, cacheTempPath, tempTablesMap, mainTablesToTempTablesMap, mainTablesMap,
-                mainSlaveTabPeriod);
+        String tmpTbName = subJoinTables(component, mainTbPathAlias, tempTbPathAlias, hasOrgTable,
+                result, metrics0, cacheTempPath, tempTablesMap, mainTablesToTempTablesMap, mainTablesMap, mainSlaveTabPeriod);
+
         Map<String, List<MetricsDimensionPathVo>> mainTbPaths = mainTablesMap.get(metrics0.getPath());
 
         SqlFuncEnum funcEnum = SqlFuncEnum.getFuncByName(metrics0.getFunc());
@@ -164,18 +165,13 @@ public abstract class AbstractGrowthOrTotalSqlBuilder extends AbstractSqlBuilder
                 tempTbPathAlias, hasOrgTable, tmpTbName, replaceLevelColumn, funcEnum);
         component.field.append(fields);
 
-        if (SqlBuilderHelper.isGrowth(funcEnum)) {
-            // 同比、环比
-            this.appendWhere(false, component.where, metricList, dimensionType, condList, mainTbPathAlias,
-                    mainTbPaths, tempTbPathAlias, funcEnum);
+        if (SqlBuilderHelper.isGrowthOrTotal(funcEnum)) {
+            // 同比、环比、年/月累计 需要关联时间维表
+            this.appendWhere(false, component.where, metricList, dimensionType,
+                    condList, mainTbPathAlias, mainTbPaths, tempTbPathAlias, funcEnum);
         }
-        if (SqlBuilderHelper.isTotal(funcEnum)) {
-            // 月/年累计 需要关联时间维表
-            this.appendWhere(false, component.where, metricList, dimensionType, condList, mainTbPathAlias,
-                    mainTbPaths, tempTbPathAlias, funcEnum);
-        }
-        this.mergeGroupBy(metricList, dimensionList, component.group, mainTbPathAlias, tempTbPathAlias, hasOrgTable,
-                tmpTbName, replaceLevelColumn);
+        this.mergeGroupBy(metricList, dimensionList, component.group, mainTbPathAlias,
+                tempTbPathAlias, hasOrgTable, tmpTbName, replaceLevelColumn);
 
         SubQuerySqlQo relativeDimension = new SubQuerySqlQo();
         relativeDimension.setDimensionList(dimensionList);
