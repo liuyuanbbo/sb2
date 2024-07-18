@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -57,5 +59,20 @@ public class ObjTest {
         public OrgDimension(String orgLevel) {
             this.orgLevel = orgLevel;
         }
+    }
+
+    @Test
+    public void tt3() {
+        TreeMap<String, Object> map = new TreeMap<>();
+        map.put("3", "CC");
+        map.put("2", "BB");
+        map.put("1", "AA");
+        map.put("4", "DD");
+
+        SortedMap<String, Object> sortMap = map.headMap("3");
+        String firstKey = sortMap.firstKey();
+        String lastKey = sortMap.lastKey();
+
+        log.info("{} {}", firstKey, lastKey);
     }
 }

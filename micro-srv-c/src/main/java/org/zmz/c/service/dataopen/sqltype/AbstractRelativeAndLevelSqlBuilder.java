@@ -569,28 +569,11 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         List<SubQuerySqlQo> subSqlList = new ArrayList<>();
         ResultSql subQueryToTmpResult = subQueryToTmTab ? result : null;
         if (CollUtil.isNotEmpty(growthOrTotalsMetric)) {
-            Map<String, List<DatasetColumnQo>> funcGroups = growthOrTotalsMetric.stream()
-                    .collect(Collectors.groupingBy(DatasetColumnQo::getFunc));
-
-            Map<String, List<DatasetColumnQo>> tmpMap = new LinkedHashMap<>();
-            for (DatasetColumnQo datasetColumnQo : growthOrTotalsMetric) {
-                String funcName = datasetColumnQo.getFunc();
-                SqlFuncEnum sqlfuncEnum = SqlFuncEnum.getFuncByName(funcName);
-                List<DatasetColumnQo> tmpQoList = tmpMap.getOrDefault(funcName, new ArrayList<>());
-                if (CollUtil.isEmpty(tmpQoList)) {
-                    tmpMap.put(funcName, tmpQoList);
-                    SqlFuncEnum sameSqlFuncEnum = SqlFuncEnum.mergeSameFuncEnum(sqlfuncEnum);
-                    if (sameSqlFuncEnum != null) {
-                        String sameFunName = sameSqlFuncEnum.name();
-                        tmpMap.put(sameFunName, tmpQoList);
-                    }
-                }
-                tmpQoList.add(datasetColumnQo);
-            }
+            Map<String, List<DatasetColumnQo>> funcGroups = mergeGrowFuncForSubQuery(growthOrTotalsMetric);
 
             Map<SqlFuncEnum, SubQuerySqlQo> growthSubMap = new HashMap<>();
             // 按同环比分类，比上期/比上期%，统计账期条件一样的，应该分为一组
-            for (Map.Entry<String, List<DatasetColumnQo>> entry : tmpMap.entrySet()) {
+            for (Map.Entry<String, List<DatasetColumnQo>> entry : funcGroups.entrySet()) {
                 // 有同环比或者月/年累计
                 List<DatasetColumnQo> value = entry.getValue();
                 subSqlGrowthOrTotal(subSqlList, value, dimensionType, dimensionList, condList, needAppendPeriod, replaceLevelColumn, scheduleType, growthSubMap);
@@ -625,6 +608,32 @@ public abstract class AbstractRelativeAndLevelSqlBuilder extends AbstractGrowthO
         }
         // 合并同环比或者月年累计
         return mergeRelativeDims(singleSql, dimensionList, beforeMergeSql, subSqlList, replaceLevelColumn, subQueryToTmpResult);
+    }
+
+    /**
+     * 合并 同环比函数,方便 join 合并后 查询字段也要合并
+     */
+    private Map<String, List<DatasetColumnQo>> mergeGrowFuncForSubQuery(List<DatasetColumnQo> growthOrTotalsMetric) {
+        Map<String, List<DatasetColumnQo>> tmpMap = new LinkedHashMap<>();
+        for (DatasetColumnQo datasetColumnQo : growthOrTotalsMetric) {
+            String funcName = datasetColumnQo.getFunc();
+            SqlFuncEnum sqlfuncEnum = SqlFuncEnum.getFuncByName(funcName);
+            List<DatasetColumnQo> tmpQoList = tmpMap.getOrDefault(funcName, new ArrayList<>());
+            if (CollUtil.isEmpty(tmpQoList)) {
+                tmpMap.put(funcName, tmpQoList);
+                SqlFuncEnum sameSqlFuncEnum = SqlFuncEnum.mergeSameFuncEnum(sqlfuncEnum);
+                if (sameSqlFuncEnum != null) {
+                    String sameFunName = sameSqlFuncEnum.name();
+                    tmpMap.put(sameFunName, tmpQoList);
+                }
+            } else {
+                List<DatasetColumnQo> copyQoList = new ArrayList<>(tmpQoList);
+                copyQoList.add(0, datasetColumnQo);
+                tmpMap.put(funcName, copyQoList);
+            }
+            tmpQoList.add(datasetColumnQo);
+        }
+        return tmpMap;
     }
 
     /**
