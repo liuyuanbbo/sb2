@@ -75,4 +75,22 @@ public class ObjTest {
 
         log.info("{} {}", firstKey, lastKey);
     }
+
+    @Test
+    public void tt4() {
+        boolean b = true;
+        List<String> list = List.of("A");
+        b = b && list.contains("B");
+
+        log.info("{}", b);
+    }
+
+    @Test
+    public void tt5() {
+        boolean b = "O".equalsIgnoreCase("0");
+        boolean b2 = "O".equalsIgnoreCase("o");
+        log.info("{}", b);
+        log.info("{}", b2);
+    }
+
 }
