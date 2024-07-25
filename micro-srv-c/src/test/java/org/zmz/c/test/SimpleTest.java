@@ -292,4 +292,15 @@ public class SimpleTest {
         log.info("{}", partitionName);
     }
 
+    @Test
+    public void t14() {
+        String s1 = "你好";
+        String s2 = s1;
+
+        s1 = "hello world";
+
+        log.info("{}", s1);
+        log.info("{}", s2);
+    }
+
 }

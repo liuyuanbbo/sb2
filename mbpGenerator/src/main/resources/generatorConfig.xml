@@ -6,7 +6,8 @@
     <!--引用外部数据库配置文件-->
     <!--    <properties resource="maria-local.properties"/>-->
     <!--<properties resource="mysql-dev-dataopen-157-8003.properties"/>-->
-    <properties resource="mysql-dev-dataopen-157-8001.properties"/>
+<!--    <properties resource="mysql-dev-dataopen-157-8001.properties"/>-->
+    <properties resource="mysql-dev-datamaster-154-8003.properties"/>
     <!--targetRuntime="MyBatis3Simple"表示生成简易版本，这里创建原始版本,参数为MyBatis3-->
     <context id="testTables" targetRuntime="MyBatis3">
         <commentGenerator>
@@ -55,7 +56,7 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         <!-- 指定生成哪些数据库表，要和数据库中对应，不能写错了，这里以t_user表为例，可以写多个；domainObjectName是要生成的实体类名称-->
-        <table domainObjectName="DopUserFavorLog" tableName="dop_user_favor_log"/>
+        <table domainObjectName="MasterDataReference" tableName="master_data_reference"/>
 
         <!-- 有些表的字段需要指定java类型
          <table schema="" tableName="">
