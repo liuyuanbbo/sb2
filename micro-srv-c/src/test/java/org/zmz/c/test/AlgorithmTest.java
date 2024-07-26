@@ -2,6 +2,7 @@ package org.zmz.c.test;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
@@ -80,5 +81,14 @@ public class AlgorithmTest {
         String sortKeyCode = StrUtil.join(",", treeMap.values());
 
         return Pair.of(sortPrimaryKey, sortKeyCode);
+    }
+
+    @Test
+    public void t4() {
+        String sMetaCode = "8!@!172.21.72.155!@!8003!@!test_wy!@!test_wy!@!bfm_test";
+        String md5Str = DigestUtil.md5Hex(sMetaCode);
+        log.info("{}", md5Str);
+        //cbdb488604169071deaa720ff8233c6e
+        //cbdb488604169071deaa720ff8233c6e
     }
 }
