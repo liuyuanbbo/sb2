@@ -93,4 +93,11 @@ public class ObjTest {
         log.info("{}", b2);
     }
 
+    @Test
+    public void tt6() {
+        //9223372036854775807
+        //1570684347384918018
+        log.info("{}", Long.MAX_VALUE);
+    }
+
 }
