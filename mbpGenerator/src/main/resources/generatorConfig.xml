@@ -6,8 +6,8 @@
     <!--引用外部数据库配置文件-->
     <!--    <properties resource="maria-local.properties"/>-->
     <!--<properties resource="mysql-dev-dataopen-157-8003.properties"/>-->
-<!--    <properties resource="mysql-dev-dataopen-157-8001.properties"/>-->
-    <properties resource="mysql-dev-datamaster-154-8003.properties"/>
+    <!--    <properties resource="mysql-dev-dataopen-157-8001.properties"/>-->
+    <properties resource="mysql-dev-dataportal-154-8003.properties"/>
     <!--targetRuntime="MyBatis3Simple"表示生成简易版本，这里创建原始版本,参数为MyBatis3-->
     <context id="testTables" targetRuntime="MyBatis3">
         <commentGenerator>
@@ -26,6 +26,7 @@
                         connectionURL="${jdbc.url}"
                         userId="${jdbc.username}"
                         password="${jdbc.password}">
+            <property name="nullCatalogMeansCurrent" value="true"/>
         </jdbcConnection>
 
         <!-- 默认false，把JDBC DECIMAL和NUMERIC类型解析为Integer，为true时把JDBC DECIMAL 和
@@ -35,7 +36,7 @@
         </javaTypeResolver>
 
         <!-- targetProject:POJO类生成的位置 -->
-        <javaModelGenerator targetPackage="org.zmz.model"
+        <javaModelGenerator targetPackage="com.ztesoft.standard.genfile.bean"
                             targetProject="src/main/java">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
@@ -43,24 +44,32 @@
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
         <!-- targetProject:mapper映射文件生成的位置 -->
-        <sqlMapGenerator targetPackage="mapper"
+        <sqlMapGenerator targetPackage="com.ztesoft.standard.genfile.dao"
                          targetProject="src/main/resources">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- targetPackage：mapper接口生成的位置 -->
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="org.zmz.mapper"
+                             targetPackage="com.ztesoft.standard.genfile.dao"
                              targetProject="src/main/java">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         <!-- 指定生成哪些数据库表，要和数据库中对应，不能写错了，这里以t_user表为例，可以写多个；domainObjectName是要生成的实体类名称-->
-        <table domainObjectName="MasterDataReference" tableName="master_data_reference"/>
+        <table schema="InjectionLabel" tableName="injection_label"
+               enableSelectByPrimaryKey="true"
+               enableInsert="true"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableUpdateByPrimaryKey="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               enableDeleteByPrimaryKey="true"
+               selectByExampleQueryId="true">
 
-        <!-- 有些表的字段需要指定java类型
-         <table schema="" tableName="">
-            <columnOverride column="" javaType="" />
-        </table> -->
+            <columnOverride column="injection_label_desc" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <columnOverride column="create_type" javaType="java.lang.String" jdbcType="VARCHAR" />
+        </table>
     </context>
 </generatorConfiguration>
