@@ -40,6 +40,7 @@ CREATE TABLE `injection_label`
     `injection_label_desc` text COMMENT '标签描述',
     `grp_id`               bigint(18)          DEFAULT NULL COMMENT '标签目录',
     `heat_value`           bigint(18)          DEFAULT 0 COMMENT '标签热度值',
+    `icon`                 text COMMENT '图标',
     `create_date`          datetime            DEFAULT NULL COMMENT '标签创建时间',
     `update_date`          datetime(6)         DEFAULT NULL COMMENT '更新时间',
     `status_cd`            varchar(10)         DEFAULT NULL COMMENT '状态',
