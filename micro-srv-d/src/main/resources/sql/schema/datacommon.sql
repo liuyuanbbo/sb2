@@ -1,3 +1,4 @@
+-- 已经存在的表 不需要重新进行新建
 CREATE TABLE `stan_catalogue_dir`
 (
     `dir_id`            int(10) NOT NULL COMMENT '目录id',
@@ -73,3 +74,28 @@ CREATE TABLE `injection_label_rela`
     KEY `idx_data_id` (`data_id`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='标签应用表';
+
+
+INSERT INTO dataportal.tfm_sequences(SEQUENCE_NAME, INCREMENT_BY, CURRENT_VALUE, MIN_VALUE, MAX_VALUE, COMMENTS, CYCLE,
+                                     tf_sequence_id)
+SELECT 'SEQ_INJECTION_LABEL',
+       1,
+       0,
+       1,
+       9999999999999,
+       '标签表',
+       NULL,
+       MAX(tf_sequence_id) + 1
+FROM dataportal.tfm_sequences;
+
+INSERT INTO dataportal.tfm_sequences(SEQUENCE_NAME, INCREMENT_BY, CURRENT_VALUE, MIN_VALUE, MAX_VALUE, COMMENTS, CYCLE,
+                                     tf_sequence_id)
+SELECT 'SEQ_INJECTION_LABEL_RELA',
+       1,
+       0,
+       1,
+       9999999999999,
+       '标签应用表',
+       NULL,
+       MAX(tf_sequence_id) + 1
+FROM dataportal.tfm_sequences;
