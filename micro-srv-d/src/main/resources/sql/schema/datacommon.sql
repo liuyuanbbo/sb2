@@ -34,42 +34,44 @@ CREATE TABLE `stan_catalogue_dir`
   DEFAULT CHARSET = utf8 COMMENT ='标准目录表';
 
 drop table if exists injection_label;
-CREATE TABLE `injection_label`
+drop table if exists stan_tag;
+CREATE TABLE `stan_tag`
 (
-    `injection_label_id`   bigint(18) NOT NULL DEFAULT '0' COMMENT '注智标签标识',
-    `injection_label_name` varchar(50)         DEFAULT NULL COMMENT '标签名称',
-    `injection_label_desc` text COMMENT '标签描述',
-    `grp_id`               bigint(18)          DEFAULT NULL COMMENT '标签目录',
-    `heat_value`           bigint(18)          DEFAULT 0 COMMENT '标签热度值',
-    `icon`                 text COMMENT '图标',
-    `create_date`          datetime            DEFAULT NULL COMMENT '标签创建时间',
-    `update_date`          datetime(6)         DEFAULT NULL COMMENT '更新时间',
-    `status_cd`            varchar(10)         DEFAULT NULL COMMENT '状态',
-    `create_staff`         bigint(18)          DEFAULT NULL COMMENT '创建人标识',
-    `create_staff_code`    varchar(60)         DEFAULT NULL COMMENT '工号',
-    `update_staff`         bigint(18)          DEFAULT NULL COMMENT '修改人',
-    `create_type`          text COMMENT '创建类型',
-    PRIMARY KEY (`injection_label_id`) USING BTREE,
-    KEY `idx_injection_label_name` (`injection_label_name`) USING BTREE,
+    `tag_id`            bigint(18) NOT NULL DEFAULT '0' COMMENT '注智标签标识',
+    `tag_name`          varchar(50)         DEFAULT NULL COMMENT '标签名称',
+    `tag_desc`          text COMMENT '标签描述',
+    `grp_id`            bigint(18)          DEFAULT NULL COMMENT '标签目录',
+    `heat_value`        bigint(18)          DEFAULT 0 COMMENT '标签热度值',
+    `icon`              text COMMENT '图标',
+    `create_date`       datetime            DEFAULT NULL COMMENT '标签创建时间',
+    `update_date`       datetime(6)         DEFAULT NULL COMMENT '更新时间',
+    `status_cd`         varchar(10)         DEFAULT NULL COMMENT '状态',
+    `create_staff`      bigint(18)          DEFAULT NULL COMMENT '创建人标识',
+    `create_staff_code` varchar(60)         DEFAULT NULL COMMENT '工号',
+    `update_staff`      bigint(18)          DEFAULT NULL COMMENT '修改人',
+    `create_type`       varchar(60) COMMENT '创建类型',
+    PRIMARY KEY (`tag_id`) USING BTREE,
+    KEY `idx_injection_label_name` (`tag_name`) USING BTREE,
     KEY `idx_grp_id` (`grp_id`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='标签表';
 
 
 drop table if exists injection_label_rela;
-CREATE TABLE `injection_label_rela`
+drop table if exists stan_tag_rela;
+CREATE TABLE `stan_tag_rela`
 (
-    `rela_id`            bigint(18) NOT NULL DEFAULT '0' COMMENT '注智标签标识',
-    `injection_label_id` bigint(18) NOT NULL DEFAULT '0' COMMENT '标签id',
-    `data_type`          varchar(50)         DEFAULT NULL COMMENT '打标对象类型：用户USER，数据目录DATA_CATALOG，派生指标DIM_INDEX_INFO，原子指标PRO_INDEX_INFO，模型META_MODEL文件META_FILE，消息META_MESSAGE，数据服务 API',
-    `data_id`            bigint(18) NOT NULL COMMENT '打标对象标识',
-    `create_date`        datetime            DEFAULT NULL COMMENT '标签创建时间',
-    `update_date`        datetime(6)         DEFAULT NULL COMMENT '更新时间',
-    `status_cd`          varchar(10)         DEFAULT NULL COMMENT '状态',
-    `create_staff`       bigint(18)          DEFAULT NULL COMMENT '创建人标识',
-    `create_staff_code`  varchar(60)         DEFAULT NULL COMMENT '工号',
+    `rela_id`           bigint(18) NOT NULL DEFAULT '0' COMMENT '注智标签标识',
+    `tag_id`            bigint(18) NOT NULL DEFAULT '0' COMMENT '标签id',
+    `data_type`         varchar(50)         DEFAULT NULL COMMENT '打标对象类型：用户USER，数据目录DATA_CATALOG，派生指标DIM_INDEX_INFO，原子指标PRO_INDEX_INFO，模型META_MODEL文件META_FILE，消息META_MESSAGE，数据服务 API',
+    `data_id`           bigint(18) NOT NULL COMMENT '打标对象标识',
+    `create_date`       datetime            DEFAULT NULL COMMENT '标签创建时间',
+    `update_date`       datetime(6)         DEFAULT NULL COMMENT '更新时间',
+    `status_cd`         varchar(10)         DEFAULT NULL COMMENT '状态',
+    `create_staff`      bigint(18)          DEFAULT NULL COMMENT '创建人标识',
+    `create_staff_code` varchar(60)         DEFAULT NULL COMMENT '工号',
     PRIMARY KEY (`rela_id`) USING BTREE,
-    KEY `idx_injection_label_id` (`injection_label_id`) USING BTREE,
+    KEY `idx_injection_label_id` (`tag_id`) USING BTREE,
     KEY `idx_data_type` (`data_type`) USING BTREE,
     KEY `idx_data_id` (`data_id`) USING BTREE
 ) ENGINE = InnoDB
@@ -78,7 +80,7 @@ CREATE TABLE `injection_label_rela`
 
 INSERT INTO dataportal.tfm_sequences(SEQUENCE_NAME, INCREMENT_BY, CURRENT_VALUE, MIN_VALUE, MAX_VALUE, COMMENTS, CYCLE,
                                      tf_sequence_id)
-SELECT 'SEQ_INJECTION_LABEL',
+SELECT 'SEQ_STAN_TAG',
        1,
        0,
        1,
@@ -90,7 +92,7 @@ FROM dataportal.tfm_sequences;
 
 INSERT INTO dataportal.tfm_sequences(SEQUENCE_NAME, INCREMENT_BY, CURRENT_VALUE, MIN_VALUE, MAX_VALUE, COMMENTS, CYCLE,
                                      tf_sequence_id)
-SELECT 'SEQ_INJECTION_LABEL_RELA',
+SELECT 'SEQ_STAN_TAG_RELA',
        1,
        0,
        1,
@@ -99,3 +101,10 @@ SELECT 'SEQ_INJECTION_LABEL_RELA',
        NULL,
        MAX(tf_sequence_id) + 1
 FROM dataportal.tfm_sequences;
+
+delete
+from dc_system_config
+where PARAM_CODE = 'PRIV_TAG_MGR';
+
+INSERT INTO dc_system_config (PARAM_ID, PARAM_CODE, PARAM_DESC, PARAM_TYPE, PARAM_VALUE)
+VALUES (NEXTVAL('SEQ_CONFIG_ID'), 'PRIV_TAG_MGR', '标签管理权限', 'B', 'N');

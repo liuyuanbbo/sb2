@@ -57,7 +57,7 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         <!-- 指定生成哪些数据库表，要和数据库中对应，不能写错了，这里以t_user表为例，可以写多个；domainObjectName是要生成的实体类名称-->
-        <table schema="InjectionLabel" tableName="injection_label"
+        <table schema="StanTag" tableName="stan_tag"
                enableSelectByPrimaryKey="true"
                enableInsert="true"
                enableCountByExample="true"
@@ -68,8 +68,8 @@
                enableDeleteByPrimaryKey="true"
                selectByExampleQueryId="true">
 
-            <columnOverride column="injection_label_desc" javaType="java.lang.String" jdbcType="VARCHAR" />
-            <columnOverride column="create_type" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <columnOverride column="tag_desc" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <columnOverride column="icon" javaType="java.lang.String" jdbcType="VARCHAR" />
         </table>
     </context>
 </generatorConfiguration>
