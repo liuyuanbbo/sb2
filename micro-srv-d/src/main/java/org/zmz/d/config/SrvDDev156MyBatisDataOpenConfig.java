@@ -1,4 +1,4 @@
-package org.zmz.d.test.config;
+package org.zmz.d.config;
 
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -13,8 +13,11 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+/**
+ * @author Zmz
+ */
 @Configuration
-@MapperScan(basePackages = "org.zmz.d.test.mapper.dev156.dataopen",
+@MapperScan(basePackages = "org.zmz.d.mapper.dev156.dataopen",
         sqlSessionTemplateRef = "dev156DataOpenSqlSessionTemplate")
 public class SrvDDev156MyBatisDataOpenConfig {
     @Resource
@@ -25,7 +28,7 @@ public class SrvDDev156MyBatisDataOpenConfig {
         MybatisSqlSessionFactoryBean sqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dev156DataOpenMysqlDataSource);
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath:mapper/dev156/dataopen/*Mapper.xml"));
+                .getResources("classpath*:mapper/dev156/dataopen/*Mapper.xml"));
         return sqlSessionFactoryBean.getObject();
     }
 

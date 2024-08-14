@@ -6,7 +6,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.zmz.d.test.pojo.TestObjInfo;
+import org.zmz.d.mapper.dev156.dataopen.TestObjInfoMapper;
+import org.zmz.d.pojo.ObjInfo;
 
 import java.util.List;
 
@@ -19,16 +20,16 @@ public class MapperTest {
 
     @Test
     public void t1() {
-        TestObjInfo testObjInfo = testObjInfoMapper.selectById(2342L);
-        log.info("{}", ReflectionToStringBuilder.toString(testObjInfo, ToStringStyle.MULTI_LINE_STYLE));
+        ObjInfo objInfo = testObjInfoMapper.selectById(2342L);
+        log.info("{}", ReflectionToStringBuilder.toString(objInfo, ToStringStyle.MULTI_LINE_STYLE));
     }
 
     @Test
     public void t2() {
-        List<TestObjInfo> testObjInfos = testObjInfoMapper.selectList(null);
-        for (TestObjInfo testObjInfo : testObjInfos) {
-            log.info("====================================================");
-            log.info("{}", ReflectionToStringBuilder.toString(testObjInfo, ToStringStyle.MULTI_LINE_STYLE));
+        List<ObjInfo> objInfos = testObjInfoMapper.selectList(null);
+        for (ObjInfo objInfo : objInfos) {
+            log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            log.info("{}", ReflectionToStringBuilder.toString(objInfo, ToStringStyle.MULTI_LINE_STYLE));
             log.info("====================================================");
         }
     }

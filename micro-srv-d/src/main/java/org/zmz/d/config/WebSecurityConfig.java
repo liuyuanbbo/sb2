@@ -1,4 +1,4 @@
-package org.zmz.d.test.config;
+package org.zmz.d.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

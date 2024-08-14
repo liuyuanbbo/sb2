@@ -1,0 +1,84 @@
+{
+  "properties": [
+    {
+      "name": "spring.datasource.mysql.dev156.dataopen.driverClassName",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.mysql.dev156.dataopen.driverClassName."
+    },
+    {
+      "name": "spring.datasource.mysql.dev156.dataopen.jdbcUrl",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.mysql.dev156.dataopen.jdbcUrl."
+    },
+    {
+      "name": "spring.datasource.mysql.dev156.dataopen.username",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.mysql.dev156.dataopen.username."
+    },
+    {
+      "name": "spring.datasource.mysql.dev156.dataopen.password",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.mysql.dev156.dataopen.password."
+    },
+    {
+      "name": "spring.datasource.mysql.dev154.dataportal.driverClassName",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.mysql.dev154.dataportal.driverClassName."
+    },
+    {
+      "name": "spring.datasource.mysql.dev154.dataportal.jdbcUrl",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.mysql.dev154.dataportal.jdbcUrl."
+    },
+    {
+      "name": "spring.datasource.mysql.dev154.dataportal.username",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.mysql.dev154.dataportal.username."
+    },
+    {
+      "name": "spring.datasource.mysql.dev154.dataportal.password",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.mysql.dev154.dataportal.password."
+    },
+    {
+      "name": "spring.datasource.yoga14s.mysql.driverClassName",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.yoga14s.mysql.driverClassName."
+    },
+    {
+      "name": "spring.datasource.yoga14s.mysql.jdbcUrl",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.yoga14s.mysql.jdbcUrl."
+    },
+    {
+      "name": "spring.datasource.yoga14s.mysql.username",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.yoga14s.mysql.username."
+    },
+    {
+      "name": "spring.datasource.yoga14s.mysql.password",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.yoga14s.mysql.password."
+    },
+    {
+      "name": "spring.datasource.yoga14s.pgsql.driverClassName",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.yoga14s.pgsql.driverClassName."
+    },
+    {
+      "name": "spring.datasource.yoga14s.pgsql.jdbcUrl",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.yoga14s.pgsql.jdbcUrl."
+    },
+    {
+      "name": "spring.datasource.yoga14s.pgsql.username",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.yoga14s.pgsql.username."
+    },
+    {
+      "name": "spring.datasource.yoga14s.pgsql.password",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.yoga14s.pgsql.password."
+    }
+  ]
+}
