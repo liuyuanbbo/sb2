@@ -6,7 +6,7 @@
     </appender>
 
     <logger name="org.springframework" level="INFO"/>
-    <logger name="org.zmz.security" level="DEBUG"/>
+    <logger name="org.zmz.a" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

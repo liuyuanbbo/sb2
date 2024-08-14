@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.zmz.security.mapper.dataportal.StanAuditOrderMapper">
-    <resultMap id="baseMap" type="org.zmz.security.model.StanAuditOrder">
+<mapper namespace="org.zmz.a.mapper.dataportal.StanAuditOrderMapper">
+    <resultMap id="baseMap" type="org.zmz.a.model.StanAuditOrder">
         <id column="order_id" property="orderId"/>
         <result column="audit_obj_id" property="auditObjId"/>
         <result column="audit_obj_type" property="auditObjType"/>

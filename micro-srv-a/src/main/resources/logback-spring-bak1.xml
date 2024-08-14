@@ -1,7 +1,7 @@
 <configuration debug="false">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="org.zmz.security.logback.CustomerPatternLayout"> <!-- 自定义layout -->
+            <layout class="org.zmz.a.logback.CustomerPatternLayout"> <!-- 自定义layout -->
                 <maskPattern>\"certId\"\s*:\s*\"(.*?)\"</maskPattern> <!--json地址格式 -->
                 <maskPattern>\"password\"\s*:\s*\"(.*?)\"</maskPattern> <!--json地址格式 -->
                 <pattern>%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{10}):%boldMagenta(%method) - %cyan(%msg%n)</pattern>
@@ -10,7 +10,7 @@
     </appender>
 
     <logger name="org.springframework" level="INFO"/>
-    <logger name="org.zmz.security" level="DEBUG"/>
+    <logger name="org.zmz.a" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

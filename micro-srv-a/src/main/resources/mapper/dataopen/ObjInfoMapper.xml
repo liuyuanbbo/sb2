@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.zmz.security.mapper.dataopen.ObjInfoMapper">
-    <resultMap id="baseMap" type="org.zmz.security.model.dataopen.ObjInfo">
+<mapper namespace="org.zmz.a.mapper.dataopen.ObjInfoMapper">
+    <resultMap id="baseMap" type="org.zmz.a.model.dataopen.ObjInfo">
         <id column="object_id" property="objectId"/>
         <result column="parent_id" property="parentId"/>
         <result column="grp_id" property="grpId"/>
@@ -33,7 +33,7 @@
         select now()
     </select>
 
-    <select id="queryConditionByChoose" resultMap="baseMap" parameterType="org.zmz.security.vo.request.ObjInfoQueryQo">
+    <select id="queryConditionByChoose" resultMap="baseMap" parameterType="org.zmz.a.vo.request.ObjInfoQueryQo">
         select *
         from obj_info
         where status_cd != '1200'
@@ -52,7 +52,7 @@
         </choose>
     </select>
 
-    <select id="queryCondition" resultMap="baseMap" parameterType="org.zmz.security.vo.request.ObjInfoQueryQo">
+    <select id="queryCondition" resultMap="baseMap" parameterType="org.zmz.a.vo.request.ObjInfoQueryQo">
         select *
         from obj_info
         where status_cd != '1200'
