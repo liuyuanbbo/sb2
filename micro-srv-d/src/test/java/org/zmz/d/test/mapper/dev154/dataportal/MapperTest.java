@@ -22,6 +22,7 @@ public class MapperTest {
     @Autowired
     StanTagRelaMapper stanTagRelaMapper;
 
+
     @Test
     public void t1() {
         StanTag stanTag = stanTagMapper.selectById(10L);
@@ -33,4 +34,5 @@ public class MapperTest {
         List<StanTagRela> stanTagRelas = stanTagRelaMapper.selectList(null);
         log.info("{}", ReflectionToStringBuilder.toString(stanTagRelas, ToStringStyle.MULTI_LINE_STYLE));
     }
+
 }
