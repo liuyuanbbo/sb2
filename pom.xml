@@ -35,7 +35,8 @@
         <guava.version>32.1.1-jre</guava.version>
         <jackson-bom.version>2.17.2</jackson-bom.version>
         <netty.version>4.1.112.Final</netty.version>
-        <commmons-compress.version>1.27.0</commmons-compress.version>
+        <commons-compress.version>1.27.0</commons-compress.version>
+        <commons-logging.version>1.3.2</commons-logging.version>
         <commons-io.version>2.16.1</commons-io.version>
         <spring-framework.version>5.3.37</spring-framework.version>
         <spring-security.version>5.8.12</spring-security.version>
