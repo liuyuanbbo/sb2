@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.zmz.d.mapper.dev156.dataopen.TestObjInfoMapper">
-    <resultMap id="BaseResultMap" type="org.zmz.d.pojo.ObjInfo">
+    <resultMap id="BaseResultMap" type="org.zmz.d.pojo.dev156.dataopen.ObjInfo">
         <id column="object_id" jdbcType="BIGINT" property="objectId"/>
         <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
         <result column="grp_id" jdbcType="BIGINT" property="grpId"/>

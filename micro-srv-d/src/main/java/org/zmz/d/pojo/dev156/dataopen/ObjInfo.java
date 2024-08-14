@@ -1,4 +1,4 @@
-package org.zmz.d.pojo;
+package org.zmz.d.pojo.dev156.dataopen;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;

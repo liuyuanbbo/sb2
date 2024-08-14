@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zmz.d.mapper.dev156.dataopen.TestObjInfoMapper;
-import org.zmz.d.pojo.ObjInfo;
+import org.zmz.d.pojo.dev156.dataopen.ObjInfo;
 
 import java.util.List;
 
