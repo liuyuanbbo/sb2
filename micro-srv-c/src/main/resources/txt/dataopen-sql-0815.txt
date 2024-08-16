@@ -1,0 +1,282 @@
+<select id="queryData" parameterType="java.util.Map" resultType="java.util.Map">
+        select distinct
+        <choose>
+            <when test="keywordSearch != null and keywordSearch != ''">
+                cds.service_id "serviceId", cds.key_words "keyWords"
+            </when>
+            <otherwise>
+                cds.service_id "serviceId", cds.src_model_id "srcModelId", cds.data_type "dataType",cds.data_sub_type "dataSubType", cds.data_code "dataCode",
+                cds.data_name "dataName", cds.supply_freq "supplyFreq", cds.enum_values "enumValues",cds.busi_desc "busiDesc",
+                coalesce(cds.apply_count, 0) "applyCount", cds.inject_count "injectCount", cds.comments,
+                cds.create_staff_id "createStaffId", cds.key_words "keyWords", cds.uml_mode "umlMode",
+                cds.uml_tool "umlTool", cds.use_scene "useScene", cds.state_date "stateDate", cds.data_unit "dataUnit",
+                case when cds.store_system = 'ES' then '1' else 0 end "isEs", cds.security_level "securityLevel",cds.src_type "srcType", cds.src_system "srcSystem"
+                <if test="searchName != null and searchName != ''">
+                    ,CASE WHEN upper(cds.data_name) LIKE concat(concat('%', upper(#{searchName,jdbcType=VARCHAR})), '%') THEN 3
+                    WHEN upper(cds.data_code) LIKE concat(concat('%', upper(#{searchName,jdbcType=VARCHAR})), '%') THEN 2 ELSE 0 END "sort"
+                </if>
+                <if test="_databaseId == 'postgresql'">
+                    ,cds.apply_count
+                </if>
+            </otherwise>
+        </choose>
+        from c_data_service cds
+        left join c_data_lan cdl
+        on cds.service_id = cdl.service_id
+        and cdl.state = '00A'
+        <if test="_databaseId == 'mysql' and accountId != null and isBuyed != null and (isBuyed == 1 or isBuyed == '1')">
+            LEFT JOIN (
+            SELECT
+            a.service_id, a.inter_kind_list, GROUP_CONCAT( b.stand_display_value ) interKindName
+            FROM (
+            SELECT
+            sdi.service_id, GROUP_CONCAT( DISTINCT smart.inter_kind ) inter_kind_list
+            FROM s_service_apply ssa, s_data_inst sdi, inject_smart smart
+            WHERE ssa.apply_id = sdi.apply_id
+            AND ssa.apply_staff_id = #{accountId}
+            AND ssa.service_type = 'DATA' AND sdi.extract_type = 'period'
+            AND sdi.smart_id = smart.smart_id
+            GROUP BY sdi.service_id
+            ) a
+            LEFT JOIN dc_system_config_list b ON b.stand_type IN ( 'AUTH_INITINTER_KIND', 'SYN_INITINTER_KIND' )
+            AND FIND_IN_SET( b.stand_code, a.inter_kind_list )
+            GROUP BY a.service_id
+            ) dik ON dik.service_id = cds.service_id
+        </if>
+        <if test="_databaseId == 'postgresql' and accountId != null and isBuyed != null and (isBuyed == 1 or isBuyed == '1')">
+            LEFT JOIN (
+            SELECT
+            a.service_id, a.inter_kind_list, array_to_string(ARRAY_AGG(b.stand_display_value), ',') interKindName
+            FROM (
+            SELECT
+            sdi.service_id, array_to_string(ARRAY_AGG(DISTINCT smart.inter_kind), ',') inter_kind_list
+            FROM s_service_apply ssa, s_data_inst sdi, inject_smart smart
+            WHERE ssa.apply_id = sdi.apply_id
+            AND ssa.apply_staff_id = #{accountId}
+            AND ssa.service_type = 'DATA' AND sdi.extract_type = 'period'
+            AND sdi.smart_id = smart.smart_id
+            GROUP BY sdi.service_id
+            ) a
+            LEFT JOIN dc_system_config_list b ON b.stand_type IN ('AUTH_INITINTER_KIND', 'SYN_INITINTER_KIND')
+            AND strpos(',' || a.inter_kind_list || ',', ',' || b.stand_code || ',' ) > 0
+            GROUP BY a.service_id, a.inter_kind_list
+            ) dik ON dik.service_id = cds.service_id
+        </if>
+        where cds.state = '00A'
+        and cds.catalog_id is not null
+        <if test="comAcctId != null and comAcctId != ''">
+            and cds.com_acct_id = #{comAcctId}
+        </if>
+        and 1 = (CASE WHEN (cds.data_type = '02' OR cds.data_type = '03') AND cds.store_system = 'ES' THEN 0 ELSE 1 END)
+        <choose>
+            <when test="dataType != null and dataType == '11'.toString()" />
+            <when test="dataType != null and dataType == '12'.toString()" />
+            <when test="dataType != null and dataType == '13'.toString()" />
+            <otherwise>
+                <if test="orgIdList != null and orgIdList.size() > 0">
+                    AND cdl.lan_id IN
+                    <foreach collection="orgIdList" open="(" item="item" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="authServiceIds != null and authServiceIds.size() > 0">
+                    <include refid="Auth_Where_Clause" />
+                </if>
+            </otherwise>
+        </choose>
+        <if test="serviceId != null and serviceId != ''">
+            and cds.service_id = #{serviceId}
+        </if>
+        <if test="dataType != null and dataType != ''">
+            and cds.data_type = #{dataType}
+        </if>
+        <if test="dataType != null and dataType == '02'.toString()">
+            and cds.catalog_id in (
+            select distinct b.grp_id from injection_label_grp b where b.grp_type = '1' and b.status_cd = '1000'
+            )
+        </if>
+        <if test="dataType != null and dataType == '05'.toString()">
+            AND cds.src_model_id IS NOT NULL
+            AND EXISTS (
+            SELECT 1 FROM tar_grp s WHERE s.tar_grp_id = cds.src_model_id
+            )
+        </if>
+        <if test="dataType2 != null and dataType2 == 'classicModel'">
+            AND EXISTS (
+            SELECT 1 FROM c_data_param cdp
+            WHERE cdp.param_code = 'isClassicModel' AND cdp.param_value = '1' AND cdp.service_id = cds.service_id
+            )
+        </if>
+        <if test="isOrder != null and isOrder == '1'.toString()">
+          and cds.apply_count > 0
+        </if>
+        <if test="isOrder != null and isOrder == '0'.toString()">
+            and cds.apply_count = 0
+        </if>
+        <if test="startPublishTime != null and startPublishTime != ''">
+            and cds.create_date <![CDATA[ >= ]]> #{startPublishTime}
+        </if>
+        <if test="endPublishTime != null and endPublishTime != ''">
+            and cds.create_date <![CDATA[ <= ]]> #{endPublishTime}
+        </if>
+
+        <if test="searchName != null and searchName != ''">
+            AND (upper(cds.data_name) LIKE concat('%', concat(upper(#{searchName,jdbcType=VARCHAR}), '%'))
+            OR upper(cds.data_code) LIKE concat('%', concat(upper(#{searchName,jdbcType=VARCHAR}), '%'))
+            <if test="dataType != null and dataType == '01'">
+                OR cds.service_id IN (
+                SELECT DISTINCT cdc.service_id
+                FROM c_data_column cdc
+                WHERE (upper(cdc.column_code) like concat('%', concat(upper(#{searchName,jdbcType=VARCHAR}), '%'))
+                OR upper(cdc.column_name) like concat('%', concat(upper(#{searchName,jdbcType=VARCHAR}), '%')) )
+                )
+                OR exists (
+                select 1 from c_data_src ds where
+                    cds.service_id = ds.service_id
+                    and upper(ds.src_schema_code) LIKE concat('%', concat(upper(#{searchName,jdbcType=VARCHAR}), '%'))
+                )
+            </if>
+            <if test="serviceIdList != null and serviceIdList.size() > 0">
+                or cds.service_id in
+                <foreach collection="serviceIdList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            )
+        </if>
+        <if test="applyServiceIdList != null and applyServiceIdList.size() > 0">
+            and cds.service_id in
+            <foreach collection="applyServiceIdList" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="catalogPathList != null and catalogPathList.size() > 0">
+            <choose>
+                <when test="dataType == '11'.toString() or dataType == '12'.toString() or dataType == '13'.toString()">
+                    <if test="catalogIds != null and catalogIds.size() > 0">
+                        <foreach collection="catalogIds" item="item" open=" and cds.catalog_id in (" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                </when>
+                <when test="dataType2 != null and dataType2 == 'classicModel'">
+                    AND EXISTS (
+                    SELECT 1
+                    FROM data_grp cdc, grp_mbr gm
+                    WHERE cdc.grp_type = '17' AND cdc.grp_id = gm.grp_id
+                    AND gm.status_cd = '00A' AND cds.src_model_id = gm.data_id
+                    AND cds.data_type = '01' AND cds.state = '00A'
+                    AND
+                    <foreach collection="catalogPathList" item="catalogPathList" index="index" open="(" close=")" separator="or">
+                        (cdc.path_code = #{catalogPathList} OR cdc.path_code LIKE concat(#{catalogPathList}, '.%'))
+                    </foreach>
+                    )
+                </when>
+                <otherwise>
+                    and cds.catalog_id in (
+                    select distinct b.grp_id
+                    <choose>
+                        <when test="dataType != null and dataType == '02'.toString()">
+                            from injection_label_grp b
+                        </when>
+                        <otherwise>
+                            FROM data_grp b
+                        </otherwise>
+                    </choose>
+                    <where>
+                        <if test="grpType != null and grpType != '1'.toString()">
+                            b.grp_type = #{grpType}
+                        </if>
+                        and
+                        <foreach collection="catalogPathList" item="catalogPathList" index="index" open="(" close=")" separator="or">
+                            (b.path_code = #{catalogPathList} or b.path_code like concat(#{catalogPathList}, '.%'))
+                        </foreach>
+                    </where>
+                    )
+                </otherwise>
+            </choose>
+        </if>
+        <if test="preSearch != null and preSearch != ''">
+            and cds.key_words is not null
+        </if>
+        <choose>
+            <when test="accountId != null and isBuyed != null and (isBuyed == 1 or isBuyed == '1')">
+                AND cds.service_id IN (
+                SELECT DISTINCT sdi.service_id
+                FROM s_service_apply ssa, s_data_inst sdi
+                WHERE ssa.apply_id = sdi.apply_id AND ssa.service_type = 'DATA'
+                AND ssa.state IN ( '00A' ) AND sdi.extract_type = 'period'
+                AND ssa.apply_staff_id = #{accountId}
+                <if test="_databaseId == 'mysql'">
+                    AND STR_TO_DATE(DATE_FORMAT(now(), '%Y-%m-%d'), '%Y-%m-%d %H:%i:%s') BETWEEN ssa.eff_date AND ssa.exp_date
+                </if>
+                <if test="_databaseId == 'oracle'">
+                    AND TO_DATE(TO_CHAR(sysdate,'yyyy-mm-dd'), 'yyyy-mm-dd HH24:mi:ss') BETWEEN ssa.eff_date AND ssa.exp_date
+                </if>
+                <if test="_databaseId == 'postgresql'">
+                    AND CURRENT_DATE BETWEEN ssa.eff_date AND ssa.exp_date
+                </if>
+                )
+            </when>
+            <when test="accountId != null and isBuyed != null and (isBuyed == 0 or isBuyed == '0')">
+                AND cds.service_id NOT IN (
+                SELECT DISTINCT sdi.service_id
+                FROM s_service_apply ssa, s_data_inst sdi
+                WHERE ssa.apply_id = sdi.apply_id AND ssa.service_type = 'DATA'
+                AND ssa.state IN ( '00A' ) AND sdi.extract_type = 'period'
+                AND ssa.apply_staff_id = #{accountId}
+                <if test="_databaseId == 'mysql'">
+                    AND STR_TO_DATE(DATE_FORMAT(now(), '%Y-%m-%d'), '%Y-%m-%d %H:%i:%s') BETWEEN ssa.eff_date AND ssa.exp_date
+                </if>
+                <if test="_databaseId == 'oracle'">
+                    AND TO_DATE(TO_CHAR(sysdate,'yyyy-mm-dd'), 'yyyy-mm-dd HH24:mi:ss') BETWEEN ssa.eff_date AND ssa.exp_date
+                </if>
+                <if test="_databaseId == 'postgresql'">
+                    AND CURRENT_DATE BETWEEN ssa.eff_date AND ssa.exp_date
+                </if>
+                )
+            </when>
+        </choose>
+        <if test="accountId != null and interKind != null and isBuyed != null and (isBuyed == 1 or isBuyed == '1')">
+            <if test="_databaseId == 'mysql'">
+                AND FIND_IN_SET(#{interKind}, dik.inter_kind_list)
+            </if>
+            <if test="_databaseId == 'postgresql'">
+                AND strpos(',' || dik.inter_kind_list || ',', ',' || #{interKind} || ',' ) > 0
+            </if>
+        </if>
+        <if test="srcModelId != null and srcModelId != ''">
+            and cds.src_model_id = #{srcModelId}
+        </if>
+        <choose>
+            <when test="keywordSearch != null and keywordSearch != ''"></when>
+            <when test="searchName != null and searchName != ''">
+                order by sort desc
+                <if test="sortBy == 'new' and sortType == 'asc'">
+                    , cds.state_date asc
+                </if>
+                <if test="sortBy == 'new' and sortType == 'desc'">
+                    , cds.state_date desc
+                </if>
+                <if test="sortBy == 'hot' and sortType == 'asc'">
+                    , cds.apply_count asc
+                </if>
+                <if test="sortBy == 'hot' and sortType == 'desc'">
+                    , cds.apply_count desc
+                </if>
+            </when>
+            <when test="sortBy == 'new' and sortType == 'asc'">
+                order by cds.state_date asc
+            </when>
+            <when test="sortBy == 'new' and sortType == 'desc'">
+                order by cds.state_date desc
+            </when>
+            <when test="sortBy == 'hot' and sortType == 'asc'">
+                order by cds.apply_count asc
+            </when>
+            <when test="sortBy == 'hot' and sortType == 'desc'">
+                order by cds.apply_count desc
+            </when>
+            <otherwise></otherwise>
+        </choose>
+    </select>
