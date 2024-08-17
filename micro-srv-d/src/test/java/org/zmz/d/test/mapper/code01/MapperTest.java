@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.zmz.d.mapper.code01.JobsMapper;
 import org.zmz.d.pojo.code01.Jobs;
 
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.util.List;
 
 @SpringBootTest
@@ -19,8 +21,12 @@ public class MapperTest {
     @Autowired
     JobsMapper jobsMapper;
 
+    @Resource
+    DataSource code01DataSource;
+
     @Test
     public void t1() {
+        log.info(">>>>>> {}", code01DataSource);
         List<Jobs> jobs = jobsMapper.selectList(null);
         for (Jobs job : jobs) {
             log.info("{}", ReflectionToStringBuilder.toString(job, ToStringStyle.MULTI_LINE_STYLE));

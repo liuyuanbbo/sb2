@@ -21,12 +21,12 @@ import javax.sql.DataSource;
         sqlSessionTemplateRef = "code01SqlSessionTemplate")
 public class SrvDCode01MyBatisWithConfig {
     @Resource
-    private DataSource code01Datasource;
+    private DataSource code01DataSource;
 
     @Bean(name = "code01SqlSessionFactory")
     public SqlSessionFactory code01SqlSessionFactory() throws Exception {
         MybatisSqlSessionFactoryBean sqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(code01Datasource);
+        sqlSessionFactoryBean.setDataSource(code01DataSource);
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
                 .getResources("classpath*:mapper/code01//*Mapper.xml"));
         return sqlSessionFactoryBean.getObject();
@@ -34,7 +34,7 @@ public class SrvDCode01MyBatisWithConfig {
 
     @Bean(name = "code01TransactionManager")
     public DataSourceTransactionManager code01TransactionManager() {
-        return new DataSourceTransactionManager(code01Datasource);
+        return new DataSourceTransactionManager(code01DataSource);
     }
 
     @Bean(name = "code01SqlSessionTemplate")

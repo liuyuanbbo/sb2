@@ -24,15 +24,15 @@ public class SrvDDataSourceConfig {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "yoga14sDatasource")
+    @Bean(name = "yoga14sDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.yoga14s")
-    public DataSource yoga14sDatasource() {
+    public DataSource yoga14sDataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "code01Datasource")
+    @Bean(name = "code01DataSource")
     @ConfigurationProperties(prefix = "spring.datasource.code01")
-    public DataSource code01Datasource() {
+    public DataSource code01DataSource() {
         return DataSourceBuilder.create().build();
     }
 }

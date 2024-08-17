@@ -21,12 +21,12 @@ import javax.sql.DataSource;
         sqlSessionTemplateRef = "yoga14sSqlSessionTemplate")
 public class SrvDYoga14sMyBatisWithConfig {
     @Resource
-    private DataSource yoga14sDatasource;
+    private DataSource yoga14sDataSource;
 
     @Bean(name = "yoga14sSqlSessionFactory")
     public SqlSessionFactory yoga14sSqlSessionFactory() throws Exception {
         MybatisSqlSessionFactoryBean sqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(yoga14sDatasource);
+        sqlSessionFactoryBean.setDataSource(yoga14sDataSource);
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
                 .getResources("classpath*:mapper/yoga14s//*Mapper.xml"));
         return sqlSessionFactoryBean.getObject();
@@ -34,7 +34,7 @@ public class SrvDYoga14sMyBatisWithConfig {
 
     @Bean(name = "yoga14sTransactionManager")
     public DataSourceTransactionManager yoga14sTransactionManager() {
-        return new DataSourceTransactionManager(yoga14sDatasource);
+        return new DataSourceTransactionManager(yoga14sDataSource);
     }
 
     @Bean(name = "yoga14sSqlSessionTemplate")
