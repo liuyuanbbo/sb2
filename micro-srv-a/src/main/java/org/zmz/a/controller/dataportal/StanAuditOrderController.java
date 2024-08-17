@@ -26,7 +26,7 @@ public class StanAuditOrderController {
     @PostMapping("/batchInsertDaAuditOrder")
     public R<Long> batchInsertDaAuditOrder(@RequestBody Map<String, Object> params) {
         List<BatchInsertDaAuditOrderReq> list = MapUtil.get(params, "reqList",
-                new TypeReference<List<BatchInsertDaAuditOrderReq>>() {
+                new TypeReference<>() {
                 });
         Long count = stanAuditOrderService.batchInsertDaAuditOrder(list);
         log.info("插入行数: {}", count);

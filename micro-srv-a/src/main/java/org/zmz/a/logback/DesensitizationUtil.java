@@ -1,5 +1,6 @@
 package org.zmz.a.logback;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -79,7 +80,7 @@ public class DesensitizationUtil {
             Map<String, Object> patternMap = YmlUtils.patternMap;
             if (!CollectionUtils.isEmpty(patternMap)) {
                 // 如果没有开启脱敏，返回""，则不会做脱敏操作
-                if (!this.checkOpen(patternMap)) {
+                if (!this.checkOpen()) {
                     return "";
                 }
                 // 获取一个原始Message的正则匹配器
@@ -104,10 +105,10 @@ public class DesensitizationUtil {
                                     continue;
                                 }
                                 patternVales = patternVales.replaceAll(" ", "");
-                                if(PASSWORD.equalsIgnoreCase(patternVales)){
+                                if (PASSWORD.equalsIgnoreCase(patternVales)) {
                                     String origin = regexMatcher.group(1) + regexMatcher.group(2) + regexMatcher.group(3);
                                     originalMessage = originalMessage.replace(origin, regexMatcher.group(1) + regexMatcher.group(2) + "******");
-                                    flag=true;
+                                    flag = true;
                                     // 密码级别的，直接替换为全*，继续下一轮匹配
                                     continue;
                                 }
@@ -115,13 +116,13 @@ public class DesensitizationUtil {
                                 String originalPatternValues = patternVales;
                                 // 判断这个规则是否带括号，带括号的需要把括号拿出来 - 核心规则
                                 String filterData = this.getBracketPattern(patternVales);
-                                if (!"".equals(filterData)) {
+                                if (StringUtils.isNotEmpty(filterData)) {
                                     patternVales = filterData;
                                 }
                                 // 以逗号分割
                                 String[] split = patternVales.split(",");
                                 value = getReplaceValue(value, patternVales, split, originalPatternValues);
-                                if (value != null && !"".equals(value)) {
+                                if (StringUtils.isNotEmpty(value)) {
                                     flag = true;
                                     String origin = regexMatcher.group(1) + regexMatcher.group(2) + regexMatcher.group(3);
                                     originalMessage = originalMessage.replace(origin, regexMatcher.group(1) + regexMatcher.group(2) + value);
@@ -145,15 +146,15 @@ public class DesensitizationUtil {
 
     /**
      * 获取替换后的value
-     * @param value value
-     * @param patternVales 核心规则
-     * @param split 分割
+     *
+     * @param value                 value
+     * @param patternVales          核心规则
+     * @param split                 分割
      * @param originalPatternValues 原始规则
-     * @return
      */
     private String getReplaceValue(String value, String patternVales, String[] split, String originalPatternValues) {
         if (split.length >= 2 && !"".equals(patternVales)) {
-            String append = "";
+            String append;
             String start = REGEX_NUM.matcher(split[0]).replaceAll("");
             String end = REGEX_NUM.matcher(split[1]).replaceAll("");
             int startSub = Integer.parseInt(start) - 1;
@@ -233,7 +234,6 @@ public class DesensitizationUtil {
     }
 
 
-
     /**
      * 将pattern的key值全部转换为小写
      *
@@ -241,14 +241,12 @@ public class DesensitizationUtil {
      * @return 转换后的pattern
      */
     public Map<String, Object> transformUpperCase(Map<String, Object> pattern) {
-        Map<String, Object> resultMap = new HashMap();
+        Map<String, Object> resultMap = new HashMap<>();
         if (pattern != null && !pattern.isEmpty()) {
             // 获取Key的Set集合
             Set<String> keySet = pattern.keySet();
-            Iterator<String> iterator = keySet.iterator();
             // 黄线强迫症，用for代替while
-            for (; iterator.hasNext(); ) {
-                String key = iterator.next();
+            for (String key : keySet) {
                 // 把key转换为小写字符串
                 String newKey = key.toLowerCase();
                 // 重新放入
@@ -277,13 +275,11 @@ public class DesensitizationUtil {
             if (patternVale instanceof List) {
                 List<Map<String, Object>> list = (List<Map<String, Object>>) patternVale;
                 if (!CollectionUtils.isEmpty(list)) {
-                    Iterator<Map<String, Object>> iterator = list.iterator();
                     // 遍历每一种规则
-                    while (iterator.hasNext()) {
-                        Map<String, Object> map = iterator.next();
+                    for (Map<String, Object> map : list) {
                         String patternValue = this.getPatternByMap(map, newValue);
                         // 如果是空的，表示没匹配上该规则，去匹配下一个规则
-                        if (!"".equals(patternValue)) {
+                        if (StringUtils.isNotEmpty(patternValue)) {
                             return patternValue;
                         }
                     }
@@ -320,7 +316,7 @@ public class DesensitizationUtil {
                 position = (String) positionObj;
             }
             // 如果日志中的值能够匹配，直接返回其对应的规则
-            if (!"".equals(customRegex) && value.matches(customRegex)) {
+            if (StringUtils.isNotEmpty(customRegex) && value.matches(customRegex)) {
                 return position;
             } else {
                 // 如果不能匹配到正则，就看他是不是内置规则
@@ -330,14 +326,14 @@ public class DesensitizationUtil {
                     defaultRegex = (String) defaultRegexObj;
                 }
                 // 这段代码写的多多少少感觉有点问题，可以写在一个if里，但是阿里检测代码的工具会警告
-                if (!"".equals(defaultRegex)) {
-                    if(IDENTITY.equals(defaultRegex) && isIdentity(value)){
+                if (StringUtils.isNotEmpty(defaultRegex)) {
+                    if (IDENTITY.equals(defaultRegex) && isIdentity(value)) {
                         return position;
-                    }else if(EMAIL.equals(defaultRegex) && isEmail(value)){
+                    } else if (EMAIL.equals(defaultRegex) && isEmail(value)) {
                         return position;
-                    }else if(PHONE.equals(defaultRegex) && isMobile(value)){
+                    } else if (PHONE.equals(defaultRegex) && isMobile(value)) {
                         return position;
-                    }else if(OTHER.equals(defaultRegex)){
+                    } else if (OTHER.equals(defaultRegex)) {
                         return position;
                     }
                 }
@@ -349,6 +345,7 @@ public class DesensitizationUtil {
 
     /**
      * 获取规则 - 判断是否带括号，带括号则返回括号内数据
+     *
      * @param patternVales 规则
      * @return 规则
      */
@@ -379,10 +376,9 @@ public class DesensitizationUtil {
     /**
      * 检查是否开启脱敏
      *
-     * @param pattern Yml配置文件内容 - Map格式
      * @return 是否开启脱敏
      */
-    private Boolean checkOpen(Map<String, Object> pattern) {
+    private Boolean checkOpen() {
         // 作为openFlag初始化的标记，第一次openFlag需要从Yml中获取是否开启
         // 后面就不用去Yml里获取了
         if (!initOpenFlag) {
@@ -397,8 +393,9 @@ public class DesensitizationUtil {
 
     /**
      * 脱敏处理
+     *
      * @param start 脱敏开始下标
-     * @param end 脱敏结束下标
+     * @param end   脱敏结束下标
      * @param value value
      */
     public String dataDesensitization(int start, int end, String value) {
