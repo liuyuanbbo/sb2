@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.zmz.d.mapper.code01.pgsql.EmployeesMapper">
-    <resultMap id="BaseResultMap" type="org.zmz.d.pojo.code01.pgsql.Employees">
+<mapper namespace="org.zmz.d.mapper.code01.EmployeesMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.d.pojo.code01.Employees">
         <id column="employee_id" jdbcType="INTEGER" property="employeeId" />
         <result column="first_name" jdbcType="VARCHAR" property="firstName" />
         <result column="last_name" jdbcType="VARCHAR" property="lastName" />

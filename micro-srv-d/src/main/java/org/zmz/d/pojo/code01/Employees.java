@@ -1,4 +1,4 @@
-package org.zmz.d.pojo.code01.pgsql;
+package org.zmz.d.pojo.code01;
 
 import lombok.Getter;
 import lombok.Setter;

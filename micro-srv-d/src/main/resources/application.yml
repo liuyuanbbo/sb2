@@ -9,7 +9,8 @@ spring:
       - conf/mysql-dev-dataopen-156.yml
       - conf/yoga14s-pgsql-local.yml
       - conf/yoga14s-mysql-local.yml
-      - conf/code01-pgsql-local.yml
+      #- conf/code01-pgsql-local.yml
+      - conf/code01-mariadb-local.yml
 logging:
   level:
     org.zmz.d: debug

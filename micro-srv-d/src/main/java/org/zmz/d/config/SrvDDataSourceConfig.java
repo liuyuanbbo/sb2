@@ -24,21 +24,15 @@ public class SrvDDataSourceConfig {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "yoga14sMysqlDatasource")
-    @ConfigurationProperties(prefix = "spring.datasource.yoga14s.mysql")
-    public DataSource yoga14sMysqlDatasource() {
+    @Bean(name = "yoga14sDatasource")
+    @ConfigurationProperties(prefix = "spring.datasource.yoga14s")
+    public DataSource yoga14sDatasource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "yoga14sPgsqlDatasource")
-    @ConfigurationProperties(prefix = "spring.datasource.yoga14s.pgsql")
-    public DataSource yoga14sPgsqlDatasource() {
-        return DataSourceBuilder.create().build();
-    }
-
-    @Bean(name = "code01PgsqlDatasource")
-    @ConfigurationProperties(prefix = "spring.datasource.code01.pgsql")
-    public DataSource code01PgsqlDatasource() {
+    @Bean(name = "code01Datasource")
+    @ConfigurationProperties(prefix = "spring.datasource.code01")
+    public DataSource code01Datasource() {
         return DataSourceBuilder.create().build();
     }
 }
