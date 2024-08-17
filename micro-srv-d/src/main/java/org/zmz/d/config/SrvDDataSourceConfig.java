@@ -35,4 +35,10 @@ public class SrvDDataSourceConfig {
     public DataSource yoga14sPgsqlDatasource() {
         return DataSourceBuilder.create().build();
     }
+
+    @Bean(name = "code01PgsqlDatasource")
+    @ConfigurationProperties(prefix = "spring.datasource.code01.pgsql")
+    public DataSource code01PgsqlDatasource() {
+        return DataSourceBuilder.create().build();
+    }
 }

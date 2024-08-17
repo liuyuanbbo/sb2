@@ -18,7 +18,6 @@ import java.util.Map;
 public class StanTagService {
 
     static final Cache<String, List<StanTag>> STAN_TAG_CACHE = Caffeine.newBuilder().expireAfterWrite(Duration.ofMinutes(1))
-            .refreshAfterWrite(Duration.ofMinutes(30))
             .maximumSize(1000).build();
 
     @Resource
