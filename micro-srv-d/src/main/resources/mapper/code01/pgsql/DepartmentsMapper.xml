@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.d.mapper.code01.pgsql.JobsMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.d.pojo.code01.pgsql.Departments">
+        <id column="department_id" jdbcType="INTEGER" property="departmentId" />
+        <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+        <result column="manager_id" jdbcType="INTEGER" property="managerId" />
+        <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    </resultMap>
+</mapper>
