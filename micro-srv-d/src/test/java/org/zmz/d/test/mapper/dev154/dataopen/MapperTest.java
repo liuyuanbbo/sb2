@@ -1,13 +1,15 @@
 package org.zmz.d.test.mapper.dev154.dataopen;
 
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zmz.d.mapper.dev154.dataopen.DimIndexInfoMapper;
-
-import lombok.extern.slf4j.Slf4j;
+import org.zmz.d.mapper.dev154.dataopen.IndexMapper;
 import org.zmz.d.mapper.dev154.dataopen.ProIndexMapper;
+import org.zmz.d.pojo.dev154.dto.IndexDto;
 
 import java.util.Collection;
 import java.util.Set;
@@ -21,6 +23,9 @@ public class MapperTest {
 
     @Autowired
     ProIndexMapper proIndexMapper;
+
+    @Autowired
+    IndexMapper indexMapper;
 
     @Test
     public void t1() {
@@ -42,5 +47,13 @@ public class MapperTest {
         log.info("{}", subtractIds2);
 
         log.info("交集: {}", CollectionUtils.union(dimIds, proIds));
+    }
+
+    @Test
+    public void t2() {
+        Set<IndexDto> list = indexMapper.unionAllProIndexAndDimIndex();
+        log.info("{}", list.size());
+        String jsonString = JSONObject.toJSONString(list);
+        log.info("{}", jsonString);
     }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.d.mapper.dev154.dataopen.IndexMapper">
+
+    <resultMap id="IndexDtoMap" type="org.zmz.d.pojo.dev154.dto.IndexDto">
+        <result column="index_name" property="indexName"/>
+        <result column="index_code" property="indexCode"/>
+    </resultMap>
+
+    <select id="unionAllProIndexAndDimIndex" resultMap="IndexDtoMap">
+        SELECT tb4.index_name,
+               tb4.index_code
+        FROM dataopen.pro_index tb4
+        WHERE tb4.index_code IS NOT NULL
+          AND tb4.index_name IS NOT NULL
+          AND tb4.pro_table_id IN (SELECT
+                                       -- tb1.object_id,
+                                       -- tb1.meta_table_id,
+                                       tb2.meta_data_id
+                                   FROM dataopen.obj_info tb1,
+                                        dataopen.obj_key_table_rela tb2
+                                   WHERE tb1.status_cd != '1200'
+          AND tb2.meta_data_id IS NOT NULL
+          AND tb1.object_id = tb2.rela_key_object_id
+            )
+        UNION ALL
+        SELECT tb5.dim_index_name,
+               tb5.index_code
+        FROM dataopen.dim_index_info tb5
+        WHERE tb5.index_code IS NOT NULL
+          AND tb5.dim_index_name IS NOT NULL
+          AND tb5.meta_table_id IN (SELECT
+                                        -- tb1.object_id,
+                                        -- tb1.meta_table_id,
+                                        tb2.meta_data_id
+                                    FROM dataopen.obj_info tb1,
+                                         dataopen.obj_key_table_rela tb2
+                                    WHERE tb1.status_cd != '1200'
+          AND tb2.meta_data_id IS NOT NULL
+          AND tb1.object_id = tb2.rela_key_object_id
+            );
+    </select>
+</mapper>
