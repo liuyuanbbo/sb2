@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.d.mapper.dev154.dataopen.DimIndexInfoMapper">
+
+    <select id="selectDimIndexIds" resultType="java.lang.Long">
+        select distinct dii.dim_index_id
+        from dataopen.dim_index_info dii
+        where dii.PRO_TABLE_ID in (select distinct oktr.meta_data_id
+                                   from dataopen.obj_info oi
+                                      , dataopen.obj_key_table_rela oktr
+                                   where oi.status_cd != '1200'
+          and oktr.meta_data_id IS NOT NULL
+          and oi.object_id = oktr.rela_key_object_id)
+    </select>
+</mapper>

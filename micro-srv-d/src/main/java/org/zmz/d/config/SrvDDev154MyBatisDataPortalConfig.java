@@ -17,7 +17,7 @@ import javax.sql.DataSource;
  * @author Zmz
  */
 @Configuration
-@MapperScan(basePackages = "org.zmz.d.mapper.dev154.dataportal",
+@MapperScan(basePackages = {"org.zmz.d.mapper.dev154.dataportal", "org.zmz.d.mapper.dev154.dataopen"},
         sqlSessionTemplateRef = "dev154DataPortalSqlSessionTemplate")
 public class SrvDDev154MyBatisDataPortalConfig {
     @Resource
@@ -28,7 +28,7 @@ public class SrvDDev154MyBatisDataPortalConfig {
         MybatisSqlSessionFactoryBean sqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dev154DataPortalMysqlDataSource);
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath*:mapper/dev154/dataportal/*Mapper.xml"));
+                .getResources("classpath*:mapper/dev154/data*/*Mapper.xml"));
         return sqlSessionFactoryBean.getObject();
     }
 
