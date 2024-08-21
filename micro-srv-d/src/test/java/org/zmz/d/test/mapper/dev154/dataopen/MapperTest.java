@@ -51,9 +51,10 @@ public class MapperTest {
 
     @Test
     public void t2() {
-        Set<IndexDto> list = indexMapper.unionAllProIndexAndDimIndex();
-        log.info("{}", list.size());
-        String jsonString = JSONObject.toJSONString(list);
+        Set<Long> objectIds = Set.of(17061L, 27246L);
+        Set<IndexDto> sets = indexMapper.unionAllProIndexAndDimIndex(objectIds);
+        log.info("{}", sets.size());
+        String jsonString = JSONObject.toJSONString(sets);
         log.info("{}", jsonString);
     }
 }

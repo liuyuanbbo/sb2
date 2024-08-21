@@ -7,11 +7,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Objects;
 
+/**
+ * @author Zmz
+ */
 @Getter
 @Setter
 public class IndexDto {
     private String indexName;
+
     private String indexCode;
+
+    private String tableCode;
+
+    private String indexType;
 
     @Override
     public String toString() {
@@ -20,8 +28,12 @@ public class IndexDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         IndexDto indexDto = (IndexDto) o;
         return Objects.equals(indexName, indexDto.indexName) && Objects.equals(indexCode, indexDto.indexCode);
     }
