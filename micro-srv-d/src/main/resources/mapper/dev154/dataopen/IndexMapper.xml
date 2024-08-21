@@ -8,6 +8,11 @@
         <result column="index_type" property="indexType"/>
     </resultMap>
 
+    <resultMap id="ObjInfoDtoMap" type="org.zmz.d.pojo.dev154.dto.ObjInfoDto">
+        <result column="object_code" property="objectCode"/>
+        <result column="object_name" property="objectName"/>
+    </resultMap>
+
     <select id="unionAllProIndexAndDimIndex" resultMap="IndexDtoMap">
         SELECT DISTINCT pi.index_name,
         pi.index_code,
@@ -38,5 +43,14 @@
         <foreach collection="objectIds" item="objectId" separator="," open="(" close=")">
             #{objectId}
         </foreach>)
+    </select>
+
+    <select id="selectObjInfo" resultMap="ObjInfoDtoMap">
+        select oi.object_code,oi.object_name from object_info oi where
+        oi.status_cd != '1200'
+        oi.object_id in
+        <foreach collection="objectIds" item="objectId" separator="," open="(" close=")">
+            #{objectId}
+        </foreach>
     </select>
 </mapper>

@@ -1,0 +1,42 @@
+[
+  {
+    "condId": "1",
+    "condExp": "IN",
+    "condDesc": "包含"
+  },
+  {
+    "condId": "2",
+    "condExp": "=",
+    "condDesc": "等于"
+  },
+  {
+    "condId": "3",
+    "condExp": "!=",
+    "condDesc": "不等于"
+  },
+  {
+    "condId": "4",
+    "condExp": ">",
+    "condDesc": "大于"
+  },
+  {
+    "condId": "5",
+    "condExp": "<",
+    "condDesc": "小于"
+  },
+  {
+    "condId": "6",
+    "condExp": ">=",
+    "condDesc": "大于等于"
+  },
+  {
+    "condId": "7",
+    "condExp": "<=",
+    "condDesc": "小于等于"
+  },
+  {
+    "condId": "8",
+    "condExp": "NOT IN",
+    "condDesc": "不包含"
+  }
+]
