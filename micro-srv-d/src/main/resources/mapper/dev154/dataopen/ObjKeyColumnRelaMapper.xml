@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.d.mapper.dev154.dataopen.ObjKeyColumnRelaMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.d.pojo.dev154.dataopen.ObjKeyColumnRela">
+        <id column="rela_id" jdbcType="BIGINT" property="relaId"/>
+        <result column="parent_rela_id" jdbcType="BIGINT" property="parentRelaId"/>
+        <result column="object_id" jdbcType="BIGINT" property="objectId"/>
+        <result column="column_code" jdbcType="VARCHAR" property="columnCode"/>
+        <result column="column_id" jdbcType="BIGINT" property="columnId"/>
+        <result column="rela_column_id" jdbcType="BIGINT" property="relaColumnId"/>
+        <result column="rela_column_code" jdbcType="VARCHAR" property="relaColumnCode"/>
+        <result column="func" jdbcType="VARCHAR" property="func"/>
+        <result column="rela_func" jdbcType="VARCHAR" property="relaFunc"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        rela_id
+        , parent_rela_id, object_id, column_code, column_id, rela_column_id, rela_column_code,
+    func, rela_func
+    </sql>
+</mapper>

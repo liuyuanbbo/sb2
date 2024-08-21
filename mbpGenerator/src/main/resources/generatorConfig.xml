@@ -75,6 +75,10 @@
                 </table>-->
 
         <table tableName="obj_info" domainObjectName="ObjInfo"></table>
+        <table tableName="obj_table_rela" domainObjectName="ObjTableRela"></table>
+        <table tableName="obj_column_rela" domainObjectName="ObjColumnRela"></table>
+        <table tableName="obj_key_table_rela" domainObjectName="ObjKeyTableRela"></table>
+        <table tableName="obj_key_column_rela" domainObjectName="ObjKeyColumnRela"></table>
         <table tableName="departments" domainObjectName="Departments"
                enableSelectByPrimaryKey="true"
                enableInsert="true"

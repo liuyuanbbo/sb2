@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.d.mapper.dev154.dataopen.ObjColumnRelaMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.d.pojo.dev154.dataopen.ObjColumnRela">
+        <id column="rela_id" jdbcType="BIGINT" property="relaId"/>
+        <result column="object_id" jdbcType="BIGINT" property="objectId"/>
+        <result column="src_object_id" jdbcType="BIGINT" property="srcObjectId"/>
+        <result column="src_column_id" jdbcType="BIGINT" property="srcColumnId"/>
+        <result column="column_id" jdbcType="BIGINT" property="columnId"/>
+        <result column="column_code" jdbcType="VARCHAR" property="columnCode"/>
+        <result column="column_name" jdbcType="VARCHAR" property="columnName"/>
+        <result column="column_type" jdbcType="VARCHAR" property="columnType"/>
+        <result column="table_code" jdbcType="VARCHAR" property="tableCode"/>
+        <result column="src_table_id" jdbcType="BIGINT" property="srcTableId"/>
+        <result column="datasource_id" jdbcType="BIGINT" property="datasourceId"/>
+        <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode"/>
+        <result column="data_id" jdbcType="BIGINT" property="dataId"/>
+        <result column="data_name" jdbcType="VARCHAR" property="dataName"/>
+        <result column="status_cd" jdbcType="VARCHAR" property="statusCd"/>
+        <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId"/>
+        <result column="seq" jdbcType="BIGINT" property="seq"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        rela_id , object_id, src_object_id, src_column_id, column_id, column_code, column_name,
+    column_type, table_code, src_table_id, datasource_id, datasource_code, data_id, data_name,
+    status_cd, com_acct_id, seq
+    </sql>
+</mapper>

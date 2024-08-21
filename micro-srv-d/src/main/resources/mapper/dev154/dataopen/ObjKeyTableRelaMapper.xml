@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.d.mapper.dev154.dataopen.ObjKeyTableRelaMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.d.pojo.dev154.dataopen.ObjKeyTableRela">
+        <id column="rela_id" jdbcType="BIGINT" property="relaId"/>
+        <result column="object_id" jdbcType="BIGINT" property="objectId"/>
+        <result column="meta_data_id" jdbcType="BIGINT" property="metaDataId"/>
+        <result column="column_code" jdbcType="VARCHAR" property="columnCode"/>
+        <result column="table_code" jdbcType="VARCHAR" property="tableCode"/>
+        <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode"/>
+        <result column="rela_type" jdbcType="VARCHAR" property="relaType"/>
+        <result column="column_id" jdbcType="BIGINT" property="columnId"/>
+        <result column="rela_key_object_id" jdbcType="BIGINT" property="relaKeyObjectId"/>
+        <result column="rela_column_id" jdbcType="BIGINT" property="relaColumnId"/>
+        <result column="rela_column_code" jdbcType="VARCHAR" property="relaColumnCode"/>
+        <result column="rela_table_id" jdbcType="BIGINT" property="relaTableId"/>
+        <result column="refer_type" jdbcType="VARCHAR" property="referType"/>
+        <result column="src_rela_id" jdbcType="BIGINT" property="srcRelaId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        rela_id
+        , object_id, meta_data_id, column_code, table_code, datasource_code, rela_type,
+    column_id, rela_key_object_id, rela_column_id, rela_column_code, rela_table_id, refer_type,
+    src_rela_id
+    </sql>
+</mapper>
