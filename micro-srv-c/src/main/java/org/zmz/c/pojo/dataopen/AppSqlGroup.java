@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @ToString
 @Table(name = "app_sql_group")
 @NameStyle(value = Style.camelhumpAndLowercase)
-public class DataSetGroup {
+public class AppSqlGroup {
     private Long groupId;
 
     private String groupName;

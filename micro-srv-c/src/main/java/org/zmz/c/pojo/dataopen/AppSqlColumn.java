@@ -14,7 +14,7 @@ import java.io.Serializable;
 @ToString
 @Table(name = "app_sql_column")
 @NameStyle(value = Style.camelhumpAndLowercase)
-public class DataSetColumn implements Serializable {
+public class AppSqlColumn implements Serializable {
     private Long appDetailId;
 
     private Long columnId;

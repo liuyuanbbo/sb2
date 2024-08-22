@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @ToString
 @Table(name = "app_sql_condition")
 @NameStyle(value = Style.camelhumpAndLowercase)
-public class DataSetCondition {
+public class AppSqlCondition {
     private Long condId;
 
     private Long appId;

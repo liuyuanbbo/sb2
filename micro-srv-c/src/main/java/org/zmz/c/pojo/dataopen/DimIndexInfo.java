@@ -15,7 +15,7 @@ import java.util.Date;
 @ToString
 @Table(name = "dim_index_info")
 @NameStyle(value = Style.camelhumpAndLowercase)
-public class DimIndex {
+public class DimIndexInfo {
     @Id
     private Long dimIndexId;
     /**

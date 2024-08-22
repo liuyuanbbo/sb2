@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.zmz.c.mapper.dataopen.DataSetColumnMapper">
-    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.DataSetColumn">
+<mapper namespace="org.zmz.c.mapper.dataopen.AppSqlColumnMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataopen.AppSqlColumn">
         <id column="app_detail_id" jdbcType="BIGINT" property="appDetailId"/>
         <result column="column_id" jdbcType="BIGINT" property="columnId"/>
         <result column="app_id" jdbcType="BIGINT" property="appId"/>

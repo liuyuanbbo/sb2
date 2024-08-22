@@ -14,7 +14,7 @@ import java.util.Date;
 @ToString
 @Table(name = "app_sql_analysis")
 @NameStyle(value = Style.camelhumpAndLowercase)
-public class DataSetAnalysis {
+public class AppSqlAnalysis {
     private Long analysisId;
 
     private String analysisName;
