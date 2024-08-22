@@ -2,7 +2,7 @@ package org.zmz.c.service.dataopen.dataset;
 
 import cn.hutool.core.collection.CollUtil;
 import org.springframework.stereotype.Service;
-import org.zmz.c.pojo.dataopen.DataSetColumn;
+import org.zmz.c.pojo.dataopen.AppSqlColumn;
 import org.zmz.c.qo.dataopen.Constants;
 import org.zmz.c.qo.dataopen.DatasetColumnAndConditionQo;
 import org.zmz.c.qo.dataopen.DatasetColumnQo;
@@ -110,7 +110,7 @@ public class DatasetGroupService {
                 measureDimensions.addAll(notPkColumns);
                 // 取差集
                 List<DatasetColumnQo> diffDimensionList = dimensionList.stream()
-                        .filter(b -> startDimensions.stream().map(DataSetColumn::getPath)
+                        .filter(b -> startDimensions.stream().map(AppSqlColumn::getPath)
                                 .noneMatch(id -> Objects.equals(b.getPath(), id)))
                         .collect(Collectors.toList());
                 getSmallestDimensions(diffDimensionList, measureDimensions);

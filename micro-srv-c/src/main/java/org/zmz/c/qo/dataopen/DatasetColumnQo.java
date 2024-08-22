@@ -3,7 +3,7 @@ package org.zmz.c.qo.dataopen;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;
-import org.zmz.c.pojo.dataopen.DataSetColumn;
+import org.zmz.c.pojo.dataopen.AppSqlColumn;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Setter
 @Getter
-public class DatasetColumnQo extends DataSetColumn {
+public class DatasetColumnQo extends AppSqlColumn {
 
     /**
      * 计算字段

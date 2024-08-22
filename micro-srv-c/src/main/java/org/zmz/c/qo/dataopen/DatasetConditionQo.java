@@ -2,7 +2,7 @@ package org.zmz.c.qo.dataopen;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.zmz.c.pojo.dataopen.DataSetCondition;
+import org.zmz.c.pojo.dataopen.AppSqlCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Setter
 @Getter
-public class DatasetConditionQo extends DataSetCondition {
+public class DatasetConditionQo extends AppSqlCondition {
 
     private Long dataId;
 
