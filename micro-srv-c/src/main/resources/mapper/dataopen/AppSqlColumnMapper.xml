@@ -37,9 +37,6 @@
         <result column="pro_index_id" jdbcType="BIGINT" property="proIndexId"/>
         <result column="modes" jdbcType="VARCHAR" property="modes"/>
         <result column="rela_type" jdbcType="VARCHAR" property="relaType"/>
-    </resultMap>
-
-    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.c.pojo.dataopen.DataSetColumn">
-        <result column="column_expression" jdbcType="LONGVARCHAR" property="columnExpression"/>
+        <result column="column_expression" jdbcType="VARCHAR" property="columnExpression"/>
     </resultMap>
 </mapper>

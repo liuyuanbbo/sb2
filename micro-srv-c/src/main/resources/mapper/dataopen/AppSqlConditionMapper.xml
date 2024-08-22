@@ -26,9 +26,7 @@
         <result column="mod_state" jdbcType="VARCHAR" property="modState"/>
         <result column="pro_index_id" jdbcType="BIGINT" property="proIndexId"/>
         <result column="rela_type" jdbcType="VARCHAR" property="relaType"/>
+        <result column="cond_value" jdbcType="VARCHAR" property="condValue"/>
     </resultMap>
 
-    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.zmz.c.pojo.dataopen.DataSetCondition">
-        <result column="cond_value" jdbcType="LONGVARCHAR" property="condValue"/>
-    </resultMap>
 </mapper>

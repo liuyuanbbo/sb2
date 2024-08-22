@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.zmz.c.mapper.dataopen.ObjInfoMapper;
-import org.zmz.c.pojo.dataopen.DataSetColumn;
+import org.zmz.c.pojo.dataopen.AppSqlColumn;
 import org.zmz.c.pojo.dataopen.ObjInfo;
 import org.zmz.c.pojo.dataportal.DcSystemConfigList;
 import org.zmz.c.pojo.dataportal.Organization;
@@ -79,7 +79,7 @@ public class DatasetDataPrivService {
             dataPrivCtrlVo.setDataPrivModelList(privModeInfos);
         }
         // 获取数据库类型
-        Long objectId = params.getColumnList().stream().map(DataSetColumn::getObjectId).filter(Objects::nonNull)
+        Long objectId = params.getColumnList().stream().map(AppSqlColumn::getObjectId).filter(Objects::nonNull)
                 .findFirst().orElse(null);
         ObjInfo oneObjInfo = objInfoMapper.selectById(objectId);
         String tableType = oneObjInfo.getTableType();
