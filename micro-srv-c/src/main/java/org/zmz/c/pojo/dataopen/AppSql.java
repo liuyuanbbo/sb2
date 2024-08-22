@@ -1,5 +1,6 @@
 package org.zmz.c.pojo.dataopen;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,6 +16,7 @@ import java.util.Date;
 @Table(name = "app_sql")
 @NameStyle(value = Style.camelhumpAndLowercase)
 public class AppSql {
+    @TableId
     private Long appId;
 
     private String appCode;

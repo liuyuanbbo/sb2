@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.zmz.c.mapper.dataopen.DimIndexMapper;
+import org.zmz.c.mapper.dataopen.DimIndexInfoMapper;
 import org.zmz.c.mapper.dataopen.ProIndexMapper;
 import org.zmz.c.pojo.dataopen.ProIndex;
 
@@ -19,12 +19,12 @@ public class MapperTest {
     ProIndexMapper proIndexMapper;
 
     @Autowired
-    DimIndexMapper dimIndexMapper;
+    DimIndexInfoMapper dimIndexInfoMapper;
 
     @Test
     public void testContext() {
         LocalDateTime proIndexNow = proIndexMapper.selectNow();
-        LocalDateTime dimIndexNow = dimIndexMapper.selectNow();
+        LocalDateTime dimIndexNow = dimIndexInfoMapper.selectNow();
 
         log.info("{}", proIndexNow);
         log.info("{}", dimIndexNow);
