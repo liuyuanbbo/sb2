@@ -3,6 +3,6 @@ spring:
     yoga14s:
       pgsql:
         driverClassName: org.postgresql.Driver
-        jdbcUrl: jdbc:postgresql://localhost:5432/mytest
+        jdbcUrl: jdbc:postgresql://localhost:5432/hrdb
         username: postgres
         password: '123456'

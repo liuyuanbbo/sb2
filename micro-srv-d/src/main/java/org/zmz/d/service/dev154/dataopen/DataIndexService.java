@@ -1,15 +1,9 @@
 package org.zmz.d.service.dev154.dataopen;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.Resource;
-
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.map.MapUtil;
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -18,11 +12,14 @@ import org.zmz.d.pojo.dev154.dto.CondOperatorDto;
 import org.zmz.d.pojo.dev154.dto.IndexDto;
 import org.zmz.d.pojo.dev154.dto.ObjInfoDto;
 
-import com.alibaba.fastjson.JSONObject;
-
-import cn.hutool.core.lang.TypeReference;
-import cn.hutool.core.map.MapUtil;
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Zmz
@@ -41,9 +38,8 @@ public class DataIndexService {
         try {
             byte[] bytes = Files.readAllBytes(Path.of(resource.getPath()));
             COND_OPERATOR_DTO_LIST = JSONObject.parseArray(new String(bytes), CondOperatorDto.class);
-        }
-        catch (IOException e) {
-            System.exit(0);
+        } catch (IOException e) {
+            log.error("加载静态代码块异常", e);
         }
     }
 

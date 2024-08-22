@@ -4,6 +4,6 @@ spring:
       dev156:
         dataopen:
           driverClassName: com.mysql.cj.jdbc.Driver
-          jdbcUrl: jdbc:mysql://172.21.72.157:8001/dataopen?serverTimezone=Asia/Shanghai
+          jdbcUrl: jdbc:mysql://172.21.72.157:8009/dataopen?serverTimezone=Asia/Shanghai
           username: root
           password: 'root'
