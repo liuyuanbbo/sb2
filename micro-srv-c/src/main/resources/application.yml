@@ -7,8 +7,8 @@ spring:
     import:
       - conf/maria-local.yml
       - conf/pgsql-local.yml
-      #- conf/mysql-dev-dataopen-154.yml
-      - conf/mysql-dev-dataopen-156.yml
+      - conf/mysql-dev-dataopen-154.yml
+      #- conf/mysql-dev-dataopen-156.yml
       #- conf/mysql-dev-dataportal-154.yml
       - conf/mysql-dev-dataportal-156.yml
       - conf/pgsql-dev.yml
