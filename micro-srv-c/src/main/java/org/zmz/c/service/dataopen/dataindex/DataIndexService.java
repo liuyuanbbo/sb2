@@ -6,6 +6,7 @@ import static org.zmz.c.utils.SqlUtils.SQL_FROM;
 import static org.zmz.c.utils.SqlUtils.SQL_LEFT_JOIN;
 import static org.zmz.c.utils.SqlUtils.SQL_ON;
 import static org.zmz.c.utils.SqlUtils.SQL_SELECT;
+import static org.zmz.c.utils.SqlUtils.SQL_WHERE;
 import static org.zmz.c.utils.SqlUtils.STR_BLANK;
 import static org.zmz.c.utils.SqlUtils.STR_DOT;
 import static org.zmz.c.utils.SqlUtils.STR_EQUAL;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.zmz.c.mapper.dataopen.ObjKeyTableRelaMapper;
 import org.zmz.c.qo.dataopen.DatasetColumnAndConditionQo;
 import org.zmz.c.qo.dataopen.DatasetColumnQo;
+import org.zmz.c.qo.dataopen.DatasetConditionQo;
 import org.zmz.c.qo.dataopen.DatasetDetail;
 import org.zmz.c.qo.dataopen.ObjKeyColumnRelaVo;
 import org.zmz.c.qo.dataopen.ObjKeyTableRelaQo;
@@ -54,13 +56,8 @@ public class DataIndexService {
         Map<String, String> tbMap = this.buildOutField(outField, columnList);
         // 构建 from
         this.buildFrom(outField, tbMap, columnList);
+        this.buildWhere(outField, tbMap, columnList);
         return outField.toString();
-    }
-
-    private void buildFrom(StringBuilder outField, Map<String, String> tbMap, List<DatasetColumnQo> columnList) {
-        outField.append(SQL_FROM);
-        List<ObjKeyTableRelaVo> objKeyTableRelaVos = qryTableFieldOnCondition(columnList);
-        joinOn(outField, tbMap, objKeyTableRelaVos);
     }
 
     private Map<String, String> buildOutField(StringBuilder outField, List<DatasetColumnQo> columnList) {
@@ -83,6 +80,26 @@ public class DataIndexService {
         // 归 0
         TB_COUNTER.set(0);
         return tbAliasMap;
+    }
+
+    private void buildFrom(StringBuilder outField, Map<String, String> tbMap, List<DatasetColumnQo> columnList) {
+        outField.append(SQL_FROM);
+        List<ObjKeyTableRelaVo> objKeyTableRelaVos = qryTableFieldOnCondition(columnList);
+        joinOn(outField, tbMap, objKeyTableRelaVos);
+    }
+
+    private void buildWhere(StringBuilder outField, Map<String, String> tbMap, List<DatasetColumnQo> columnList) {
+        outField.append(SQL_WHERE);
+        for (DatasetColumnQo datasetColumnQo : columnList) {
+            List<DatasetConditionQo> condList = datasetColumnQo.getCondList();
+            if (CollectionUtils.isNotEmpty(condList)) {
+                for (DatasetConditionQo condQo : condList) {
+                    //BuildSqlUtil.appendSimpleCond(outField, condQo, tbMap);
+                }
+            }
+        }
+
+
     }
 
     private String sqlFieldComments(String field) {
