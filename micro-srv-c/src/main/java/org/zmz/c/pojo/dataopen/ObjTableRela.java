@@ -8,6 +8,9 @@ import tk.mybatis.mapper.code.Style;
 
 import javax.persistence.Table;
 
+/**
+ * @author Zmz
+ */
 @Getter
 @Setter
 @ToString

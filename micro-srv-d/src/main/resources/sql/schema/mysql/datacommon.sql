@@ -33,7 +33,6 @@ CREATE TABLE `stan_catalogue_dir`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='标准目录表';
 
-drop table if exists injection_label;
 drop table if exists stan_tag;
 CREATE TABLE `stan_tag`
 (
@@ -56,8 +55,6 @@ CREATE TABLE `stan_tag`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='标签表';
 
-
-drop table if exists injection_label_rela;
 drop table if exists stan_tag_rela;
 CREATE TABLE `stan_tag_rela`
 (

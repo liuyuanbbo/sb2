@@ -1,5 +1,6 @@
 package org.zmz.c.service.dataopen.dataindex;
 
+import static org.zmz.c.utils.KeyValues.DS_MYSQL;
 import static org.zmz.c.utils.SqlUtils.SQL_AND;
 import static org.zmz.c.utils.SqlUtils.SQL_AS;
 import static org.zmz.c.utils.SqlUtils.SQL_FROM;
@@ -10,7 +11,9 @@ import static org.zmz.c.utils.SqlUtils.SQL_WHERE;
 import static org.zmz.c.utils.SqlUtils.STR_BLANK;
 import static org.zmz.c.utils.SqlUtils.STR_DOT;
 import static org.zmz.c.utils.SqlUtils.STR_EQUAL;
+import static org.zmz.c.utils.SqlUtils.STR_LEFT_BRACKET;
 import static org.zmz.c.utils.SqlUtils.STR_POINT;
+import static org.zmz.c.utils.SqlUtils.STR_RIGHT_BRACKET;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,9 +26,11 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.zmz.c.mapper.dataopen.ObjKeyTableRelaMapper;
+import org.zmz.c.mapper.dataopen.ObjTableRelaMapper;
 import org.zmz.c.qo.dataopen.DatasetColumnAndConditionQo;
 import org.zmz.c.qo.dataopen.DatasetColumnQo;
 import org.zmz.c.qo.dataopen.DatasetConditionQo;
@@ -33,6 +38,11 @@ import org.zmz.c.qo.dataopen.DatasetDetail;
 import org.zmz.c.qo.dataopen.ObjKeyColumnRelaVo;
 import org.zmz.c.qo.dataopen.ObjKeyTableRelaQo;
 import org.zmz.c.qo.dataopen.ObjKeyTableRelaVo;
+import org.zmz.c.service.dataopen.sql.AbstractSqlParser;
+import org.zmz.c.service.dataopen.sql.SqlParserFactory;
+import org.zmz.c.utils.AcctTimeUtil;
+import org.zmz.c.utils.BuildSqlUtil;
+import org.zmz.c.vo.dataopen.dataset.CycleInfo;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +56,9 @@ public class DataIndexService {
     @Resource
     ObjKeyTableRelaMapper objKeyTableRelaMapper;
 
+    @Resource
+    ObjTableRelaMapper objTableRelaMapper;
+
     private static final AtomicInteger TB_COUNTER = new AtomicInteger(0);
 
     public String generateSql(DatasetDetail params) {
@@ -56,7 +69,7 @@ public class DataIndexService {
         Map<String, String> tbMap = this.buildOutField(outField, columnList);
         // 构建 from
         this.buildFrom(outField, tbMap, columnList);
-        this.buildWhere(outField, tbMap, columnList);
+        this.buildWhere(outField, tbMap, columnList, group.getCondList());
         return outField.toString();
     }
 
@@ -88,18 +101,58 @@ public class DataIndexService {
         joinOn(outField, tbMap, objKeyTableRelaVos);
     }
 
-    private void buildWhere(StringBuilder outField, Map<String, String> tbMap, List<DatasetColumnQo> columnList) {
-        outField.append(SQL_WHERE);
-        for (DatasetColumnQo datasetColumnQo : columnList) {
-            List<DatasetConditionQo> condList = datasetColumnQo.getCondList();
-            if (CollectionUtils.isNotEmpty(condList)) {
-                for (DatasetConditionQo condQo : condList) {
-                    //BuildSqlUtil.appendSimpleCond(outField, condQo, tbMap);
+    private void buildWhere(StringBuilder outField, Map<String, String> tbMap, List<DatasetColumnQo> columnList,
+        List<DatasetConditionQo> condList) {
+        if (CollectionUtils.isNotEmpty(condList)) {
+            outField.append(SQL_WHERE);
+            AbstractSqlParser sqlParser = SqlParserFactory.getViewSqlParser(DS_MYSQL);
+            for (DatasetConditionQo condQo : condList) {
+                String datasourceCode = condQo.getDatasourceCode();
+                String tableCode = condQo.getTableCode();
+                if (StringUtils.isNotBlank(datasourceCode) && StringUtils.isNotBlank(tableCode)) {
+                    String tbAlias = tbMap.get(datasourceCode + STR_POINT + tableCode);
+                    condQo.setTableAlias(tbAlias);
+                }
+                BuildSqlUtil.appendSimpleCond(outField, condQo, "", sqlParser);
+                // TODO 要求前端以 ) 区分条件 ??
+                if (StringUtils.endsWith(outField.toString(), STR_RIGHT_BRACKET)) {
+                    outField.append(SQL_AND);
                 }
             }
         }
+        if (!StringUtils.endsWith(outField.toString(), SQL_AND)) {
+            outField.append(SQL_AND);
+        }
+        // 拼接账期字段
+        calcAccountPeriodCondition(outField, tbMap, columnList);
 
+    }
 
+    public void calcAccountPeriodCondition(StringBuilder outField, Map<String, String> tbAliasMap,
+        List<DatasetColumnQo> columnList) {
+        Set<Long> tableIdSets = columnList.stream().map(DatasetColumnQo::getTableId).collect(Collectors.toSet());
+        List<Map<String, String>> list = objTableRelaMapper.getObjTableRelaMap(tableIdSets);
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (Map<String, String> map : list) {
+                String datasourceCode = MapUtils.getString(map, "datasource_code");
+                String metaDataCode = MapUtils.getString(map, "meta_data_code");
+                String dataCycle = MapUtils.getString(map, "data_cycle");
+                if (StringUtils.isNotBlank(datasourceCode) && StringUtils.isNotBlank(metaDataCode)) {
+                    String key = datasourceCode + STR_POINT + metaDataCode;
+                    String tbAlias = tbAliasMap.get(key);
+
+                    if (StringUtils.isNotBlank(dataCycle)) {
+                        CycleInfo cycleInfo = AcctTimeUtil.getCycleInfo().get(dataCycle);
+                        if (cycleInfo != null) {
+
+                            outField.append(STR_LEFT_BRACKET).append(tbAlias).append(STR_POINT)
+                                .append(cycleInfo.getCycleExp()).append(STR_EQUAL).append(cycleInfo.getCycleVal())
+                                .append(STR_RIGHT_BRACKET);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private String sqlFieldComments(String field) {
