@@ -62,4 +62,15 @@
             </if>
         </where>
     </select>
+
+    <select id="getObjTableRela" resultMap="ObjTableRelaResultMap">
+        select t1.datasource_code, t1.meta_data_code, t1.data_cycle
+        from obj_table_rela t1
+        where status_cd = '00A' AND meta_data_id IN
+        <if test="tableIds != null and tableIds.size() > 0">
+            <foreach collection="tableIds" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
 </mapper>

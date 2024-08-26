@@ -1,6 +1,7 @@
 package org.zmz.c.test.dev154.mapper;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.zmz.c.mapper.dataopen.ObjTableRelaMapper;
 import org.zmz.c.mapper.dataopen.ProIndexMapper;
 import org.zmz.c.pojo.dataopen.AppSql;
 import org.zmz.c.pojo.dataopen.AppSqlColumn;
+import org.zmz.c.pojo.dataopen.ObjTableRela;
 import org.zmz.c.qo.dataopen.ObjKeyTableRelaQo;
 import org.zmz.c.qo.dataopen.ObjKeyTableRelaVo;
 
@@ -85,6 +87,14 @@ public class MapperTest {
         params.setObjectIds(List.of(8302L, 8303L));
         List<ObjKeyTableRelaVo> objKeyTableRelaVos = objKeyTableRelaMapper.selectKeyRelaByQo(params);
         log.info(">>> {}", JSONObject.toJSONString(objKeyTableRelaVos));
+    }
+
+    @Test
+    public void t4() {
+        Set<Long> tableIds = Set.of(30915L, 30917L);
+        List<ObjTableRela> objTableRelas = objTableRelaMapper.getObjTableRela(tableIds);
+        String jsonString = JSONObject.toJSONString(objTableRelas);
+        log.info("{}", jsonString);
     }
 
 }
