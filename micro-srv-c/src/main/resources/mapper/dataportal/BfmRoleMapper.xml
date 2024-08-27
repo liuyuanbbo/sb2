@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataportal.BfmRoleMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataportal.BfmRole">
+        <id column="ROLE_ID" jdbcType="BIGINT" property="roleId"/>
+        <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName"/>
+        <result column="COMMENTS" jdbcType="VARCHAR" property="comments"/>
+        <result column="ROLE_CODE" jdbcType="VARCHAR" property="roleCode"/>
+        <result column="IS_LOCKED" jdbcType="CHAR" property="isLocked"/>
+        <result column="com_acct_id" jdbcType="BIGINT" property="comAcctId"/>
+        <result column="user_level" jdbcType="VARCHAR" property="userLevel"/>
+        <result column="state" jdbcType="CHAR" property="state"/>
+        <result column="APP_ID" jdbcType="DECIMAL" property="appId"/>
+        <result column="net_work" jdbcType="VARCHAR" property="netWork"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ROLE_ID, ROLE_NAME, COMMENTS, ROLE_CODE, IS_LOCKED, com_acct_id, user_level, state,
+    APP_ID, net_work
+    </sql>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataportal.BfmUserMapper">
+    <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataportal.BfmUser">
+        <id column="USER_ID" jdbcType="BIGINT" property="userId"/>
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+        <result column="EMAIL" jdbcType="VARCHAR" property="email"/>
+        <result column="PHONE" jdbcType="VARCHAR" property="phone"/>
+        <result column="USER_CODE" jdbcType="VARCHAR" property="userCode"/>
+        <result column="PWD" jdbcType="VARCHAR" property="pwd"/>
+        <result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+        <result column="MEMO" jdbcType="VARCHAR" property="memo"/>
+        <result column="USER_EFF_DATE" jdbcType="TIMESTAMP" property="userEffDate"/>
+        <result column="USER_EXP_DATE" jdbcType="TIMESTAMP" property="userExpDate"/>
+        <result column="CREATED_DATE" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="STATE" jdbcType="CHAR" property="state"/>
+        <result column="STATE_DATE" jdbcType="TIMESTAMP" property="stateDate"/>
+        <result column="IS_LOCKED" jdbcType="CHAR" property="isLocked"/>
+        <result column="PWD_EXP_DATE" jdbcType="TIMESTAMP" property="pwdExpDate"/>
+        <result column="LOGIN_FAIL" jdbcType="DECIMAL" property="loginFail"/>
+        <result column="UNLOCK_DATE" jdbcType="TIMESTAMP" property="unlockDate"/>
+        <result column="PORTAL_ID" jdbcType="DECIMAL" property="portalId"/>
+        <result column="SRC_ID" jdbcType="DECIMAL" property="srcId"/>
+        <result column="LAN_ID" jdbcType="INTEGER" property="lanId"/>
+        <result column="OPEN_ID" jdbcType="VARCHAR" property="openId"/>
+        <result column="USER_TYPE" jdbcType="CHAR" property="userType"/>
+        <result column="ALIAS" jdbcType="VARCHAR" property="alias"/>
+        <result column="LAST_LOGIN_DATE" jdbcType="TIMESTAMP" property="lastLoginDate"/>
+        <result column="SECURITY_QUESTION_ID" jdbcType="DECIMAL" property="securityQuestionId"/>
+        <result column="SECURITY_ANSWER" jdbcType="VARCHAR" property="securityAnswer"/>
+        <result column="THUMBNAIL_URI" jdbcType="VARCHAR" property="thumbnailUri"/>
+        <result column="EXT_ATTR" jdbcType="VARCHAR" property="extAttr"/>
+        <result column="MAIN_ACCOUNT_CODE" jdbcType="VARCHAR" property="mainAccountCode"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        USER_ID, USER_NAME, EMAIL, PHONE, USER_CODE, PWD, ADDRESS, MEMO, USER_EFF_DATE, USER_EXP_DATE,
+    CREATED_DATE, UPDATE_DATE, STATE, STATE_DATE, IS_LOCKED, PWD_EXP_DATE, LOGIN_FAIL, 
+    UNLOCK_DATE, PORTAL_ID, SRC_ID, LAN_ID, OPEN_ID, USER_TYPE, ALIAS, LAST_LOGIN_DATE, 
+    SECURITY_QUESTION_ID, SECURITY_ANSWER, THUMBNAIL_URI, EXT_ATTR, MAIN_ACCOUNT_CODE
+    </sql>
+</mapper>

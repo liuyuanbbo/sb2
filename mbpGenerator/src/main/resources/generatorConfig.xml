@@ -7,9 +7,9 @@
     <!--    <properties resource="maria-local.properties"/>-->
     <!--<properties resource="mysql-dev-dataopen-157-8003.properties"/>-->
     <!--    <properties resource="mysql-dev-dataopen-157-8001.properties"/>-->
-    <!--    <properties resource="mysql-dev-dataportal-154-8003.properties"/>-->
+        <properties resource="mysql-dev-dataportal-154-8003.properties"/>
     <!-- <properties resource="pgsql-local.properties"/>-->
-    <properties resource="mysql-dev-dataopen-154-8003.properties"/>
+    <!--<properties resource="mysql-dev-dataopen-154-8003.properties"/>-->
     <!--targetRuntime="MyBatis3Simple"表示生成简易版本，这里创建原始版本,参数为MyBatis3-->
     <context id="testTables" targetRuntime="MyBatis3">
         <commentGenerator>
@@ -74,9 +74,9 @@
                     <columnOverride column="icon" javaType="java.lang.String" jdbcType="VARCHAR" />
                 </table>-->
 
-        <table tableName="app_sql" domainObjectName="AppSql"></table>
-        <table tableName="app_sql_column" domainObjectName="AppSqlColumn"></table>
-        <table tableName="app_sql_condition" domainObjectName="AppSqlCondition"></table>
+        <table tableName="bfm_user" domainObjectName="BfmUser"></table>
+        <table tableName="bfm_role" domainObjectName="BfmRole"></table>
+        <table tableName="bfm_user_role" domainObjectName="BfmUserRole"></table>
         <table tableName="departments" domainObjectName="Departments"
                enableSelectByPrimaryKey="true"
                enableInsert="true"

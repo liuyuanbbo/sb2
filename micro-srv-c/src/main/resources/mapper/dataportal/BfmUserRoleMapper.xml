@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataportal.BfmUserRoleMapper">
+  <resultMap id="BaseResultMap" type="org.zmz.c.pojo.dataportal.BfmUserRole">
+    <id column="USER_ID" jdbcType="BIGINT" property="userId" />
+    <id column="ROLE_ID" jdbcType="BIGINT" property="roleId" />
+    <id column="SP_ID" jdbcType="BIGINT" property="spId" />
+    <result column="default_role" jdbcType="CHAR" property="defaultRole" />
+    <result column="net_work" jdbcType="VARCHAR" property="netWork" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    USER_ID, ROLE_ID, SP_ID, default_role, net_work
+  </sql>
+
+</mapper>
