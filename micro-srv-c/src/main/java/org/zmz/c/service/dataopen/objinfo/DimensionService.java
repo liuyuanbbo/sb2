@@ -1,10 +1,13 @@
-package org.zmz.c.service;
+package org.zmz.c.service.dataopen.objinfo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * @author Zmz
+ */
 @Service
 @Slf4j
 public class DimensionService implements AuditInterfaceCallback {
@@ -24,6 +27,5 @@ public class DimensionService implements AuditInterfaceCallback {
     public <T> void changeStatus(T t) {
         defaultChangeStatus(t);
     }
-
 
 }
