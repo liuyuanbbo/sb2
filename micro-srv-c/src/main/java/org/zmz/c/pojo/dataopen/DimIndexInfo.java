@@ -13,6 +13,9 @@ import lombok.ToString;
 import tk.mybatis.mapper.annotation.NameStyle;
 import tk.mybatis.mapper.code.Style;
 
+/**
+ * @author Zmz
+ */
 @Getter
 @Setter
 @ToString

@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import java.util.Date;
 
+/**
+ * @author Zmz
+ */
 @Getter
 @Setter
 @TableName("dop_user_favor_log")

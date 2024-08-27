@@ -1,5 +1,6 @@
 package org.zmz.c.pojo.dataopen;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,6 +12,9 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Date;
 
+/**
+ * @author Zmz
+ */
 @Getter
 @Setter
 @ToString
@@ -21,6 +25,7 @@ public class ProIndex {
      * 原子指标标识
      */
     @Id
+    @TableId
     public Long indexId;
 
     /**
@@ -190,4 +195,3 @@ public class ProIndex {
      */
     private String srcSystem;
 }
-

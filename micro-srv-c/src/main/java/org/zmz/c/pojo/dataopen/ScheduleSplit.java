@@ -8,6 +8,9 @@ import tk.mybatis.mapper.code.Style;
 
 import javax.persistence.Table;
 
+/**
+ * @author Zmz
+ */
 @Getter
 @Setter
 @ToString
@@ -18,6 +21,7 @@ public class ScheduleSplit {
     public Long splitId;
 
     public Long scheduleId;
+
     public String splitKey;
 
     public String splitType;

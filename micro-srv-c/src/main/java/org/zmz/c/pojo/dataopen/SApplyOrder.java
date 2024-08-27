@@ -9,6 +9,9 @@ import tk.mybatis.mapper.code.Style;
 import javax.persistence.Table;
 import java.util.Date;
 
+/**
+ * @author Zmz
+ */
 @Getter
 @Setter
 @ToString

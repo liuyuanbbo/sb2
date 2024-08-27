@@ -1,17 +1,22 @@
 package org.zmz.c.pojo.dataopen;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * @author Zmz
+ */
 @Setter
 @Getter
 @Table(name = "PRO_RESTRICT_COLUMN")
 public class ProRestrictColumn {
 
     @Id
+    @TableId
     private Long restrictColumnId;
 
     private Long restrictId;

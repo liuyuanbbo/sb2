@@ -1,11 +1,13 @@
 package org.zmz.c.pojo.dataopen;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import tk.mybatis.mapper.annotation.NameStyle;
 import tk.mybatis.mapper.code.Style;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -17,6 +19,8 @@ import javax.persistence.Table;
 @Table(name = "obj_table_rela")
 @NameStyle(value = Style.camelhumpAndLowercase)
 public class ObjTableRela {
+    @TableId
+    @Id
     private Long relaId;
 
     private Long objectId;

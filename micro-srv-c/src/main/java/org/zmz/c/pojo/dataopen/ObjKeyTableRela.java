@@ -1,19 +1,26 @@
 package org.zmz.c.pojo.dataopen;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import tk.mybatis.mapper.annotation.NameStyle;
 import tk.mybatis.mapper.code.Style;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * @author Zmz
+ */
 @Getter
 @Setter
 @ToString
 @Table(name = "obj_key_table_rela")
 @NameStyle(value = Style.camelhumpAndLowercase)
 public class ObjKeyTableRela {
+    @TableId
+    @Id
     private Long relaId;
 
     private Long objectId;
