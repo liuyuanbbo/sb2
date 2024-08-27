@@ -1,10 +1,13 @@
 package org.zmz.c.mapper.dataopen;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.zmz.c.pojo.dataopen.AttrValue;
 
-import java.util.List;
-
+/**
+ * @author Zmz
+ */
 public interface StaticDataMapper {
     /**
      * 根据code过虑AttrValue表数据
@@ -17,5 +20,5 @@ public interface StaticDataMapper {
     /**
      * 根据编码获取执行的dcSql
      */
-    String getStaticAttrDcsqlByCode(@Param("code") String code);
+    String getStaticAttrDcSqlByCode(@Param("code") String code);
 }

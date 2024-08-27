@@ -2,4 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.zmz.c.mapper.dataopen.DatasetObjMapper">
 
+    <select id="selectObjKeyTableColumnRel" resultType="org.zmz.c.qo.dataopen.ObjKeyTableRelaVo">
+    </select>
 </mapper>

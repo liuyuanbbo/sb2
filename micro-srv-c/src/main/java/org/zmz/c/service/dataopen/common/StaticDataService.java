@@ -107,7 +107,7 @@ public class StaticDataService {
             return null;
         }
 
-        String dcSql = staticDataMapper.getStaticAttrDcsqlByCode(code);
+        String dcSql = staticDataMapper.getStaticAttrDcSqlByCode(code);
         if (StringUtils.isEmpty(dcSql)) {
             return Collections.emptyList();
         }

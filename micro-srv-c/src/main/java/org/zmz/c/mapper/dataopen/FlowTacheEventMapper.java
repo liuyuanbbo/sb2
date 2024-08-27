@@ -1,7 +1,10 @@
 package org.zmz.c.mapper.dataopen;
 
+import org.zmz.c.mapper.TkAndMPlusMapper;
 import org.zmz.c.pojo.dataopen.FlowTacheEvent;
-import tk.mybatis.mapper.common.Mapper;
 
-public interface FlowTacheEventMapper extends Mapper<FlowTacheEvent> {
+/**
+ * @author Zmz
+ */
+public interface FlowTacheEventMapper extends TkAndMPlusMapper<FlowTacheEvent> {
 }

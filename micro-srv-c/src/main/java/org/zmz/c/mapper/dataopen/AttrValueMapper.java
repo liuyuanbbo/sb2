@@ -1,4 +1,10 @@
 package org.zmz.c.mapper.dataopen;
 
-public interface AttrValueMapper {
+import org.zmz.c.mapper.TkAndMPlusMapper;
+import org.zmz.c.pojo.dataopen.AttrValue;
+
+/**
+ * @author Zmz
+ */
+public interface AttrValueMapper extends TkAndMPlusMapper<AttrValue> {
 }

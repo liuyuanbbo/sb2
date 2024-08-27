@@ -47,7 +47,7 @@
         order by a.attr_value_sort
     </select>
 
-    <select id="getStaticAttrDcsqlByCode" resultType="string">
+    <select id="getStaticAttrDcSqlByCode" resultType="string">
         select dc_sql from dc_sql where dc_name =#{code}
     </select>
 </mapper>

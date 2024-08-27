@@ -1,4 +1,10 @@
 package org.zmz.c.mapper.dataopen;
 
-public interface DimIndexKeyRelaMapper {
+import org.zmz.c.mapper.TkAndMPlusMapper;
+import org.zmz.c.pojo.dataopen.DimIndexKeyRela;
+
+/**
+ * @author Zmz
+ */
+public interface DimIndexKeyRelaMapper extends TkAndMPlusMapper<DimIndexKeyRela> {
 }
