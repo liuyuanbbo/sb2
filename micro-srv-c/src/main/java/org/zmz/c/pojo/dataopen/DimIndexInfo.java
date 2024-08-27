@@ -1,14 +1,17 @@
 package org.zmz.c.pojo.dataopen;
 
+import java.util.Date;
+
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import tk.mybatis.mapper.annotation.NameStyle;
 import tk.mybatis.mapper.code.Style;
-
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -16,6 +19,7 @@ import java.util.Date;
 @Table(name = "dim_index_info")
 @NameStyle(value = Style.camelhumpAndLowercase)
 public class DimIndexInfo {
+    @TableId
     @Id
     private Long dimIndexId;
     /**

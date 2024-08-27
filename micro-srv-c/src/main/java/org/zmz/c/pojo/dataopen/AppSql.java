@@ -7,9 +7,13 @@ import lombok.ToString;
 import tk.mybatis.mapper.annotation.NameStyle;
 import tk.mybatis.mapper.code.Style;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
+/**
+ * @author Zmz
+ */
 @Getter
 @Setter
 @ToString
@@ -17,6 +21,7 @@ import java.util.Date;
 @NameStyle(value = Style.camelhumpAndLowercase)
 public class AppSql {
     @TableId
+    @Id
     private Long appId;
 
     private String appCode;
