@@ -1,5 +1,8 @@
 package org.zmz.c.service.dataopen.dataset;
 
+/**
+ * @author Zmz
+ */
 public final class EngineType {
 
     private EngineType() {

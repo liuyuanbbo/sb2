@@ -61,22 +61,22 @@ public enum ClickHouseColumnTypeEnum implements ColumnType {
     /**
      * 该字段是否能声明字段长度
      */
-    private boolean declareLength;
+    private final boolean declareLength;
 
     /**
      * 该字段是否能声明字段精度
      */
-    private boolean declareAccuracy;
+    private final boolean declareAccuracy;
 
     /**
      * 字段声明的最大长度，该长度为建字段时SQL不会报错的最大长度，并非实际字段类型的最大长度
      */
-    private Long maxLength;
+    private final Long maxLength;
 
     /**
      * 字段的最大精度
      */
-    private Long maxAccuracy;
+    private final Long maxAccuracy;
 
     ClickHouseColumnTypeEnum(boolean declareLength, boolean declareAccuracy, Long maxLength, Long maxAccuracy) {
         this.declareLength = declareLength;

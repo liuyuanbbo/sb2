@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Zmz
+ */
 @Setter
 @Getter
 public class DatasetConditionQo extends AppSqlCondition {
@@ -55,7 +58,7 @@ public class DatasetConditionQo extends AppSqlCondition {
     private List<DatasetObjColumnVo> termRelaColumns = new ArrayList<>();
 
     /**
-     * 时间粒度类型  timeFreq/timeFreqValue
+     * 时间粒度类型 timeFreq/timeFreqValue
      */
     private String businessType;
 

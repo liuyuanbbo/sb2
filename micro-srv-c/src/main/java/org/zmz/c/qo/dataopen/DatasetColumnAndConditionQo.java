@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 /**
  * 数据编排生成sql参数
+ * 
+ * @author Zmz
  */
 @Getter
 @Setter
@@ -90,9 +92,9 @@ public class DatasetColumnAndConditionQo extends DatasetConfig {
         if (CollectionUtils.isEmpty(this.columnList)) {
             return Collections.emptyList();
         }
-        return this.columnList.stream()
-                .filter(columnQo -> Constants.APP_TYPE_DIMENSION.equals(columnQo.getAppType()) && columnQo.getColumnId() != null)
-                .collect(Collectors.toList());
+        return this.columnList.stream().filter(
+            columnQo -> Constants.APP_TYPE_DIMENSION.equals(columnQo.getAppType()) && columnQo.getColumnId() != null)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -102,9 +104,8 @@ public class DatasetColumnAndConditionQo extends DatasetConfig {
         if (CollectionUtils.isEmpty(this.columnList)) {
             return Collections.emptyList();
         }
-        return this.columnList.stream()
-                .filter(columnQo -> Constants.APP_TYPE_DIMENSION.equals(columnQo.getAppType()))
-                .collect(Collectors.toList());
+        return this.columnList.stream().filter(columnQo -> Constants.APP_TYPE_DIMENSION.equals(columnQo.getAppType()))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -114,9 +115,8 @@ public class DatasetColumnAndConditionQo extends DatasetConfig {
         if (CollectionUtils.isEmpty(this.columnList)) {
             return Collections.emptyList();
         }
-        return this.columnList.stream()
-                .filter(columnQo -> Constants.APP_TYPE_METRICS.equals(columnQo.getAppType()))
-                .collect(Collectors.toList());
+        return this.columnList.stream().filter(columnQo -> Constants.APP_TYPE_METRICS.equals(columnQo.getAppType()))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -153,7 +153,8 @@ public class DatasetColumnAndConditionQo extends DatasetConfig {
             if (StrUtil.isNotEmpty(columnQo.getTermCode())) {
                 if (StrUtil.isNotEmpty(appType) && appType.equals(columnQo.getAppType())) {
                     termColumns.add(columnQo);
-                } else if (StrUtil.isEmpty(appType)) {
+                }
+                else if (StrUtil.isEmpty(appType)) {
                     termColumns.add(columnQo);
                 }
             }
@@ -169,7 +170,7 @@ public class DatasetColumnAndConditionQo extends DatasetConfig {
             return new ArrayList<>(1);
         }
         return condList.stream().filter(d -> d.getColumnId() != null).map(DatasetConditionQo::getObjId).distinct()
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
     }
 
     public boolean judgeIndexView() {

@@ -28,7 +28,7 @@ public class DatasetGroupService {
         // 需要包含虚拟对象
         List<DatasetColumnQo> dimensionList = firstGroup.getAllDimensionColumns();
         Map<String, List<DatasetColumnQo>> dimByRelaTypeMap = dimensionList.stream()
-                .collect(Collectors.groupingBy(DatasetColumnQo::getRelaType));
+            .collect(Collectors.groupingBy(DatasetColumnQo::getRelaType));
 
         List<DatasetColumnQo> dimensionListN = dimByRelaTypeMap.get(Constants.OBJ_TREE_RELA_TYPE_N);
         List<DatasetColumnQo> dimensionList2 = dimByRelaTypeMap.get(Constants.OBJ_TREE_RELA_TYPE_2);
@@ -54,11 +54,8 @@ public class DatasetGroupService {
         // 一端对象
         if (CollUtil.isNotEmpty(dimensionList1)) {
             // 按路径分组,分组后保留list顺序
-            Map<String, List<DatasetColumnQo>> samePathColumnsMap = dimensionList1.stream()
-                    .collect(
-                            Collectors.groupingBy(columnQo -> columnQo.getPath().split(",")[0],
-                                    LinkedHashMap::new, Collectors.toList())
-                    );
+            Map<String, List<DatasetColumnQo>> samePathColumnsMap = dimensionList1.stream().collect(Collectors
+                .groupingBy(columnQo -> columnQo.getPath().split(",")[0], LinkedHashMap::new, Collectors.toList()));
             for (List<DatasetColumnQo> samePathColumns : samePathColumnsMap.values()) {
                 getSmallestDimensions(samePathColumns, measureDimensions);
             }
@@ -73,15 +70,17 @@ public class DatasetGroupService {
     /**
      * 计算 N端 2端 0端
      */
-    private List<DatasetColumnQo> calcEnd(List<DatasetColumnQo> measureDimensions, List<DatasetColumnQo> dimensionList) {
+    private List<DatasetColumnQo> calcEnd(List<DatasetColumnQo> measureDimensions,
+        List<DatasetColumnQo> dimensionList) {
         // n端对象
         if (CollUtil.isNotEmpty(dimensionList)) {
             List<DatasetColumnQo> pkColumns = dimensionList.stream()
-                    .filter(datasetColumnQo -> Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
-                    .collect(Collectors.toList());
+                .filter(datasetColumnQo -> Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
+                .collect(Collectors.toList());
             if (CollUtil.isNotEmpty(pkColumns)) {
                 return pkColumns;
-            } else {
+            }
+            else {
                 measureDimensions.addAll(pkColumns);
             }
         }
@@ -97,24 +96,22 @@ public class DatasetGroupService {
             Long startObjectId = dimensionList.get(0).getObjectId();
             // 起点对象的字段
             List<DatasetColumnQo> startDimensions = dimensionList.stream()
-                    .filter(datasetColumnQo -> startObjectId.equals(datasetColumnQo.getObjectId()))
-                    .toList();
+                .filter(datasetColumnQo -> startObjectId.equals(datasetColumnQo.getObjectId())).toList();
             // 起点对象的主键
             List<DatasetColumnQo> pkColumns = startDimensions.stream()
-                    .filter(datasetColumnQo -> Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
-                    .collect(Collectors.toList());
+                .filter(datasetColumnQo -> Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
+                .collect(Collectors.toList());
             if (CollUtil.isEmpty(pkColumns)) {
                 List<DatasetColumnQo> notPkColumns = startDimensions.stream()
-                        .filter(datasetColumnQo -> !Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
-                        .toList();
+                    .filter(datasetColumnQo -> !Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary())).toList();
                 measureDimensions.addAll(notPkColumns);
                 // 取差集
-                List<DatasetColumnQo> diffDimensionList = dimensionList.stream()
-                        .filter(b -> startDimensions.stream().map(AppSqlColumn::getPath)
-                                .noneMatch(id -> Objects.equals(b.getPath(), id)))
-                        .collect(Collectors.toList());
+                List<DatasetColumnQo> diffDimensionList = dimensionList.stream().filter(b -> startDimensions.stream()
+                    .map(AppSqlColumn::getPath).noneMatch(id -> Objects.equals(b.getPath(), id)))
+                    .collect(Collectors.toList());
                 getSmallestDimensions(diffDimensionList, measureDimensions);
-            } else {
+            }
+            else {
                 measureDimensions.addAll(pkColumns);
             }
         }

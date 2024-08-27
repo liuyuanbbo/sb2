@@ -1,6 +1,6 @@
 package org.zmz.c.mapper;
 
-import tk.mybatis.mapper.common.BaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import tk.mybatis.mapper.common.Mapper;
 
 /**

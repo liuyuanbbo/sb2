@@ -1,5 +1,8 @@
 package org.zmz.c.service.dataopen.dataset;
 
+/**
+ * @author Zmz
+ */
 public interface ColumnType {
 
     /**

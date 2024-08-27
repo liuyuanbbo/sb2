@@ -48,12 +48,9 @@ public class DataSetService {
         // 数据同步
         params.setDatasetDetailExt(params);
         // 判断是否已经构建过path
-        DatasetColumnQo columnQos = groups.stream()
-                .map(DatasetColumnAndConditionQo::getColumnList)
-                .flatMap(Collection::stream)
-                .filter(columnQo -> CollUtil.isNotEmpty(columnQo.getPaths()))
-                .findFirst()
-                .orElse(null);
+        DatasetColumnQo columnQos = groups.stream().map(DatasetColumnAndConditionQo::getColumnList)
+            .flatMap(Collection::stream).filter(columnQo -> CollUtil.isNotEmpty(columnQo.getPaths())).findFirst()
+            .orElse(null);
         if (columnQos == null) {
             // sql拼接前的参数构建
             datasetParamsBuildService.paramsBuild(params);

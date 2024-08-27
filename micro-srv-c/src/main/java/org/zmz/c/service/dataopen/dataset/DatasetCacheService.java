@@ -63,7 +63,7 @@ public class DatasetCacheService {
             obj.setComAcctId(comAcctId);
             List<ObjKeyTableRelaVo> list = objKeyTableRelaMapper.selectKeyRelaByQo(obj);
             Map<Long, List<ObjKeyTableRelaVo>> objDimRelaVosMap = list.stream()
-                    .collect(Collectors.groupingBy(ObjKeyTableRelaVo::getObjectId));
+                .collect(Collectors.groupingBy(ObjKeyTableRelaVo::getObjectId));
             stringValueOperations.set(redisKey, JSON.toJSONString(objDimRelaVosMap), TIMEOUT, TimeUnit.MILLISECONDS);
             return objDimRelaVosMap;
         }

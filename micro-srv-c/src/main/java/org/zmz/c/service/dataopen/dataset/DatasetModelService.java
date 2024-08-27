@@ -35,8 +35,9 @@ public class DatasetModelService {
         Set<Long> metaTableIds;
         if (StrUtil.isNotEmpty(datasetDetail.getSqlRelTables())) {
             metaTableIds = Arrays.stream(datasetDetail.getSqlRelTables().split("\\|")).map(Long::parseLong)
-                    .collect(Collectors.toSet());
-        } else {
+                .collect(Collectors.toSet());
+        }
+        else {
             DatasetRelaQo datasetRelaQo = this.getDatasetRelas(datasetDetail);
             metaTableIds = new HashSet<>(datasetRelaQo.getTableIds());
         }
@@ -113,7 +114,7 @@ public class DatasetModelService {
     }
 
     private void addDatasetRelas(Set<Long> objectIds, Set<Long> metaTableIds, Set<Long> columnIds,
-                                 MetricsDimensionPathVo metricsDimensionPathVo) {
+        MetricsDimensionPathVo metricsDimensionPathVo) {
         if (metricsDimensionPathVo.getSrcObjectId() != null) {
             objectIds.add(metricsDimensionPathVo.getSrcObjectId());
         }
@@ -139,7 +140,7 @@ public class DatasetModelService {
     }
 
     private void addDatasetColumnRelas(Set<Long> objectIds, Set<Long> metaTableIds, Set<Long> columnIds,
-                                       Set<Long> proIndexIds, Set<Long> dimIndexIds, DatasetColumnQo columnQo) {
+        Set<Long> proIndexIds, Set<Long> dimIndexIds, DatasetColumnQo columnQo) {
         this.addDatasetRelas(objectIds, metaTableIds, columnIds, proIndexIds, dimIndexIds, columnQo);
 
         if (CollUtil.isNotEmpty(columnQo.getColumnGroup())) {
@@ -161,7 +162,7 @@ public class DatasetModelService {
     }
 
     private void addDatasetPathRelas(Set<Long> objectIds, Set<Long> metaTableIds, Set<Long> columnIds,
-                                     DatasetColumnQo columnQo) {
+        DatasetColumnQo columnQo) {
         if (CollUtil.isNotEmpty(columnQo.getPaths())) {
             for (MetricsDimensionPathVo metricsDimensionPathVo : columnQo.getPaths()) {
                 this.addDatasetRelas(objectIds, metaTableIds, columnIds, metricsDimensionPathVo);
@@ -170,7 +171,7 @@ public class DatasetModelService {
     }
 
     private void addDatasetRelas(Set<Long> objectIds, Set<Long> metaTableIds, Set<Long> columnIds,
-                                 Set<Long> proIndexIds, Set<Long> dimIndexIds, DatasetColumnQo columnQo) {
+        Set<Long> proIndexIds, Set<Long> dimIndexIds, DatasetColumnQo columnQo) {
         if (columnQo.getObjectId() != null) {
             objectIds.add(columnQo.getObjectId());
         }
@@ -189,7 +190,7 @@ public class DatasetModelService {
     }
 
     private void addDatasetRelas(Set<Long> objectIds, Set<Long> metaTableIds, Set<Long> columnIds,
-                                 Set<Long> proIndexIds, Set<Long> dimIndexIds, DatasetConditionQo conditionQo) {
+        Set<Long> proIndexIds, Set<Long> dimIndexIds, DatasetConditionQo conditionQo) {
         if (conditionQo.getObjId() != null) {
             objectIds.add(conditionQo.getObjId());
         }

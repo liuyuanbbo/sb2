@@ -2,6 +2,10 @@ package org.zmz.c.service.dataopen.dataset;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * @author Zmz
+ */
+
 public enum SqlFuncEnum {
 
     /**
@@ -11,8 +15,7 @@ public enum SqlFuncEnum {
     /**
      * 原生函数
      */
-    Native,
-    MAX, MIN, COUNT, COUNTDISTINCT, LOGICCOUNT,
+    Native, MAX, MIN, COUNT, COUNTDISTINCT, LOGICCOUNT,
     /**
      * 月累计
      */
@@ -46,13 +49,11 @@ public enum SqlFuncEnum {
      */
     mmGrowth,
     /**
-     * 日：比上年末：(本期实际值 -去年最后一天实际值)
-     * 月：比上年末：（本期实际值 -去年12月实际值)
+     * 日：比上年末：(本期实际值 -去年最后一天实际值) 月：比上年末：（本期实际值 -去年12月实际值)
      */
     yearEnd,
     /**
-     * 日：比上年末(%)：（本期实际值 -去年最后一天实际值)/去年最后一天实际值 x100%
-     * 月：比上年末(%)：(本期实际值 -去年12月实际值)/去年12月实际值 x100%
+     * 日：比上年末(%)：（本期实际值 -去年最后一天实际值)/去年最后一天实际值 x100% 月：比上年末(%)：(本期实际值 -去年12月实际值)/去年12月实际值 x100%
      */
     yearEndGrowth;
 

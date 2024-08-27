@@ -107,7 +107,7 @@ public class DatasetParamsBuildService {
         extractMetricsAndDimensions(params, dimensionList, metricsList);
 
         // 所有对象关系数据
-        //Long comAcctId = AccountUtil.getComAcctId();
+        // Long comAcctId = AccountUtil.getComAcctId();
         long comAcctId = 1021L;
         List<ObjKeyTableRelaVo> objKeyTableRelaList = datasetCacheService.getDatasetKeyRelaListInRedis(comAcctId);
 
@@ -127,19 +127,19 @@ public class DatasetParamsBuildService {
 
         // 表多主键
         Map<Long, List<Column>> allPrimaryMapLists = allColumns.stream()
-                .filter(c -> KeyValues.YES_VALUE_1.equals(c.getBusinessKey()))
-                .collect(Collectors.groupingBy(Column::getMetaDataId));
+            .filter(c -> KeyValues.YES_VALUE_1.equals(c.getBusinessKey()))
+            .collect(Collectors.groupingBy(Column::getMetaDataId));
         // 所有字段
         Map<Long, Column> allColumnMap = allColumns.stream().collect(Collectors.toMap(Column::getColumnId, c -> c));
         // 表->表字段列表的map
         Map<Long, List<Column>> tableIdToAllColumnMap = allColumns.stream()
-                .collect(Collectors.groupingBy(Column::getMetaDataId));
+            .collect(Collectors.groupingBy(Column::getMetaDataId));
 
         if (CollUtil.isNotEmpty(metricsList)) {
             // 按度量归属表分组后的维度集合
             Map<Long, List<DatasetColumnQo>> metricDimensions = new HashMap<>();
             Map<Long, List<DatasetColumnQo>> metricGroups = metricsList.stream()
-                    .collect(Collectors.groupingBy(DatasetColumnQo::getTableId));
+                .collect(Collectors.groupingBy(DatasetColumnQo::getTableId));
             Set<Long> tableIds = dimensionList.stream().map(DatasetColumnQo::getTableId).collect(Collectors.toSet());
             metricGroups.forEach((currMetricId, metricList) -> {
                 Set<Long> dimTableIds = new HashSet<>(tableIds);
@@ -150,12 +150,12 @@ public class DatasetParamsBuildService {
                         for (DatasetConditionQo t : metric.getCondList()) {
                             if ("simpleCond".equals(t.getCondType())) {
                                 if (t.getColumnId() != null && !KeyValues.YES_VALUE_1.equals(t.getIsAcct())
-                                        && !dimTableIds.contains(t.getTableId())
-                                        && !metric.getTableId().equals(t.getTableId())) {
+                                    && !dimTableIds.contains(t.getTableId())
+                                    && !metric.getTableId().equals(t.getTableId())) {
                                     dimTableIds.add(t.getTableId());
                                     DatasetColumnQo newDatasetColumnQo = new DatasetColumnQo();
                                     BeanUtils.copyProperties(t, newDatasetColumnQo,
-                                            KeyValues.ENTITY_COPY_IGNORE_FIELDS);
+                                        KeyValues.ENTITY_COPY_IGNORE_FIELDS);
                                     metricToDimensions.add(newDatasetColumnQo);
                                 }
                             }
@@ -184,13 +184,14 @@ public class DatasetParamsBuildService {
                 if (CollectionUtils.isEmpty(allDims)) {
                     // 维度为空
                     newAllDims.add(metric);
-                } else {
+                }
+                else {
                     newAllDims.addAll(allDims);
                 }
 
                 for (DatasetColumnQo dimension : newAllDims) {
                     List<MetricsDimensionPathVo> pathVoList = pathConverts(dimensionToMetricMap, metric, dimension,
-                            allColumnMap, allPrimaryMapLists, params.getObjectId());
+                        allColumnMap, allPrimaryMapLists, params.getObjectId());
                     // 构建维度路径、这方法很重要
                     String path = SqlBuilderHelper.getConvertDimPath(metric, dimension);
                     // 主表和从表的维度，path一样，但是表关联不一样，因此要舍短取长
@@ -214,9 +215,9 @@ public class DatasetParamsBuildService {
                 // 构建度量的路径、这方法很重要、与方法SqlBuilderHelper.getConvertDimPath()强关联。
                 String metricPath = SqlBuilderHelper.getMetricPath(metric);
                 String longestMetricsPath = longestPathList.stream().filter(p -> p.startsWith(metricPath))
-                        .max(Comparator.comparingInt(String::length)).orElse(null);
+                    .max(Comparator.comparingInt(String::length)).orElse(null);
                 List<String> otherPathKeyList = longestPathList.stream().filter(p -> !p.startsWith(metricPath))
-                        .collect(Collectors.toList());
+                    .collect(Collectors.toList());
                 // N端不为空就使用N端最长路径，N端包含了1端的最长路径
                 if (CollUtil.isNotEmpty(otherPathKeyList)) {
                     // 度量来自选择对象或者1端或者主分析对象
@@ -228,11 +229,11 @@ public class DatasetParamsBuildService {
                         });
                         // 去重
                         List<MetricsDimensionPathVo> distinctLongestPathVos = totalLongestPathVos.stream().distinct()
-                                .collect(Collectors.toList());
+                            .collect(Collectors.toList());
                         // path有多个的话，可以去掉跟自己关联的path
                         if (distinctLongestPathVos.size() > 1) {
                             distinctLongestPathVos
-                                    .removeIf(p -> p.getTgtTableId() == null && p.getMultiColumns().isEmpty());
+                                .removeIf(p -> p.getTgtTableId() == null && p.getMultiColumns().isEmpty());
                         }
                         for (MetricsDimensionPathVo longestPathVo : distinctLongestPathVos) {
                             longestPathVo.setMetricsInnerPath(Constants.YES_VALUE_1);
@@ -244,7 +245,8 @@ public class DatasetParamsBuildService {
                         //
                         newPathsMap.put(longestMetricsPath, distinctLongestPathVos);
                         metric.setPathsMap(newPathsMap);
-                    } else {
+                    }
+                    else {
                         // N端
                         metric.setPathsMap(newPathsMap);
                     }
@@ -282,16 +284,16 @@ public class DatasetParamsBuildService {
      * 对象树转表关联路径(对象内表之间用表的主键关联、对象之间用表obj_key_table_rela中关系字段关联,可能是从表字段或主表字段关联)
      *
      * @param dimensionToMetricMap 所有维度到一个度量的路径
-     * @param metric               度量
-     * @param dimension            维度
-     * @param allColumnMap         所有字段
-     * @param allPrimaryMapLists   所有表的多主键字段
-     * @param currObjId            当前主分析对象id
+     * @param metric 度量
+     * @param dimension 维度
+     * @param allColumnMap 所有字段
+     * @param allPrimaryMapLists 所有表的多主键字段
+     * @param currObjId 当前主分析对象id
      * @return 返回表关联路径
      */
     private List<MetricsDimensionPathVo> pathConverts(Map<String, List<ObjRelaTreeVo>> dimensionToMetricMap,
-                                                      DatasetColumnQo metric, DatasetColumnQo dimension, Map<Long, Column> allColumnMap,
-                                                      Map<Long, List<Column>> allPrimaryMapLists, Long currObjId) {
+        DatasetColumnQo metric, DatasetColumnQo dimension, Map<Long, Column> allColumnMap,
+        Map<Long, List<Column>> allPrimaryMapLists, Long currObjId) {
         List<MetricsDimensionPathVo> pathVoList = new ArrayList<>();
         // 取出一条路径遍历创建路径path
         String dimPath = StringUtils.isBlank(dimension.getPath()) ? "-" + dimension.getTableId() : dimension.getPath();
@@ -300,7 +302,8 @@ public class DatasetParamsBuildService {
         if (relaTreeVos.size() == 1) {
             // 度量与维度同一对象、同对象不同表用主键字段关联
             firstNode(metric, dimension, allPrimaryMapLists, pathVoList);
-        } else {
+        }
+        else {
             // 维度跟度量不是同一个对象
             Long preObjId = null;
             Long preTableId = null;
@@ -340,7 +343,7 @@ public class DatasetParamsBuildService {
 
                 // 对象之间关联前一对象和下一对象时候不是同一张表用他们的主键关联(同一个对象)
                 if (objRelaTreeVo.getOneToNObjectId().equals(preObjId)
-                        && !objRelaTreeVo.getOneToNTableId().equals(preTableId)) {
+                    && !objRelaTreeVo.getOneToNTableId().equals(preTableId)) {
                     ObjRelaTreeVo newObjRelaTreeVo = new ObjRelaTreeVo();
                     // 对象与上一个对象关联的表主键字段
                     List<Column> primaryKeys = allPrimaryMapLists.get(preTableId);
@@ -382,7 +385,7 @@ public class DatasetParamsBuildService {
                 if (i == relaTreeVos.size() - 1) {
                     // 维度对象内表之间用主键关联
                     if (objRelaTreeVo.getRelaTableId() != null
-                            && !objRelaTreeVo.getRelaTableId().equals(dimension.getTableId())) {
+                        && !objRelaTreeVo.getRelaTableId().equals(dimension.getTableId())) {
                         ObjRelaTreeVo newObjRelaTreeVo = new ObjRelaTreeVo();
 
                         List<Column> primaryKeys = allPrimaryMapLists.get(objRelaTreeVo.getRelaTableId());
@@ -408,13 +411,13 @@ public class DatasetParamsBuildService {
     /**
      * 多维指标对象内部表关联
      *
-     * @param metric        多维度量
-     * @param allColumnMap  所有字段
+     * @param metric 多维度量
+     * @param allColumnMap 所有字段
      * @param objRelaTreeVo 对象关系
      * @return 路径对象
      */
     private MetricsDimensionPathVo multiDimPath(DatasetColumnQo metric, Map<Long, Column> allColumnMap,
-                                                ObjRelaTreeVo objRelaTreeVo) {
+        ObjRelaTreeVo objRelaTreeVo) {
         ObjInfo objInfo = objInfoMapper.selectById(metric.getObjectId());
         String primaryKeys = objInfo.getPrimaryKey();
         String[] primaryIds = primaryKeys.split(",");
@@ -437,11 +440,11 @@ public class DatasetParamsBuildService {
     }
 
     private void firstNode(DatasetColumnQo metric, DatasetColumnQo dimension,
-                           Map<Long, List<Column>> allPrimaryMapLists, List<MetricsDimensionPathVo> pathVoList) {
+        Map<Long, List<Column>> allPrimaryMapLists, List<MetricsDimensionPathVo> pathVoList) {
         // 虚拟对象
         ObjInfo objInfo = objInfoMapper.selectById(metric.getObjectId());
         if (!metric.getTableId().equals(dimension.getTableId())
-                && !ObjCreateType.OBJ_CREATE_TYPE_VIRTUAL.equalsIgnoreCase(objInfo.getCreateType())) {
+            && !ObjCreateType.OBJ_CREATE_TYPE_VIRTUAL.equalsIgnoreCase(objInfo.getCreateType())) {
             ObjRelaTreeVo objRelaVo = new ObjRelaTreeVo();
 
             List<Column> primaryKeys = allPrimaryMapLists.get(metric.getTableId());
@@ -457,7 +460,8 @@ public class DatasetParamsBuildService {
             objRelaVo.setRelaTableCode(dimension.getTableCode());
 
             pathVoList.add(srcTableJoinTgtTable("1", objRelaVo));
-        } else {
+        }
+        else {
             // 度量和维度来自于同一表
             MetricsDimensionPathVo path = new MetricsDimensionPathVo();
             path.setMetricsInnerPath("1");
@@ -477,7 +481,8 @@ public class DatasetParamsBuildService {
     }
 
     private DatasetColumnQo getVirtualObjColumn(DatasetColumnQo metric, DatasetColumnQo dimension) {
-        ObjColumnRela objColumnRela = objColumnRelaMapper.getObjColumnByCondition(metric.getObjectId(), metric.getTableId(), dimension.getColumnCode());
+        ObjColumnRela objColumnRela = objColumnRelaMapper.getObjColumnByCondition(metric.getObjectId(),
+            metric.getTableId(), dimension.getColumnCode());
         if (objColumnRela != null) {
             DatasetColumnQo virtualObjColumn = new DatasetColumnQo();
             virtualObjColumn.setAppType(Constants.APP_TYPE_DIMENSION);
@@ -505,7 +510,7 @@ public class DatasetParamsBuildService {
     /**
      * 对象关联对象
      *
-     * @param innerPath     1/0
+     * @param innerPath 1/0
      * @param objRelaTreeVo 对象关联对象
      * @return 返回对象路径关系
      */
@@ -524,7 +529,6 @@ public class DatasetParamsBuildService {
         return path;
     }
 
-
     private List<ObjKeyColumnRelaVo> transformPrimaryKeys(List<Column> primaryKeys, List<Column> onePrimaryKeys) {
         if (primaryKeys.size() == 1) {
             ObjKeyColumnRelaVo vo = new ObjKeyColumnRelaVo();
@@ -538,7 +542,7 @@ public class DatasetParamsBuildService {
             return singletonList;
         }
         Map<String, Long> oneColumnMap = onePrimaryKeys.stream()
-                .collect(Collectors.toMap(Column::getColumnCode, Column::getColumnId));
+            .collect(Collectors.toMap(Column::getColumnCode, Column::getColumnId));
         return primaryKeys.stream().map(input -> {
             ObjKeyColumnRelaVo vo = new ObjKeyColumnRelaVo();
             vo.setColumnId(input.getColumnId());
@@ -603,7 +607,7 @@ public class DatasetParamsBuildService {
      * 不同的路径上的组织维表，组成临时表的路径
      *
      * @param metricsList 度量
-     * @param params      前端请求参数
+     * @param params 前端请求参数
      */
     public void handleTempPath(List<DatasetColumnQo> metricsList, DatasetColumnAndConditionQo params) {
         DataPrivCtrlVo dataPrivCtrlInfo = params.getDataPrivCtrlInfo();
@@ -616,7 +620,7 @@ public class DatasetParamsBuildService {
         log.info("handleTempPath里的dataPrivCtrlInfo信息：{}", JsonUtil.toJson(dataPrivCtrlInfo));
         // 找出组织维表id列表
         List<Long> orgDimensionMetaDataIdList = orgDimensionModelInfoList.stream()
-                .map(m -> m.getMetaDataInfo().getMetaDataId()).toList();
+            .map(m -> m.getMetaDataInfo().getMetaDataId()).toList();
 
         // 度量中各个路径用到的临时表
         Map<String, Map<String, List<MetricsDimensionPathVo>>> tempTablesMap = new HashMap<>();
@@ -650,7 +654,7 @@ public class DatasetParamsBuildService {
                     if (mainTbPaths.size() == 1) {
                         MetricsDimensionPathVo pathVo = mainTbPaths.get(0);
                         MetricsDimensionPathVo mainToTempPath = (MetricsDimensionPathVo) SerializationUtils
-                                .clone(pathVo);
+                            .clone(pathVo);
                         if (orgDimensionMetaDataIdList.contains(pathVo.getTgtTableId())) {
                             this.setPathVoProperty(pathVo);
                         }
@@ -660,26 +664,28 @@ public class DatasetParamsBuildService {
                     if (mainTbPaths.size() > 1) {
                         MetricsDimensionPathVo pathVo = mainTbPaths.get(mainTbPaths.size() - 1);
                         if (pathVo.getTgtTableId() != null
-                                && orgDimensionMetaDataIdList.contains(pathVo.getTgtTableId())) {
+                            && orgDimensionMetaDataIdList.contains(pathVo.getTgtTableId())) {
                             mainTbPaths.remove(pathVo);
                             mainTablesToTempTablesPaths.put(dimPath, pathVo);
-                        } else {
+                        }
+                        else {
                             // 当有临时表，维度和度量有相同表的，这里要特殊处理，防止取到相同度量表和维度表的空关联关系
                             pathVo = mainTbPaths.get(mainTbPaths.size() - 2);
                             if (pathVo.getTgtTableId() != null
-                                    && orgDimensionMetaDataIdList.contains(pathVo.getTgtTableId())) {
+                                && orgDimensionMetaDataIdList.contains(pathVo.getTgtTableId())) {
                                 mainTbPaths.remove(pathVo);
                                 mainTablesToTempTablesPaths.put(dimPath, pathVo);
                             }
                         }
                     }
-                } else {
+                }
+                else {
                     // 若只关联了一个组织维度表，该表是目标表
                     MetricsDimensionPathVo pathVo = mainTbPaths.stream()
-                            .filter(p -> orgDimensionMetaDataIdList.contains(p.getTgtTableId())).findFirst().orElse(null);
+                        .filter(p -> orgDimensionMetaDataIdList.contains(p.getTgtTableId())).findFirst().orElse(null);
                     if (pathVo != null) {
                         MetricsDimensionPathVo mainToTempPath = (MetricsDimensionPathVo) SerializationUtils
-                                .clone(pathVo);
+                            .clone(pathVo);
                         // BeanUtils.copyProperties(pathVo, mainToTempPath);
                         // 构建组织维度临时表的path（只有一张表）
                         MetricsDimensionPathVo orgDimensionTempPath = new MetricsDimensionPathVo();
@@ -695,7 +701,7 @@ public class DatasetParamsBuildService {
                         if (mainTbPaths.size() > 1) {
                             pathVo = mainTbPaths.get(mainTbPaths.size() - 1);
                             if (pathVo.getTgtTableId() != null
-                                    && orgDimensionMetaDataIdList.contains(pathVo.getTgtTableId())) {
+                                && orgDimensionMetaDataIdList.contains(pathVo.getTgtTableId())) {
                                 mainTbPaths.remove(pathVo);
                             }
                         }
@@ -734,7 +740,7 @@ public class DatasetParamsBuildService {
      * 路径相同，但是可能有的表关系有从表，保留从表； 路径包含，但是可能短的关系有从表，长的没有，这时候要合并从表
      */
     private void mergePathsMap(Map<String, List<MetricsDimensionPathVo>> pathsMap, String path,
-                               List<MetricsDimensionPathVo> pathVoList) {
+        List<MetricsDimensionPathVo> pathVoList) {
         // 去重、path有多个的去掉跟自己关联的path
         List<MetricsDimensionPathVo> distinctPathVoList = pathVoList.stream().distinct().collect(Collectors.toList());
         if (distinctPathVoList.size() > 1) {
@@ -751,7 +757,7 @@ public class DatasetParamsBuildService {
      * 根据数据权限增加组织明细路径
      */
     public void handleDataPrivPath(List<DatasetColumnQo> metricsList, DatasetColumnAndConditionQo params,
-                                   Map<Long, List<Column>> tableIdToColumnMap) {
+        Map<Long, List<Column>> tableIdToColumnMap) {
         DataPrivCtrlVo dataPrivCtrlInfo = datasetDataPrivService.isDataPrivCtrl(params);
         if (dataPrivCtrlInfo.isDataPrivCtrl()) {
             DatasetColumnQo existOrgDimensionColumn = dataPrivCtrlInfo.getExistOrgDimensionColumn();
@@ -764,7 +770,7 @@ public class DatasetParamsBuildService {
             // 需要处理数据权限的表
             List<ModelInfo> dataPrivModelList = dataPrivCtrlInfo.getDataPrivModelList();
             Map<Long, ModelInfo> dataPrivModelMap = dataPrivModelList.stream()
-                    .collect(Collectors.toMap(d -> d.getMetaDataInfo().getMetaDataId(), d -> d));
+                .collect(Collectors.toMap(d -> d.getMetaDataInfo().getMetaDataId(), d -> d));
             // 没有选择组织维度字段的情况，直接用表的组织字段与组织明细表进行关联
             if (existOrgDimensionColumn == null) {
                 for (DatasetColumnQo metrics : metricsList) {
@@ -773,13 +779,13 @@ public class DatasetParamsBuildService {
                     for (MetricsDimensionPathVo path : paths) {
                         if (dataPrivModelMap.containsKey(path.getSrcTableId())) {
                             appendAuthObj(orgModelInfo, orgModelPrimaryColumn, orgInfoPathsMap,
-                                    dataPrivModelMap.get(path.getSrcTableId()),
-                                    tableIdToColumnMap.get(path.getSrcTableId()));
+                                dataPrivModelMap.get(path.getSrcTableId()),
+                                tableIdToColumnMap.get(path.getSrcTableId()));
                         }
                         if (dataPrivModelMap.containsKey(path.getTgtTableId())) {
                             appendAuthObj(orgModelInfo, orgModelPrimaryColumn, orgInfoPathsMap,
-                                    dataPrivModelMap.get(path.getTgtTableId()),
-                                    tableIdToColumnMap.get(path.getTgtTableId()));
+                                dataPrivModelMap.get(path.getTgtTableId()),
+                                tableIdToColumnMap.get(path.getTgtTableId()));
                         }
                     }
 
@@ -790,7 +796,7 @@ public class DatasetParamsBuildService {
                         List<MetricsDimensionPathVo> value = entry.getValue();
                         for (MetricsDimensionPathVo pathVo : value) {
                             if (dataPrivModelMap.containsKey(pathVo.getSrcTableId())
-                                    || dataPrivModelMap.containsKey(pathVo.getTgtTableId())) {
+                                || dataPrivModelMap.containsKey(pathVo.getTgtTableId())) {
                                 dataPrivPathKey = entry.getKey();
                                 metrics.setDataPrivPathKey(dataPrivPathKey);
                                 break;
@@ -815,24 +821,25 @@ public class DatasetParamsBuildService {
                         Map<Long, MetricsDimensionPathVo> orgInfoPathsMap = metrics.getOrgInfoPathsMap();
                         // 1、与最细的组织维度表关联
                         this.setDataPrivPathProperty(orgDimensionModelInfo, orgModelInfo, orgModelPrimaryColumn,
-                                orgDimensionModelPrimaryColumn, orgInfoPathsMap);
+                            orgDimensionModelPrimaryColumn, orgInfoPathsMap);
 
                         // 2、与有组织字段的表进行关联
                         List<MetricsDimensionPathVo> paths = metrics.getPaths();
                         for (MetricsDimensionPathVo path : paths) {
                             if (dataPrivModelMap.containsKey(path.getSrcTableId())) {
                                 appendAuthObj(orgModelInfo, orgModelPrimaryColumn, orgInfoPathsMap,
-                                        dataPrivModelMap.get(path.getSrcTableId()),
-                                        tableIdToColumnMap.get(path.getSrcTableId()));
+                                    dataPrivModelMap.get(path.getSrcTableId()),
+                                    tableIdToColumnMap.get(path.getSrcTableId()));
                             }
                             if (dataPrivModelMap.containsKey(path.getTgtTableId())) {
                                 appendAuthObj(orgModelInfo, orgModelPrimaryColumn, orgInfoPathsMap,
-                                        dataPrivModelMap.get(path.getTgtTableId()),
-                                        tableIdToColumnMap.get(path.getTgtTableId()));
+                                    dataPrivModelMap.get(path.getTgtTableId()),
+                                    tableIdToColumnMap.get(path.getTgtTableId()));
                             }
                         }
                     }
-                } else {
+                }
+                else {
                     for (DatasetColumnQo metrics : metricsList) {
                         // 判断出组织维度字段是来自哪个路径，只需要在该路径上sql进行权限控制
                         this.setDataPrivPathKey(metrics, existOrgDimensionColumn);
@@ -842,17 +849,17 @@ public class DatasetParamsBuildService {
                         // 找出用户表和组织维度表的关联关系，取出组织维度表的关联字段
                         MetricsDimensionPathVo orgDimensionRelaPath = paths.stream().filter(p -> {
                             return dataPrivModelMap.containsKey(p.getSrcTableId())
-                                    && p.getTgtTableId().equals(orgDimensionModelInfo.getMetaDataInfo().getMetaDataId());
+                                && p.getTgtTableId().equals(orgDimensionModelInfo.getMetaDataInfo().getMetaDataId());
                         }).findFirst().orElse(null);
 
                         if (orgDimensionRelaPath != null) {
                             List<ObjKeyColumnRelaVo> relaColumns = orgDimensionRelaPath.getKeyColumnRelas();
                             List<String> relaColumnLists = relaColumns.stream()
-                                    .map(ObjKeyColumnRelaVo::getRelaColumnCode).toList();
+                                .map(ObjKeyColumnRelaVo::getRelaColumnCode).toList();
                             // 如果组织维度拖选的最细粒度与用户表配置的组织关联层级一样时，组织明细表只需要拼接一次（与组织维度表关联）
                             // todo 与维度组织表关联，会导致不拼用户表权限条件,暂时将||改成&&，使以下if不执行
                             if (relaColumnLists.contains(existOrgDimensionColumn.getColumnCode())
-                                    && (addOrgDimensionColumn != null
+                                && (addOrgDimensionColumn != null
                                     && relaColumnLists.contains(addOrgDimensionColumn.getColumnCode()))) {
 
                                 MetricsDimensionPathVo dataPrivPath = new MetricsDimensionPathVo();
@@ -866,11 +873,11 @@ public class DatasetParamsBuildService {
 
                                 ObjKeyColumnRelaVo relaColumn = new ObjKeyColumnRelaVo();
                                 relaColumn
-                                        .setColumnCode(addOrgDimensionColumn != null ? addOrgDimensionColumn.getColumnCode()
-                                                : existOrgDimensionColumn.getColumnCode());
+                                    .setColumnCode(addOrgDimensionColumn != null ? addOrgDimensionColumn.getColumnCode()
+                                        : existOrgDimensionColumn.getColumnCode());
                                 relaColumn
-                                        .setColumnId(addOrgDimensionColumn != null ? addOrgDimensionColumn.getColumnId()
-                                                : existOrgDimensionColumn.getColumnId());
+                                    .setColumnId(addOrgDimensionColumn != null ? addOrgDimensionColumn.getColumnId()
+                                        : existOrgDimensionColumn.getColumnId());
                                 relaColumn.setRelaColumnCode(orgModelPrimaryColumn.getColumnCode());
                                 relaColumn.setRelaColumnId(orgModelPrimaryColumn.getColumnId());
 
@@ -958,10 +965,10 @@ public class DatasetParamsBuildService {
     }
 
     private void appendAuthObj(ModelInfo orgModelInfo, Column orgModelPrimaryColumn,
-                               Map<Long, MetricsDimensionPathVo> orgInfoPathsMap, ModelInfo dataPrivModelInfo, List<Column> columnList) {
+        Map<Long, MetricsDimensionPathVo> orgInfoPathsMap, ModelInfo dataPrivModelInfo, List<Column> columnList) {
         Column orgField = columnList.stream()
-                .filter(c -> c.getColumnCode().equals(dataPrivModelInfo.getBussinessAttr().getOrgField())).findAny()
-                .orElse(null);
+            .filter(c -> c.getColumnCode().equals(dataPrivModelInfo.getBussinessAttr().getOrgField())).findAny()
+            .orElse(null);
         this.setDataPrivPathProperty(dataPrivModelInfo, orgModelInfo, orgModelPrimaryColumn, orgField, orgInfoPathsMap);
     }
 
@@ -969,7 +976,7 @@ public class DatasetParamsBuildService {
      * 设置数据权限路径
      */
     private void setDataPrivPathProperty(ModelInfo orgDimensionModelInfo, ModelInfo orgModelInfo,
-                                         Column orgModelPrimaryColumn, Column orgField, Map<Long, MetricsDimensionPathVo> orgInfoPathsMap) {
+        Column orgModelPrimaryColumn, Column orgField, Map<Long, MetricsDimensionPathVo> orgInfoPathsMap) {
         MetricsDimensionPathVo dataPrivPath = new MetricsDimensionPathVo();
         dataPrivPath.setSrcTableId(orgDimensionModelInfo.getMetaDataInfo().getMetaDataId());
         dataPrivPath.setSrcTableCode(orgDimensionModelInfo.getMetaDataInfo().getMetaDataCode());
@@ -992,7 +999,7 @@ public class DatasetParamsBuildService {
     /**
      * 构建度量到所有维度的路径写入缓存
      *
-     * @param metricsList   所有度量
+     * @param metricsList 所有度量
      * @param dimensionList 所有维度
      */
     private void buildMetricToDimsPaths(List<DatasetColumnQo> metricsList, List<DatasetColumnQo> dimensionList) {
@@ -1006,8 +1013,8 @@ public class DatasetParamsBuildService {
             for (DatasetColumnQo dimension : allDims) {
                 List<ObjRelaTreeVo> objRelaList = findObjPathFromObjRelaTree(objRelaTree, metrics, dimension);
                 if (objRelaList.isEmpty()) {
-                    throw new IllegalStateException("对象路径不能为空 metrics getDataName  " + metrics.getDataName() +
-                            " dimension getDataName  " + dimension.getDataName());
+                    throw new IllegalStateException("对象路径不能为空 metrics getDataName  " + metrics.getDataName()
+                        + " dimension getDataName  " + dimension.getDataName());
                 }
                 putDimensionPathToThread(metrics, dimension, objRelaList);
             }
@@ -1021,11 +1028,11 @@ public class DatasetParamsBuildService {
                 // 虚拟出来的账期字段不用当维度
                 if ("simpleCond".equals(datasetConditionQo.getCondType())) {
                     if (datasetConditionQo.getColumnId() != null
-                            && !KeyValues.YES_VALUE_1.equals(datasetConditionQo.getIsAcct())
-                            && !metrics.getTableId().equals(datasetConditionQo.getTableId())) {
+                        && !KeyValues.YES_VALUE_1.equals(datasetConditionQo.getIsAcct())
+                        && !metrics.getTableId().equals(datasetConditionQo.getTableId())) {
                         DatasetColumnQo newDatasetColumnQo = new DatasetColumnQo();
                         BeanUtils.copyProperties(datasetConditionQo, newDatasetColumnQo,
-                                KeyValues.ENTITY_COPY_IGNORE_FIELDS);
+                            KeyValues.ENTITY_COPY_IGNORE_FIELDS);
                         allDims.add(newDatasetColumnQo);
                     }
                 }
@@ -1037,12 +1044,12 @@ public class DatasetParamsBuildService {
     /**
      * 缓存度量对应的表到所有维度的路径集合
      *
-     * @param metrics     度量字段
-     * @param dimension   维度字段
+     * @param metrics 度量字段
+     * @param dimension 维度字段
      * @param objRelaList 度量到所有维度的对象路径集合
      */
     private void putDimensionPathToThread(DatasetColumnQo metrics, DatasetColumnQo dimension,
-                                          List<ObjRelaTreeVo> objRelaList) {
+        List<ObjRelaTreeVo> objRelaList) {
         if (objRelaList.isEmpty()) {
             return;
         }
@@ -1054,7 +1061,8 @@ public class DatasetParamsBuildService {
             maps.put(dimPath, objRelaList);
             metricDimMap.put(metrics.getTableId(), maps);
             metricsDimensionPathMap.set(metricDimMap);
-        } else {
+        }
+        else {
             Map<String, List<ObjRelaTreeVo>> maps = metricDimMap.get(metrics.getTableId());
             if (MapUtil.isEmpty(maps)) {
                 maps = new HashMap<>();
@@ -1073,9 +1081,8 @@ public class DatasetParamsBuildService {
     private List<Column> getColumns() {
         // 所有对象下的所有表
         List<ObjTableRela> objTableRelaList = getObjTableRelas();
-        List<Long> tableIds = objTableRelaList.stream()
-                .map(ObjTableRela::getMetaDataId)
-                .filter(Objects::nonNull).toList();
+        List<Long> tableIds = objTableRelaList.stream().map(ObjTableRela::getMetaDataId).filter(Objects::nonNull)
+            .toList();
         ModelInfoQo modelInfoQo = new ModelInfoQo();
         modelInfoQo.setMetaDataIdList(new ArrayList<>(tableIds));
         List<ModelInfo> modelInfoList = dataCommonService.queryAllModelInfoBatch(modelInfoQo);
@@ -1115,7 +1122,7 @@ public class DatasetParamsBuildService {
     /**
      * 构建度量对象关系树
      *
-     * @param metricsList         度量
+     * @param metricsList 度量
      * @param objKeyTableRelaList 所有对象关系
      */
     private void buildMetricObjTree(List<DatasetColumnQo> metricsList, List<ObjKeyTableRelaVo> objKeyTableRelaList) {
@@ -1129,7 +1136,7 @@ public class DatasetParamsBuildService {
     /**
      * 写入度量对象树到缓存
      *
-     * @param objId       对象id
+     * @param objId 对象id
      * @param objRelaTree 对象树
      */
     private void putMetricsObjTreeToThread(Long objId, ObjRelaTreeVo objRelaTree) {
@@ -1144,12 +1151,12 @@ public class DatasetParamsBuildService {
     /**
      * 当前对象节点字段补全
      *
-     * @param currentObjRela      当前节点
+     * @param currentObjRela 当前节点
      * @param objKeyTableRelaList 对象关系所有数据
-     * @param objectIds           对象id
+     * @param objectIds 对象id
      */
     private void currentObjRelaTreeField(ObjRelaTreeVo currentObjRela, List<ObjKeyTableRelaVo> objKeyTableRelaList,
-                                         Set<Long> objectIds) {
+        Set<Long> objectIds) {
         // 防止配置对象关系导致的死循环
         if (objectIds.contains(currentObjRela.getObjectId())) {
             return;
@@ -1182,11 +1189,11 @@ public class DatasetParamsBuildService {
      * 查询维度到度量的路径集合(可能有多条路径)
      *
      * @param objRelaTree 对象树
-     * @param dimension   维度
+     * @param dimension 维度
      * @return 度量到维度的对象集合 维度ObjectId-List(List)
      */
     private List<List<ObjRelaTreeVo>> metricsToDimensionObjRelaMap(ObjRelaTreeVo objRelaTree,
-                                                                   DatasetColumnQo dimension) {
+        DatasetColumnQo dimension) {
         List<List<ObjRelaTreeVo>> paths = new ArrayList<>();
         List<ObjRelaTreeVo> path = new ArrayList<>();
         // 迭代查找所有度量到维度的对象路径
@@ -1198,12 +1205,12 @@ public class DatasetParamsBuildService {
      * 根据维度迭代对象树获取当前维度的路径树
      *
      * @param objRelaTree 迭代当前对象树
-     * @param paths       路径个数集合
-     * @param path        当前路径
-     * @param dimension   维度
+     * @param paths 路径个数集合
+     * @param path 当前路径
+     * @param dimension 维度
      */
     private void iterateObjRelaTreeFindDim(ObjRelaTreeVo objRelaTree, List<List<ObjRelaTreeVo>> paths,
-                                           List<ObjRelaTreeVo> path, DatasetColumnQo dimension) {
+        List<ObjRelaTreeVo> path, DatasetColumnQo dimension) {
         // 复制当前节点到路径里面
         ObjRelaTreeVo copyObjRela = new ObjRelaTreeVo();
         BeanUtils.copyProperties(objRelaTree, copyObjRela, "children");
@@ -1225,17 +1232,17 @@ public class DatasetParamsBuildService {
      * 查询度量到维度的对象路径(叶子节点的集合)
      *
      * @param objRelaTree 对象树
-     * @param metrics     度量
-     * @param dimension   维度
+     * @param metrics 度量
+     * @param dimension 维度
      * @return 度量到维度的对象集合
      */
     private List<ObjRelaTreeVo> findObjPathFromObjRelaTree(ObjRelaTreeVo objRelaTree, DatasetColumnQo metrics,
-                                                           DatasetColumnQo dimension) {
+        DatasetColumnQo dimension) {
         // 度量到某一个维度的路径、可能有多条路径
         List<List<ObjRelaTreeVo>> pathLists = metricsToDimensionObjRelaMap(objRelaTree, dimension);
         // 度量和维度来自于同对象
         if (pathLists.size() == 1 && (metrics.getRelaType().equals(dimension.getRelaType())
-                || Constants.OBJ_TREE_RELA_TYPE_V.equalsIgnoreCase(dimension.getRelaType()))) {
+            || Constants.OBJ_TREE_RELA_TYPE_V.equalsIgnoreCase(dimension.getRelaType()))) {
             return pathLists.get(0);
         }
         Map<String, List<ObjRelaTreeVo>> matchPaths = new HashMap<>();
@@ -1266,10 +1273,12 @@ public class DatasetParamsBuildService {
             // N端字段与其一端树上的一端（relaType=n）多路径
             else if ("n".equals(dimension.getRelaType())) {
                 strPath = dimension.getPath();
-            } else {
+            }
+            else {
                 strPath = oldMetricPath + "," + dimension.getPath();
             }
-        } else if ("2".equalsIgnoreCase(metrics.getRelaType())) {
+        }
+        else if ("2".equalsIgnoreCase(metrics.getRelaType())) {
             // relaType为2(切换对象的套餐度量或者多维指标度量)
             // 与主分析对象拥有相同一端的对象度量到1端维度
             if (matchPaths.size() == 1) {
@@ -1286,7 +1295,8 @@ public class DatasetParamsBuildService {
                 list.sort(Comparator.comparingInt(o -> o.getValue().size()));
                 return list.get(0).getValue();
             }
-        } else {
+        }
+        else {
             // 1端度量不会有到N端的维度(目录树做了拖拽限制)、只有1端度量到1端维度、直接用维度的路径即可
             strPath = dimension.getPath();
             // 可能一端度量到维度有多条路径，因此要判断包含关系
@@ -1309,7 +1319,7 @@ public class DatasetParamsBuildService {
     /**
      * 构建对象树(都是当前对象1端的对象树) A-B-C-D-E A-A1-B 上面有两条路径(A-B-C-D-E)和(A-A1-B-C-D-E) 需要产品侧抉择选哪一条路径
      *
-     * @param currentObjectId     当前度量对象id
+     * @param currentObjectId 当前度量对象id
      * @param objKeyTableRelaList 对象所有关系数据
      * @return 返回对象树
      */
@@ -1326,13 +1336,12 @@ public class DatasetParamsBuildService {
     /**
      * 迭代当前对象节点的下一个节点
      *
-     * @param currentObjRela      当前节点
+     * @param currentObjRela 当前节点
      * @param objKeyTableRelaList 对象关系所有数据
-     * @param objectIds           对象id
+     * @param objectIds 对象id
      */
-    private void iterateObjRelaTreeField(ObjRelaTreeVo currentObjRela,
-                                         List<ObjKeyTableRelaVo> objKeyTableRelaList,
-                                         Set<Long> objectIds) {
+    private void iterateObjRelaTreeField(ObjRelaTreeVo currentObjRela, List<ObjKeyTableRelaVo> objKeyTableRelaList,
+        Set<Long> objectIds) {
         for (ObjRelaTreeVo child : currentObjRela.getChildren()) {
             // 防止对象配置错误进入死循环
             Set<Long> onePathObjIds = new HashSet<>(objectIds);
@@ -1356,16 +1365,16 @@ public class DatasetParamsBuildService {
      * 只拖了维度,需要查找一个维度作为路径的起点(度量)
      *
      * @param dimensionList 维度集合
-     * @param params        参数
+     * @param params 参数
      * @return 返回度量集合
      */
     private List<DatasetColumnQo> findMetrics(List<DatasetColumnQo> dimensionList, DatasetColumnAndConditionQo params) {
         List<DatasetColumnQo> metricsList = new ArrayList<>();
         Map<String, List<DatasetColumnQo>> relaTypeGroup = dimensionList.stream()
-                .collect(Collectors.groupingBy(DatasetColumnQo::getRelaType));
+            .collect(Collectors.groupingBy(DatasetColumnQo::getRelaType));
         List<DatasetColumnQo> lists;
         if (relaTypeGroup.containsKey(Constants.OBJ_TREE_RELA_TYPE_N)
-                || relaTypeGroup.containsKey(Constants.OBJ_TREE_RELA_TYPE_2)) {
+            || relaTypeGroup.containsKey(Constants.OBJ_TREE_RELA_TYPE_2)) {
             // 有n端(切换对象)的relaType && (主分析对象||1端对象)
             lists = relaTypeGroup.get(Constants.OBJ_TREE_RELA_TYPE_N);
             if (CollectionUtils.isEmpty(lists)) {
@@ -1373,21 +1382,25 @@ public class DatasetParamsBuildService {
             }
             // 选择一个维度作为路径的起点(作为度量)
             metricsList.add(lists.get(0));
-        } else if (relaTypeGroup.containsKey(Constants.OBJ_TREE_RELA_TYPE_0)) {
+        }
+        else if (relaTypeGroup.containsKey(Constants.OBJ_TREE_RELA_TYPE_0)) {
             // 有主分析对象||1端对象,以主分析任意一个字段为起点
             lists = relaTypeGroup.get(Constants.OBJ_TREE_RELA_TYPE_0);
             // 选择一个维度作为路径的起点(作为度量)
             metricsList.add(lists.get(0));
-        } else if (relaTypeGroup.containsKey(Constants.OBJ_TREE_RELA_TYPE_V)) {
+        }
+        else if (relaTypeGroup.containsKey(Constants.OBJ_TREE_RELA_TYPE_V)) {
             // 虚拟对象不能做度量
             log.info("虚拟对象不能做度量");
-        } else {
+        }
+        else {
             // 只有1端对象
             lists = relaTypeGroup.get(Constants.OBJ_TREE_RELA_TYPE_1);
             // 需要找到与所有维度有共同的那一个维度对象作为起点(度量)。
             if (lists.size() == 1) {
                 metricsList.addAll(lists);
-            } else {
+            }
+            else {
                 List<DatasetColumnQo> metrics = findStartMetric(lists);
                 if (CollectionUtils.isEmpty(metrics)) {
                     // 创建一个主分析对象作为度量的起点
@@ -1401,7 +1414,8 @@ public class DatasetParamsBuildService {
                     column.setDataName("自定义的度量(只拖了维度)");
 
                     metricsList.add(column);
-                } else {
+                }
+                else {
                     metricsList.addAll(metrics);
                 }
             }
@@ -1441,13 +1455,12 @@ public class DatasetParamsBuildService {
     /**
      * 抽取维度和度量
      *
-     * @param params        前端参数
+     * @param params 前端参数
      * @param dimensionList 维度集合
-     * @param metricsList   度量集合
+     * @param metricsList 度量集合
      */
-    private void extractMetricsAndDimensions(DatasetColumnAndConditionQo params,
-                                             List<DatasetColumnQo> dimensionList,
-                                             List<DatasetColumnQo> metricsList) {
+    private void extractMetricsAndDimensions(DatasetColumnAndConditionQo params, List<DatasetColumnQo> dimensionList,
+        List<DatasetColumnQo> metricsList) {
         List<DatasetColumnQo> columnList = params.getColumnList();
         List<DatasetConditionQo> condList = params.getCondList();
         // 前端传的维度和度量字段
@@ -1459,11 +1472,13 @@ public class DatasetParamsBuildService {
                     String isAcct = columnQo.getIsAcct();
                     if (Constants.APP_TYPE_DIMENSION.equals(appType) && !KeyValues.YES_VALUE_1.equals(isAcct)) {
                         dimensionList.add(columnQo);
-                    } else if (Constants.APP_TYPE_METRICS.equals(appType)) {
+                    }
+                    else if (Constants.APP_TYPE_METRICS.equals(appType)) {
                         metricsList.add(columnQo);
                         // 度量上面的条件字段作为维度
                     }
-                } else {
+                }
+                else {
                     // 计算字段需要区分拖拽的度量字段是否已存在。(判断条件为度量字段id和度量的条件)
                     for (DatasetColumnQo columnGroup : columnQo.getColumnGroup()) {
                         if ("arithmeticCondItem".equals(columnGroup.getCondType())) {
@@ -1488,7 +1503,7 @@ public class DatasetParamsBuildService {
                     // 与度量表相同或度量相同的全局条件，不需要设置为维度
                     // 如果全局条件与维度路径不同，需要当作维度
                     if (CollUtil.isNotEmpty(dimTableIdPaths) && cond.getColumnId() != null
-                            && dimTableIdPaths.contains(cond.getTableId() + ";" + cond.getPath())) {
+                        && dimTableIdPaths.contains(cond.getTableId() + ";" + cond.getPath())) {
                         continue;
                     }
                     // 虚拟对象条件需要当作维度
@@ -1530,7 +1545,7 @@ public class DatasetParamsBuildService {
      * 处理路径权限问题
      */
     private void hanelPrivPathOrder(DatasetColumnQo metrics, Map<String, List<MetricsDimensionPathVo>> pathsMap,
-                                    String dataPrivPathKey) {
+        String dataPrivPathKey) {
         Map<String, List<MetricsDimensionPathVo>> newPathsMap = new LinkedHashMap<>();
         if (dataPrivPathKey != null) {
             newPathsMap.put(dataPrivPathKey, pathsMap.get(dataPrivPathKey));
@@ -1559,7 +1574,7 @@ public class DatasetParamsBuildService {
                 // 最长路径中包含了deletePathList又2次以上就需要删除起点只有一个表的路径
                 deletePathList.forEach(deletePath -> {
                     final int[] num = {
-                            0
+                        0
                     };
                     longestPathList.forEach(longestPath -> {
                         if (longestPath.startsWith(deletePath)) {

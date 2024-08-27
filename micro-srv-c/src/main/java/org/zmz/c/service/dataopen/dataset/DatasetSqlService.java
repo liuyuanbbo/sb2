@@ -32,14 +32,14 @@ public class DatasetSqlService {
     public String previewGroupSql(DatasetDetail params, Map<DatasetColumnAndConditionQo, String> groupSql) {
         if (Constants.SQL_TASK.equalsIgnoreCase(params.getSqlMode())) {
             return StrUtil.join(",", groupSql.values());
-        } else {
+        }
+        else {
             return buildPreviewGroupSql(params, groupSql, null);
         }
     }
 
-    public String buildPreviewGroupSql(DatasetDetail params,
-                                       Map<DatasetColumnAndConditionQo, String> groupSql,
-                                       String acctColumnCode) {
+    public String buildPreviewGroupSql(DatasetDetail params, Map<DatasetColumnAndConditionQo, String> groupSql,
+        String acctColumnCode) {
         // 最细粒度，用来关联字段
         List<DatasetColumnQo> smallestDimensions = datasetGroupService.getSmallestDimensions(params);
         // 表别名
@@ -55,8 +55,8 @@ public class DatasetSqlService {
         // 多分组也可能有层级维度汇总
 
         // 每个分组都有consumeOrgId,且最细粒度包含组织字段才需要分组关联
-        boolean groupByConsumeOrgId = datasetDataPrivService.getDataPrivGroupCount(params) == params.getGroups().size() &&
-                smallestDimensions.stream().anyMatch(DatasetColumnQo::isOrgDimensionCol);
+        boolean groupByConsumeOrgId = datasetDataPrivService.getDataPrivGroupCount(params) == params.getGroups().size()
+            && smallestDimensions.stream().anyMatch(DatasetColumnQo::isOrgDimensionCol);
 
         for (Map.Entry<DatasetColumnAndConditionQo, String> entry : groupSql.entrySet()) {
             DatasetColumnAndConditionQo groupQo = entry.getKey();
@@ -81,14 +81,16 @@ public class DatasetSqlService {
                             // 增加的组织id字段约定别名为consume_org_id
                             allCols.add(0, TABLE_ALIAS_PREFIX + i + "." + Constants.DATA_PRIV_ORG_FIELD_CODE);
                         }
-                    } else {
+                    }
+                    else {
                         DatasetColumnQo existOrgDimensionColumn = dataPrivCtrlInfo.getExistOrgDimensionColumn();
                         if (existOrgDimensionColumn != null) {
                             String alias = existOrgDimensionColumn.getAlias();
                             if (allColCodes.add(alias)) {
                                 allCols.add(0, TABLE_ALIAS_PREFIX + i + "." + alias);
                             }
-                        } else {
+                        }
+                        else {
                             if (allColCodes.add(Constants.DATA_PRIV_ORG_FIELD_CODE)) {
                                 allCols.add(0, TABLE_ALIAS_PREFIX + i + "." + Constants.DATA_PRIV_ORG_FIELD_CODE);
                             }
@@ -101,23 +103,22 @@ public class DatasetSqlService {
                 sqlSb.append(SqlUtils.SQL_LEFT_JOIN);
             }
             sqlSb.append(SqlUtils.STR_LEFT_BRACKET).append(sql).append(SqlUtils.STR_RIGHT_BRACKET)
-                    .append(TABLE_ALIAS_PREFIX).append(i);
+                .append(TABLE_ALIAS_PREFIX).append(i);
             if (i > 1) {
                 sqlSb.append(SqlUtils.SQL_ON);
                 for (DatasetColumnQo smallestDimension : smallestDimensions) {
                     // 最细粒度字段不允许修改和删除
                     String smallestDimensionAlias = smallestDimension.getAlias();
                     sqlSb.append(TABLE_ALIAS_PREFIX).append(i - 1).append(SqlUtils.STR_POINT)
-                            .append(smallestDimensionAlias).append(SqlUtils.STR_EQUAL).append(TABLE_ALIAS_PREFIX)
-                            .append(i).append(SqlUtils.STR_POINT).append(smallestDimensionAlias)
-                            .append(SqlUtils.SQL_AND);
+                        .append(smallestDimensionAlias).append(SqlUtils.STR_EQUAL).append(TABLE_ALIAS_PREFIX).append(i)
+                        .append(SqlUtils.STR_POINT).append(smallestDimensionAlias).append(SqlUtils.SQL_AND);
                 }
                 // 如果是组织层级字段非主键，要加上主键关联条件
                 if (groupByConsumeOrgId && groupQo.getDataPrivCtrlInfo().getAddOrgDimensionColumn() != null) {
                     sqlSb.append(TABLE_ALIAS_PREFIX).append(i - 1).append(SqlUtils.STR_POINT)
-                            .append(Constants.DATA_PRIV_ORG_FIELD_CODE).append(SqlUtils.STR_EQUAL)
-                            .append(TABLE_ALIAS_PREFIX).append(i).append(SqlUtils.STR_POINT)
-                            .append(Constants.DATA_PRIV_ORG_FIELD_CODE).append(SqlUtils.SQL_AND);
+                        .append(Constants.DATA_PRIV_ORG_FIELD_CODE).append(SqlUtils.STR_EQUAL)
+                        .append(TABLE_ALIAS_PREFIX).append(i).append(SqlUtils.STR_POINT)
+                        .append(Constants.DATA_PRIV_ORG_FIELD_CODE).append(SqlUtils.SQL_AND);
                 }
                 // 去掉最后一个AND
                 sqlSb.delete(sqlSb.length() - 4, sqlSb.length());

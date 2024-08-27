@@ -1,5 +1,9 @@
 package org.zmz.c.service.dataopen.dataset;
 
+/**
+ * @author Zmz
+ */
+
 public enum OrganizationEnum {
     /**
      * 用户信息

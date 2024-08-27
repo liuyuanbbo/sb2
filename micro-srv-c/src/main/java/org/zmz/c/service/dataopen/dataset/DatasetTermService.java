@@ -44,7 +44,7 @@ public class DatasetTermService {
         // 所有对象关系
         Map<String, Set<List<Long>>> pathMap = objKeyPathService.getDatasetObjPathMap();
         // 先从redis查询派生指标的统计粒度
-        //Long comAcctId = accountUtil.getComAcctId();
+        // Long comAcctId = accountUtil.getComAcctId();
         long comAcctId = 1021L;
         Map<Long, List<ObjKeyTableRelaVo>> objDimRelaMap = datasetCacheService.getObjDimRelaMapInRedis(comAcctId);
         for (DatasetColumnAndConditionQo group : datasetDetail.getGroups()) {
@@ -52,9 +52,8 @@ public class DatasetTermService {
         }
     }
 
-    public void buildDatasetColumns(DatasetColumnAndConditionQo group,
-                                    Map<String, Set<List<Long>>> pathMap,
-                                    Map<Long, List<ObjKeyTableRelaVo>> objDimRelaMap) {
+    public void buildDatasetColumns(DatasetColumnAndConditionQo group, Map<String, Set<List<Long>>> pathMap,
+        Map<Long, List<ObjKeyTableRelaVo>> objDimRelaMap) {
         // 维度术语
         List<DatasetColumnQo> termDimensions = group.getTermColumns(Constants.APP_TYPE_DIMENSION);
         // 度量术语
@@ -82,12 +81,12 @@ public class DatasetTermService {
                 else {
                     bestTermMetricColumn = this.getBestTermColumn(group, metricTerm, pathMap, objDimRelaMap);
                     log.info("度量术语 {} 别名： {} 最优字段: {}（对象 {}下表 {} 的字段{}）", metricTerm.getTermCode(),
-                            metricTerm.getAlias(), bestTermMetricColumn.getObjectId(), bestTermMetricColumn.getObjectName(),
-                            bestTermMetricColumn.getTableCode(), bestTermMetricColumn.getColumnCode());
+                        metricTerm.getAlias(), bestTermMetricColumn.getObjectId(), bestTermMetricColumn.getObjectName(),
+                        bestTermMetricColumn.getTableCode(), bestTermMetricColumn.getColumnCode());
                 }
                 // 前端配置内容不能覆盖
                 BeanUtils.copyProperties(bestTermMetricColumn, metricTerm, "func", "alias", "dataName", "columnName",
-                        "columnType", "columnLength", "columnAccuracy", "seq");
+                    "columnType", "columnLength", "columnAccuracy", "seq");
                 bestTermMetricColumnMap.put(metricTerm.getAlias(), metricTerm);
             }
             this.replaceTermColumn(group, bestTermMetricColumnMap);
@@ -97,19 +96,17 @@ public class DatasetTermService {
     /**
      * 同一术语下的所有字段到所有维度字段比较，取最优
      */
-    private DatasetObjColumnVo getBestTermColumn(DatasetColumnAndConditionQo group,
-                                                 DatasetColumnQo metricTerm,
-                                                 Map<String, Set<List<Long>>> pathMap,
-                                                 Map<Long, List<ObjKeyTableRelaVo>> objDimRelaMap) {
+    private DatasetObjColumnVo getBestTermColumn(DatasetColumnAndConditionQo group, DatasetColumnQo metricTerm,
+        Map<String, Set<List<Long>>> pathMap, Map<Long, List<ObjKeyTableRelaVo>> objDimRelaMap) {
         // 维度
         List<Long> allObjIds = group.getDimensionColumns().stream().map(DatasetColumnQo::getObjectId)
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
         // 过滤条件
         allObjIds.addAll(group.getCondObjIdList());
         // 度量过滤条件
         if (CollUtil.isNotEmpty(metricTerm.getCondList())) {
             allObjIds.addAll(metricTerm.getCondList().stream().filter(d -> d.getColumnId() != null)
-                    .map(DatasetConditionQo::getObjId).toList());
+                .map(DatasetConditionQo::getObjId).toList());
         }
         allObjIds = allObjIds.stream().distinct().collect(Collectors.toList());
         log.info("pathMap : {}", pathMap);
@@ -119,7 +116,7 @@ public class DatasetTermService {
         List<DatasetObjColumnVo> optTermRelaColumns = metricTerm.getOptTermRelaColumns();
         for (DatasetObjColumnVo tm : optTermRelaColumns) {
             objRelaDTO = new ObjRelaDTO(tm, allObjIds,
-                    objDimRelaMap == null ? null : objDimRelaMap.get(tm.getObjectId()));
+                objDimRelaMap == null ? null : objDimRelaMap.get(tm.getObjectId()));
             termOneObjMap.put(tm.getObjectId(), objRelaDTO);
         }
 
@@ -129,7 +126,7 @@ public class DatasetTermService {
         }
         // 判断直接一端个数取最小，关联维度最多
         List<ObjRelaDTO> list = termOneObjMap.values().stream().sorted(Comparator.comparing(ObjRelaDTO::getOneObjSize)
-                .thenComparing(ObjRelaDTO::getRetainObjSize, Comparator.reverseOrder())).toList();
+            .thenComparing(ObjRelaDTO::getRetainObjSize, Comparator.reverseOrder())).toList();
         return list.get(0).getObjColumn();
     }
 
@@ -137,7 +134,7 @@ public class DatasetTermService {
      * 计算字段引用术语替换，度量条件字段引用术语替换
      */
     private void replaceTermColumn(DatasetColumnAndConditionQo group,
-                                   Map<String, DatasetColumnQo> bestTermMetricColumnMap) {
+        Map<String, DatasetColumnQo> bestTermMetricColumnMap) {
         for (DatasetColumnQo columnQo : group.getColumnList()) {
             if (!Constants.APP_TYPE_METRICS.equals(columnQo.getAppType())) {
                 continue;
@@ -148,7 +145,7 @@ public class DatasetTermService {
     }
 
     private void replaceColumnGroup(List<DatasetColumnQo> columnGroup,
-                                    Map<String, DatasetColumnQo> bestTermMetricColumnMap) {
+        Map<String, DatasetColumnQo> bestTermMetricColumnMap) {
         if (CollUtil.isNotEmpty(columnGroup)) {
             for (DatasetColumnQo columnGroupQo : columnGroup) {
                 if (StrUtil.isNotEmpty(columnGroupQo.getTermCode())) {
@@ -156,7 +153,7 @@ public class DatasetTermService {
                     if (bestTermMetricColumn != null) {
                         // 前端配置内容不能覆盖
                         BeanUtils.copyProperties(bestTermMetricColumn, columnGroupQo, "id", "parent", "root",
-                                "condType", "condValue", "alias", "seq");
+                            "condType", "condValue", "alias", "seq");
                     }
                 }
             }
@@ -164,7 +161,7 @@ public class DatasetTermService {
     }
 
     private void replaceConditions(List<DatasetConditionQo> conditions,
-                                   Map<String, DatasetColumnQo> bestTermMetricColumnMap, String alias) {
+        Map<String, DatasetColumnQo> bestTermMetricColumnMap, String alias) {
         if (CollUtil.isNotEmpty(conditions)) {
             for (DatasetConditionQo conditionQo : conditions) {
                 if (StrUtil.isNotEmpty(conditionQo.getTermCode())) {
@@ -173,12 +170,11 @@ public class DatasetTermService {
                     if (bestTermMetricColumn != null) {
                         // 前端配置内容不能覆盖
                         BeanUtils.copyProperties(bestTermMetricColumn, conditionQo, "id", "parent", "root", "condType",
-                                "condOperator", "condValue", "seq");
+                            "condOperator", "condValue", "seq");
                     }
                 }
             }
         }
     }
-
 
 }

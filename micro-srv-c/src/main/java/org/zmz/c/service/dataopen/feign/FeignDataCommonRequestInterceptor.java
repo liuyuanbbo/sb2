@@ -11,6 +11,8 @@ import java.util.Map;
 
 /**
  * 局部配置，公共配置，使用用户名密码，不加cookie
+ * 
+ * @author Zmz
  */
 public class FeignDataCommonRequestInterceptor implements RequestInterceptor {
 
@@ -31,11 +33,11 @@ public class FeignDataCommonRequestInterceptor implements RequestInterceptor {
         template.header("ssoType", "PASSWD_TOKEN");
 
         // 用户 accountCode accountPasswd
-//        ShareBfmUser shareBfmUser = AccountUtil.getShareBfmUser();
-//        if (shareBfmUser != null) {
-//            template.header("accountCode", shareBfmUser.getUserCode());
-//            template.header("accountPasswd", shareBfmUser.getPwd());
-//        }
+        // ShareBfmUser shareBfmUser = AccountUtil.getShareBfmUser();
+        // if (shareBfmUser != null) {
+        // template.header("accountCode", shareBfmUser.getUserCode());
+        // template.header("accountPasswd", shareBfmUser.getPwd());
+        // }
         template.header("accountCode", "lyd_test");
         template.header("accountPasswd", "cf8fed38bb111ab210b2009905de17da");
     }

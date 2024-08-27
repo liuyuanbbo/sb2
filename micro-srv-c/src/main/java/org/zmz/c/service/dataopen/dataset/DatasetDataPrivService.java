@@ -44,7 +44,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DatasetDataPrivService {
 
-
     @Resource
     private DataCommonService dataCommonService;
 
@@ -69,18 +68,19 @@ public class DatasetDataPrivService {
         // 判断是否需要数据权限控制
         Map<Long, ModelInfo> modelMap = datasetModelService.getModelInfoMap(params);
         List<ModelInfo> privModeInfos = modelMap.values().stream()
-                .filter(model -> StringUtils.isNotEmpty(model.getBussinessAttr().getOrgField()))
-                .collect(Collectors.toList());
+            .filter(model -> StringUtils.isNotEmpty(model.getBussinessAttr().getOrgField()))
+            .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(privModeInfos)) {
             dataPrivCtrlVo.setDataPrivCtrl(false);
             return dataPrivCtrlVo;
-        } else {
+        }
+        else {
             dataPrivCtrlVo.setDataPrivCtrl(true);
             dataPrivCtrlVo.setDataPrivModelList(privModeInfos);
         }
         // 获取数据库类型
         Long objectId = params.getColumnList().stream().map(AppSqlColumn::getObjectId).filter(Objects::nonNull)
-                .findFirst().orElse(null);
+            .findFirst().orElse(null);
         ObjInfo oneObjInfo = objInfoMapper.selectById(objectId);
         String tableType = oneObjInfo.getTableType();
 
@@ -107,7 +107,8 @@ public class DatasetDataPrivService {
                 log.info("层级(组织)维度表层级重复，无需数据权限控制！如需数据权限控制请检查系统参数配置CONSUME_ORG_DIMENSION。");
                 dataPrivCtrlVo.setDataPrivCtrl(false);
                 return dataPrivCtrlVo;
-            } else {
+            }
+            else {
                 // 根据配置库表类型+模型表编码进行 modelInfoList 过滤
                 modelInfoList = filterModelInfoList(modelInfoList, configList);
                 boolean filterIsExistOrgLevelRepeat = existOrgLevelRepeat(modelInfoList);
@@ -127,7 +128,7 @@ public class DatasetDataPrivService {
         log.info("层级维度不为-1的组织维度表信息：{}", JsonUtil.toJson(modelInfoList));
 
         List<Long> metaDataIds = modelInfoList.stream().map(m -> m.getMetaDataInfo().getMetaDataId())
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
 
         QueryWrapper<ObjInfo> wrapper = new QueryWrapper<>();
         wrapper.in("meta_table_id", metaDataIds);
@@ -202,8 +203,8 @@ public class DatasetDataPrivService {
             if (firstDataPrivCtrl.getExistOrgDimensionColumn() != null) {
                 for (DatasetColumnQo datasetColumnQo : params.getColumnList()) {
                     if (datasetColumnQo.getColumnId()
-                            .equals(firstDataPrivCtrl.getExistOrgDimensionColumn().getColumnId())
-                            && datasetColumnQo.getPath().equals(firstDataPrivCtrl.getExistOrgDimensionColumn().getPath())) {
+                        .equals(firstDataPrivCtrl.getExistOrgDimensionColumn().getColumnId())
+                        && datasetColumnQo.getPath().equals(firstDataPrivCtrl.getExistOrgDimensionColumn().getPath())) {
                         dataPrivCtrl.setExistOrgDimensionColumn(firstDataPrivCtrl.getExistOrgDimensionColumn());
                         if (firstDataPrivCtrl.getAddOrgDimensionColumn() != null) {
                             dataPrivCtrl.setAddOrgDimensionColumn(firstDataPrivCtrl.getAddOrgDimensionColumn());
@@ -219,9 +220,9 @@ public class DatasetDataPrivService {
         List<ModelInfo> orgDimensionModelInfoList = dataPrivCtrl.getOrgDimensionModelInfoList();
         List<ObjInfo> orgDimensionObjInfoList = dataPrivCtrl.getOrgDimensionObjInfoList();
         Map<Long, ModelInfo> orgDimensionModelInfoMap = orgDimensionModelInfoList.stream()
-                .collect(Collectors.toMap(m -> m.getMetaDataInfo().getMetaDataId(), m -> m, (v1, v2) -> v2));
+            .collect(Collectors.toMap(m -> m.getMetaDataInfo().getMetaDataId(), m -> m, (v1, v2) -> v2));
         Map<Long, ObjInfo> orgDimensionObjInfoMap = orgDimensionObjInfoList.stream()
-                .collect(Collectors.toMap(ObjInfo::getMetaTableId, o -> o, (v1, v2) -> v2));
+            .collect(Collectors.toMap(ObjInfo::getMetaTableId, o -> o, (v1, v2) -> v2));
 
         // 获取分析字段
         List<DatasetColumnQo> allColumnList = new ArrayList<>();
@@ -235,7 +236,8 @@ public class DatasetDataPrivService {
                         allColumnList.add(columnGroup);
                     }
                 }
-            } else {
+            }
+            else {
                 allColumnList.add(datasetColumnQo);
             }
         }
@@ -262,7 +264,7 @@ public class DatasetDataPrivService {
             String columnCode = column.getColumnCode();
             for (OrgDimension orgDimension : orgDimensionTotalList) {
                 if (column.getTableId().equals(orgDimension.getMetaDataId())
-                        && (orgDimension.getOrgIdColumnCode().equals(columnCode)
+                    && (orgDimension.getOrgIdColumnCode().equals(columnCode)
                         || orgDimension.getOrgNameColumnCode().equals(columnCode))) {
                     selectColumnList.add(column);
                 }
@@ -272,22 +274,24 @@ public class DatasetDataPrivService {
         // 对维度的层级字段进行排序
         OrgDimension minOrgDimension = null;
         List<DatasetColumnQo> sortList = selectColumnList.stream().filter(c -> "dimension".equals(c.getAppType()))
-                .sorted(Comparator.comparingLong(DatasetColumnQo::getSeq)).collect(Collectors.toList());
+            .sorted(Comparator.comparingLong(DatasetColumnQo::getSeq)).collect(Collectors.toList());
         if (CollUtil.isNotEmpty(sortList)) {
             // 以第一个选择维度的层级字段为权限判断路径
             DatasetColumnQo firstOrgDimensionColumn = sortList.get(0);
             // 筛选出与第一个选择组织维度字段在同一路径上的其他层级字段
-            selectColumnList = selectColumnList.stream().filter(c -> "dimension".equals(c.getAppType())).filter(c -> c.getPath().contains(firstOrgDimensionColumn.getPath())
-                    || firstOrgDimensionColumn.getPath().contains(c.getPath())).collect(Collectors.toList());
+            selectColumnList = selectColumnList.stream().filter(c -> "dimension".equals(c.getAppType()))
+                .filter(c -> c.getPath().contains(firstOrgDimensionColumn.getPath())
+                    || firstOrgDimensionColumn.getPath().contains(c.getPath()))
+                .collect(Collectors.toList());
 
             // 找出层级字段对应的层级
             for (DatasetColumnQo column : selectColumnList) {
                 String columnCode = column.getColumnCode();
                 for (OrgDimension orgDimension : orgDimensionTotalList) {
                     if (column.getTableId().equals(orgDimension.getMetaDataId())
-                            && (orgDimension.getOrgIdColumnCode().equals(columnCode)
+                        && (orgDimension.getOrgIdColumnCode().equals(columnCode)
                             || orgDimension.getOrgNameColumnCode().equals(columnCode))
-                            && Integer.parseInt(orgDimension.getOrgLevel()) > 0) {
+                        && Integer.parseInt(orgDimension.getOrgLevel()) > 0) {
                         selectOrgDimensionList.add(orgDimension);
                     }
                 }
@@ -307,22 +311,23 @@ public class DatasetDataPrivService {
             DatasetColumnQo name = null;
             for (DatasetColumnQo datasetColumnQo : selectColumnList) {
                 if (datasetColumnQo.getColumnCode().equals(minOrgDimension.getOrgIdColumnCode())
-                        && datasetColumnQo.getTableId().equals(minOrgDimension.getMetaDataId())) {
+                    && datasetColumnQo.getTableId().equals(minOrgDimension.getMetaDataId())) {
                     id = datasetColumnQo;
                 }
                 if (datasetColumnQo.getColumnCode().equals(minOrgDimension.getOrgNameColumnCode())
-                        && datasetColumnQo.getTableId().equals(minOrgDimension.getMetaDataId())) {
+                    && datasetColumnQo.getTableId().equals(minOrgDimension.getMetaDataId())) {
                     name = datasetColumnQo;
                 }
             }
             // 有选id的优先，并且不需要新增id字段了；选了name但是没选id，就需要新增一个id字段
             if (id != null) {
                 dataPrivCtrl.setExistOrgDimensionColumn(id);
-            } else if (name != null) {
+            }
+            else if (name != null) {
                 dataPrivCtrl.setExistOrgDimensionColumn(name);
                 for (Column column : orgDimensionColumnTotalList) {
                     if (column.getColumnCode().equals(minOrgDimension.getOrgIdColumnCode())
-                            && column.getMetaDataId().equals(minOrgDimension.getMetaDataId())) {
+                        && column.getMetaDataId().equals(minOrgDimension.getMetaDataId())) {
                         DatasetColumnQo orgDimensionColumnQo = new DatasetColumnQo();
                         orgDimensionColumnQo.setColumnId(column.getColumnId());
                         orgDimensionColumnQo.setColumnCode(column.getColumnCode());
@@ -365,7 +370,7 @@ public class DatasetDataPrivService {
             for (ModelInfo modelInfo : modelInfoList) {
                 MetaDataInfo metaDataInfo = modelInfo.getMetaDataInfo();
                 if (StringUtils.equals(standDisplayValue, metaDataInfo.getTableType())
-                        && StringUtils.equals(standCode, metaDataInfo.getMetaDataCode())) {
+                    && StringUtils.equals(standCode, metaDataInfo.getMetaDataCode())) {
                     newModelInfoList.add(modelInfo);
                 }
             }

@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 公共配置，使用用户名密码，不加cookie
+ * 
+ * @author Zmz
  */
 @Configuration
 @EnableFeignClients

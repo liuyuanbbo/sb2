@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @author Zmz
+ */
 @Service
 public class FieldTypeValueMapService {
 
@@ -23,7 +26,7 @@ public class FieldTypeValueMapService {
             return Collections.emptyMap();
         }
         return fieldTypeMapList.stream()
-                .collect(Collectors.toMap(ZmgrOmpFieldTypeValueMap::getTypeValue, ZmgrOmpFieldTypeValueMap::getTypeString));
+            .collect(Collectors.toMap(ZmgrOmpFieldTypeValueMap::getTypeValue, ZmgrOmpFieldTypeValueMap::getTypeString));
     }
 
     private List<ZmgrOmpFieldTypeValueMap> getFieldTypeMapList(String tableType) {
