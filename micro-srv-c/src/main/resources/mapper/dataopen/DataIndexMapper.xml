@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.DataIndexMapper">
+    <resultMap id="indexDtoResultMap" type="org.zmz.c.dto.dataopen.IndexDto">
+        <result column="index_id" property="indexId"/>
+        <result column="index_name" property="indexName"/>
+        <result column="index_code" property="indexCode"/>
+        <result column="meta_table_id" property="metaTableId"/>
+        <result column="table_code" property="tableCode"/>
+        <result column="state" property="state"/>
+        <result column="index_type" property="indexType"/>
+        <result column="com_acct_id" property="comAcctId"/>
+    </resultMap>
+
+    <resultMap id="dataGrpVoResultMap" type="org.zmz.c.vo.dataopen.dataindex.DataGrpVo">
+        <result column="grp_id" property="grpId"/>
+         <result column="parent_grp_id" property="parentGrpId"/>
+        <result column="grp_name" property="grpName"/>
+        <result column="grp_code" property="grpCode"/>
+        <result column="total_num" property="totalNum"/>
+    </resultMap>
+
+    <resultMap id="objDimDataGrpVoResultMap" type="org.zmz.c.vo.dataopen.dataindex.ObjDimDataGrpVo"
+               extends="dataGrpVoResultMap">
+        <!--待扩展-->
+    </resultMap>
+
+    <resultMap id="dimIndexDataGrpVoResultMap" type="org.zmz.c.vo.dataopen.dataindex.DimIndexDataGrpVo"
+               extends="dataGrpVoResultMap">
+        <!--待扩展-->
+    </resultMap>
+
+    <resultMap id="objectDimVoResultMap" type="org.zmz.c.vo.dataopen.dataindex.ObjectDimVo">
+        <result column="object_id" property="objectId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="grp_id" property="grpId"/>
+        <result column="object_code" property="objectCode"/>
+        <result column="object_name" property="objectName"/>
+        <result column="primary_key" property="primaryKey"/>
+        <result column="meta_table_id" property="metaTableId"/>
+        <result column="table_code" property="tableCode"/>
+        <result column="status_cd" property="statusCd"/>
+        <result column="create_type" property="createType"/>
+        <result column="datasource_id" property="datasourceId"/>
+        <result column="table_type" property="tableType"/>
+        <result column="object_alias" property="objectAlias"/>
+        <result column="key_code" property="keyCode"/>
+    </resultMap>
+
+    <resultMap id="dimIndexVoResultMap" type="org.zmz.c.vo.dataopen.dataindex.DimIndexVo">
+        <result column="index_id" property="indexId"/>
+        <result column="index_name" property="indexName"/>
+        <result column="index_code" property="indexCode"/>
+        <result column="meta_table_id" property="metaTableId"/>
+        <result column="table_code" property="tableCode"/>
+        <result column="state" property="state"/>
+        <result column="index_type" property="indexType"/>
+         <result column="com_acct_id" property="comAcctId"/>
+    </resultMap>
+
+    <resultMap id="objKeyTableColumnVoResultMap" type="org.zmz.c.vo.dataopen.dataindex.ObjKeyTableColumnVo">
+        <result column="table_code" property="tableCode"/>
+        <result column="column_id" property="columnId"/>
+        <result column="column_code" property="columnCode"/>
+        <result column="rela_table_code" property="relaTableCode"/>
+        <result column="rela_column_id" property="relaColumnId"/>
+        <result column="rela_column_code" property="relaColumnCode"/>
+        <result column="rela_key_object_id" property="relaKeyObjectId"/>
+    </resultMap>
+
+    <!--根据 objectIds 查询 所有满足条件的指标-->
+    <select id="unionAllProIndexAndDimIndex" resultMap="indexDtoResultMap">
+        SELECT t.index_id,
+               t.index_name,
+               t.index_code,
+               t.meta_table_id,
+               t.table_code,
+               t.state,
+               t.index_type,
+               t.com_acct_id
+        FROM (SELECT a.index_id       as index_id,
+                     a.index_name     as index_name,
+                     a.index_code     as index_code,
+                     a.pro_table_id   as meta_table_id,
+                     a.pro_table_code as table_code,
+                     a.state          as state,
+                     'proIndex'       as index_type,
+                     a.com_acct_id    as com_acct_id
+              FROM pro_index a
+              UNION ALL
+              SELECT a.dim_index_id   as index_id,
+                     a.dim_index_name as index_name,
+                     a.index_code     as index_code,
+                     a.meta_table_id  as meta_table_id,
+                     a.table_code     as table_code,
+                     a.state          as state,
+                     'dimIndexInfo'   as index_type,
+                     a.com_acct_id    as com_acct_id
+              FROM dim_index_info a) t
+        <where>
+            <if test="comAcctId !=null">
+                AND t.com_acct_id = #{comAcctId}
+            </if>
+           <if test="objectIds !=null and objectIds.size() > 0">
+               AND t.meta_table_id IN (SELECT oktr.meta_data_id FROM obj_key_table_rela oktr WHERE oktr.rela_key_object_id IN
+                <foreach collection="objectIds" item="objectId" separator="," open="(" close=")">
+                    #{objectId}
+                </foreach>
+                )
+           </if>
+            <if test="keyword !=null and keyword !=''">
+                AND t.index_name LIKE concat(concat('%',#{keyword}),'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="queryObjDimDataGrp" resultMap="objDimDataGrpVoResultMap">
+        select a.grp_id,
+               a.parent_grp_id,
+               a.grp_name,
+               a.grp_code,
+               SUM(IFNULL(m.total, 0)) total_num
+        from data_grp a
+                 LEFT JOIN (SELECT count(b.object_id) as total,
+                                   c.path_code        as path_code
+                            FROM obj_info b
+                                     JOIN data_grp c on b.grp_id = c.grp_id
+                            <where>
+                                and b.status_cd != '1200'
+                                 <if test="comAcctId != null ">
+                                     and b.com_acct_id = #{comAcctId}
+                                 </if>
+                            </where>
+                            GROUP BY c.path_code) m
+                           ON INSTR(CONCAT(CONCAT('.', m.path_code), '.'), CONCAT(CONCAT('.', a.grp_id), '.')) > 0
+        <where>
+            and a.status_cd = '00A'
+             and a.grp_type in ('12')
+            <if test="comAcctId != null ">
+                and a.com_acct_id = #{comAcctId}
+            </if>
+        </where>
+        group by a.grp_id,a.parent_grp_id,a.grp_name,a.grp_code
+    </select>
+
+    <select id="queryObjDimByPage" resultMap="objectDimVoResultMap">
+        select a.object_id,
+               a.parent_id,
+               a.grp_id,
+               a.object_code,
+               a.object_name,
+               a.primary_key,
+               a.meta_table_id,
+               a.table_code,
+               a.status_cd,
+               a.create_type,
+               a.datasource_id,
+               a.table_type,
+               a.object_alias,
+               a.key_code
+        from obj_info a
+                 left join data_grp b on a.grp_id = b.grp_id
+        <where>
+            a.status_cd != '1200'
+            <if test="grpId !=null and grpId !=''">
+                and instr(concat(concat('.',b.path_code),'.'),concat(concat('.',#{grpId}),'.')) >0
+            </if>
+            <if test="comAcctId != null and comAcctId != '' ">
+                and a.com_acct_id = #{comAcctId}
+            </if>
+            <if test="keyword != null and keyword != '' ">
+                and (a.object_name LIKE concat(concat('%',#{keyword}),'%') or a.object_code like concat(concat('%',#{keyword}),'%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="queryDimIndexDataGrp" resultMap="dimIndexDataGrpVoResultMap">
+        SELECT t.grp_id,
+               t.grp_name,
+               t.parent_grp_id,
+               t.grp_code,
+               SUM(IFNULL(m.total, 0)) total_num
+        FROM data_grp t
+                 LEFT JOIN (SELECT count(a.dim_index_id) total, b.path_code
+                            FROM dim_index_info a
+                                     join data_grp b on a.cat_id = b.grp_id
+                            <where>
+                                and a.state != '1200'
+                                <if test="comAcctId != null and comAcctId != '' ">
+                                    and a.com_acct_id = #{comAcctId}
+                                </if>
+                            </where>
+                            UNION ALL
+                            SELECT count(a.index_id) total, b.path_code
+                            FROM pro_index a
+                                join data_grp b on a.grp_id = b.grp_id
+                            <where>
+                                and a.state != '1200'
+                                <if test="comAcctId != null and comAcctId != '' ">
+                                    and a.com_acct_id = #{comAcctId}
+                                </if>
+                            </where>) m
+                 ON INSTR(CONCAT(CONCAT('.', m.path_code), '.'), CONCAT(CONCAT('.', t.grp_id), '.')) > 0
+        <where>
+            <if test="comAcctId != null and comAcctId != '' ">
+                and t.com_acct_id = #{comAcctId}
+            </if>
+        </where>
+        GROUP BY t.grp_id,t.grp_name,t.parent_grp_id,t.grp_code
+    </select>
+
+    <select id="queryDimIndexByPage" resultMap="dimIndexVoResultMap">
+        SELECT t.index_id,
+               t.index_name,
+               t.index_code,
+               t.meta_table_id,
+               t.table_code,
+               t.state,
+               t.index_type,
+               t.com_acct_id
+        FROM (SELECT a.index_id       as index_id,
+                     a.index_name     as index_name,
+                     a.index_code     as index_code,
+                     a.pro_table_id   as meta_table_id,
+                     a.pro_table_code as table_code,
+                     a.state          as state,
+                     'proIndex'       as index_type,
+                     a.com_acct_id    as com_acct_id,
+                     a.grp_id         as grp_id
+              FROM pro_index a
+              UNION ALL
+              SELECT a.dim_index_id   as index_id,
+                     a.dim_index_name as index_name,
+                     a.index_code     as index_code,
+                     a.meta_table_id  as meta_table_id,
+                     a.table_code     as table_code,
+                     a.state          as state,
+                     'dimIndexInfo'   as index_type,
+                     a.com_acct_id    as com_acct_id,
+                     a.cat_id         as grp_id
+              FROM dim_index_info a) t
+              LEFT JOIN data_grp b ON t.grp_id = b.grp_id
+        <where>
+            <if test="comAcctId !=null">
+                AND t.com_acct_id = #{comAcctId}
+            </if>
+           <if test="grpId !=null and grpId !=''">
+               AND INSTR(CONCAT('.', b.path_code, '.'), CONCAT('.',#{grpId}, '.')) > 0
+           </if>
+           <if test="objectIds !=null and objectIds.size() > 0">
+               AND t.meta_table_id IN (SELECT oktr.meta_data_id FROM obj_key_table_rela oktr WHERE oktr.rela_key_object_id IN
+                <foreach collection="objectIds" item="objectId" separator="," open="(" close=")">
+                    #{objectId}
+                </foreach>
+                )
+           </if>
+            <if test="keyword !=null and keyword !=''">
+                AND t.index_name LIKE concat(concat('%',#{keyword}),'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="queryObjKeyTableRela" resultMap="objKeyTableColumnVoResultMap">
+        select a.table_code         as table_code,
+               b.column_id          as column_id,
+               b.column_code        as column_code,
+               c.table_code         as rela_table_code,
+               b.rela_column_id     as rela_column_id,
+               b.rela_column_code   as rela_column_code,
+               a.rela_key_object_id as rela_key_object_id
+        from obj_key_table_rela a
+                 left join obj_key_column_rela b on a.rela_id = b.parent_rela_id
+                 join obj_info c on a.rela_key_object_id = c.object_id
+        <where>
+            <if test="relaKeyObjectIds != null and relaKeyObjectIds.size() > 0">
+                AND a.rela_key_object_id IN
+               <foreach collection="relaKeyObjectIds" item="objectId" open="(" close=")" separator=",">
+                   #{objectId}
+               </foreach>
+            </if>
+            <if test="metaTableIds != null and metaTableIds.size() > 0">
+                AND (
+               <foreach collection="metaTableIds" item="metaTableId" open="a.meta_table_id IN (" close=")"
+                        separator=",">
+                   #{metaTableId}
+               </foreach>
+               OR
+              <foreach collection="metaTableIds" item="metaTableId" open="c.meta_table_id IN (" close=")" separator=",">
+                  #{metaTableId}
+              </foreach>)
+            </if>
+        </where>
+        group by a.table_code,
+                 b.column_id,
+                 b.column_code,
+                 c.table_code,
+                 b.rela_column_id,
+                 b.rela_column_code,
+                 a.rela_key_object_id
+    </select>
+</mapper>
