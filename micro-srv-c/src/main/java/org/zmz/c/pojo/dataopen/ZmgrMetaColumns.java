@@ -1,6 +1,7 @@
 package org.zmz.c.pojo.dataopen;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Getter;
 import lombok.Setter;
 import org.zmz.c.qo.dataopen.DeriveDimIndexInfo;
@@ -9,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+/**
+ * @author Zmz
+ */
 @Setter
 @Getter
 @Table(name = "ZMGR_META_COLUMNS")
@@ -101,18 +105,21 @@ public class ZmgrMetaColumns {
      * 原始字段id
      */
     @Transient
+    @TableField(exist = false)
     private Long srcColumnId;
 
     /**
      * 原始字段编码，用于字段编码重命名
      */
     @Transient
+    @TableField(exist = false)
     private String srcColumnCode;
 
     /**
      * 输出类型 2 普通 4 指标 5 标签
      */
     @Transient
+    @TableField(exist = false)
     private String outputType;
 
     public ZmgrMetaColumns() {

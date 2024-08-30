@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zmz.c.mapper.dataopen.ZmgrMetaColumnsMapper">
+    <resultMap id="ZmgrMetaColumnsBaseVoMap" type="org.zmz.c.vo.dataopen.dataindex.ZmgrMetaColumnsBaseVo">
+        <result column="column_id" property="columnId"/>
+        <result column="column_code" property="columnCode"/>
+        <result column="column_type" property="columnType"/>
+        <result column="business_key" property="isPrimary"/>
+        <result column="period" property="isAcct"/>
+    </resultMap>
+
+    <sql id="baseSql">
+        column_id,column_code,column_type,business_key,period
+    </sql>
+
+    <select id="selectListByCondition" resultMap="ZmgrMetaColumnsBaseVoMap">
+        select
+        <include refid="baseSql"/>
+        from zmgr_meta_columns
+        where IS_SENSITIVE = '0'
+            <if test="comAcctId != null">
+                AND COM_ACCT_ID = #{comAcctId}
+            </if>
+             <if test="metaDataIds != null and metaDataIds.size() > 0">
+                 <foreach collection="metaDataIds" item="item" index="index" open="AND META_DATA_ID IN ("
+                          close=")" separator=",">
+                     #{item}
+                 </foreach>
+             </if>
+        order by COLUMN_SORT desc
+    </select>
+</mapper>

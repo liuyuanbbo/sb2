@@ -1,5 +1,7 @@
 package org.zmz.c.controller.dataopen.dataindex;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +29,15 @@ public class DataIndexController {
     public R<String> generateSql(@RequestBody DatasetDetail params) {
         String sql = dataIndexService.generateSql(params);
         return R.ok(sql);
+    }
+
+    /**
+     * 分页查询指标信息
+     */
+    @PostMapping(value = "/queryDimIndexByPage")
+    public R<Map<String, Object>> queryDimIndexByPage(@RequestBody Map<String, Object> params) {
+        Map<String, Object> map = dataIndexService.queryDimIndexByPage(params);
+        return R.ok(map);
     }
 
 }

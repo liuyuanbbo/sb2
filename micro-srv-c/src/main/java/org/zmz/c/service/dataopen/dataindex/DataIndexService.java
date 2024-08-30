@@ -16,9 +16,11 @@ import static org.zmz.c.utils.SqlUtils.STR_POINT;
 import static org.zmz.c.utils.SqlUtils.STR_RIGHT_BRACKET;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -29,8 +31,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.zmz.c.mapper.dataopen.DataIndexMapper;
 import org.zmz.c.mapper.dataopen.ObjKeyTableRelaMapper;
 import org.zmz.c.mapper.dataopen.ObjTableRelaMapper;
+import org.zmz.c.mapper.dataopen.ZmgrMetaColumnsMapper;
 import org.zmz.c.qo.dataopen.DatasetColumnAndConditionQo;
 import org.zmz.c.qo.dataopen.DatasetColumnQo;
 import org.zmz.c.qo.dataopen.DatasetConditionQo;
@@ -42,6 +46,8 @@ import org.zmz.c.service.dataopen.sql.AbstractSqlParser;
 import org.zmz.c.service.dataopen.sql.SqlParserFactory;
 import org.zmz.c.utils.AcctTimeUtil;
 import org.zmz.c.utils.BuildSqlUtil;
+import org.zmz.c.vo.dataopen.dataindex.DimIndexVo;
+import org.zmz.c.vo.dataopen.dataindex.ZmgrMetaColumnsBaseVo;
 import org.zmz.c.vo.dataopen.dataset.CycleInfo;
 
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +64,12 @@ public class DataIndexService {
 
     @Resource
     ObjTableRelaMapper objTableRelaMapper;
+
+    @Resource
+    DataIndexMapper dataIndexMapper;
+
+    @Resource
+    ZmgrMetaColumnsMapper zmgrMetaColumnsMapper;
 
     private static final AtomicInteger TB_COUNTER = new AtomicInteger(0);
 
@@ -102,7 +114,7 @@ public class DataIndexService {
     }
 
     private void buildWhere(StringBuilder outField, Map<String, String> tbMap, List<DatasetColumnQo> columnList,
-        List<DatasetConditionQo> condList) {
+                            List<DatasetConditionQo> condList) {
         if (CollectionUtils.isNotEmpty(condList)) {
             outField.append(SQL_WHERE);
             AbstractSqlParser sqlParser = SqlParserFactory.getViewSqlParser(DS_MYSQL);
@@ -129,7 +141,7 @@ public class DataIndexService {
     }
 
     public void calcAccountPeriodCondition(StringBuilder outField, Map<String, String> tbAliasMap,
-        List<DatasetColumnQo> columnList) {
+                                           List<DatasetColumnQo> columnList) {
         Set<Long> tableIdSets = columnList.stream().map(DatasetColumnQo::getTableId).collect(Collectors.toSet());
         List<Map<String, String>> list = objTableRelaMapper.getObjTableRelaMap(tableIdSets);
         if (CollectionUtils.isNotEmpty(list)) {
@@ -146,8 +158,8 @@ public class DataIndexService {
                         if (cycleInfo != null) {
 
                             outField.append(STR_LEFT_BRACKET).append(tbAlias).append(STR_POINT)
-                                .append(cycleInfo.getCycleExp()).append(STR_EQUAL).append(cycleInfo.getCycleVal())
-                                .append(STR_RIGHT_BRACKET);
+                                    .append(cycleInfo.getCycleExp()).append(STR_EQUAL).append(cycleInfo.getCycleVal())
+                                    .append(STR_RIGHT_BRACKET);
                         }
                     }
                 }
@@ -224,14 +236,14 @@ public class DataIndexService {
                 List<ObjKeyColumnRelaVo> keyColumnRelas = vo.getKeyColumnRelas();
 
                 if (CollectionUtils.isNotEmpty(keyColumnRelas) && StringUtils.isNotBlank(sourceTbAlias)
-                    && StringUtils.isNotBlank(relaTbAlias)) {
+                        && StringUtils.isNotBlank(relaTbAlias)) {
                     int j = 1;
                     for (ObjKeyColumnRelaVo keyColumnRela : keyColumnRelas) {
                         String columnCode = keyColumnRela.getColumnCode();
                         String relaColumnCode = keyColumnRela.getRelaColumnCode();
 
                         sb.append(sourceTbAlias).append(STR_POINT).append(columnCode).append(STR_EQUAL)
-                            .append(relaTbAlias).append(STR_POINT).append(relaColumnCode);
+                                .append(relaTbAlias).append(STR_POINT).append(relaColumnCode);
                         if (j != keyColumnRelas.size()) {
                             sb.append(SQL_AND);
                             j++;
@@ -245,4 +257,30 @@ public class DataIndexService {
             }
         }
     }
+
+    // ----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * 分页查询指标信息
+     *
+     * @param params 入参
+     * @return ResponseUtil
+     */
+    public Map<String, Object> queryDimIndexByPage(Map<String, Object> params) {
+        List<DimIndexVo> dimIndexList = dataIndexMapper.queryDimIndexByPage(params);
+
+        Map<String, Object> resultObject = new HashMap<>(2);
+        Set<Long> tableIds = dimIndexList.stream().map(DimIndexVo::getMetaTableId).filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        // resultObject.put("dimIndexList", dimIndexList);
+//        List<ZmgrMetaColumns> zmgrMetaColumns = zmgrMetaColumnsMapper
+//            .selectList(Wrappers.<ZmgrMetaColumns> query().in("META_TABLE_ID", tableIds));
+        params.put("metaDataIds", tableIds);
+        List<ZmgrMetaColumnsBaseVo> zmgrMetaColumns = zmgrMetaColumnsMapper.selectListByCondition(params);
+        resultObject.put("tableIds", tableIds);
+        resultObject.put("zmgrMetaColumns", zmgrMetaColumns);
+        return resultObject;
+    }
+    // ----------------------------------------------------------------------------------------------------------------
+
 }
