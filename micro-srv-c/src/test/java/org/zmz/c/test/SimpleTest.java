@@ -1,20 +1,5 @@
 package org.zmz.c.test;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Maps;
-import org.junit.jupiter.api.Test;
-
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -25,11 +10,33 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.assertj.core.util.Maps;
+import org.junit.jupiter.api.Test;
+
+import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.SelectItem;
+
 @Slf4j
 public class SimpleTest {
     @Test
     public void t1() {
-        //1.69 - 1.12 = 0.57
+        // 1.69 - 1.12 = 0.57
         String s = "1101";
         String res = String.format("/ext/smart/proIndexList/proIndexDetail?indexId=%s&viewType=popupView", s);
 
@@ -59,18 +66,19 @@ public class SimpleTest {
 
     @Test
     public void t5() {
-        //String s1 = "123,456,789";
-        //String s2 = "456,789,123";
-        //String s1 = "你好,我好,大家好";
-        //String s2 = "我好,大家好,你好";
-        //String s1 = "你好";
-        //String s2 = "你好";
+        // String s1 = "123,456,789";
+        // String s2 = "456,789,123";
+        // String s1 = "你好,我好,大家好";
+        // String s2 = "我好,大家好,你好";
+        // String s1 = "你好";
+        // String s2 = "你好";
 
         String s1 = null;
         String s2 = "hello";
         if (isContains(s1, s2)) {
             log.info("{}", "包含");
-        } else {
+        }
+        else {
             log.info("{}", "不包含");
         }
     }
@@ -95,8 +103,8 @@ public class SimpleTest {
     @Test
     public void t7() {
         String json = """
-                {"success":true,"code":0,"msg":"http://135.32.120.118/mydiskdx/applyDownload.html#nodeIds=2c9a31a88f22c248018fec50a95a0403&token=97583a6c69dc2512640e973f1a55697a","data":null}
-                """;
+            {"success":true,"code":0,"msg":"http://135.32.120.118/mydiskdx/applyDownload.html#nodeIds=2c9a31a88f22c248018fec50a95a0403&token=97583a6c69dc2512640e973f1a55697a","data":null}
+            """;
         HashMap<?, ?> map = JSONUtil.toBean(json, HashMap.class);
         log.info("{}", map);
         String code = getStringValue(map, "code");
@@ -114,7 +122,8 @@ public class SimpleTest {
 
         if (value instanceof String) {
             return (String) value;
-        } else {
+        }
+        else {
             return value.toString();
         }
 
@@ -123,8 +132,8 @@ public class SimpleTest {
     @Test
     public void t8() {
         String json = """
-                {"success":true,"code":0,"msg":"http://135.32.120.118/mydiskdx/applyDownload.html#nodeIds=2c9a31a88f22c248018fec50a95a0403&token=97583a6c69dc2512640e973f1a55697a","data":null}
-                """;
+            {"success":true,"code":0,"msg":"http://135.32.120.118/mydiskdx/applyDownload.html#nodeIds=2c9a31a88f22c248018fec50a95a0403&token=97583a6c69dc2512640e973f1a55697a","data":null}
+            """;
         Map<?, ?> map = fromJson(json, Map.class);
         log.info("{}", map);
         String success = getStringValue(map, "success");
@@ -154,7 +163,8 @@ public class SimpleTest {
         Gson gson = builder.create();
         try {
             return (T) gson.fromJson(json, clazz);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -164,20 +174,21 @@ public class SimpleTest {
         Long id = null;
         String s = String.valueOf(id);
 
-
         Map<String, String> map = new LinkedHashMap<>();
         map.put("aa", null);
 
         String aa = map.get("aa");
         log.info("{}", aa);
 
-//        String did = null;
-//        Long l = Long.valueOf(did);
-//        log.info("{}", l);
+        // String did = null;
+        // Long l = Long.valueOf(did);
+        // log.info("{}", l);
 
         log.info("=============================================");
 
-        Long[] list = new Long[]{1L, 2L, null, 3L};
+        Long[] list = new Long[] {
+            1L, 2L, null, 3L
+        };
 
         StringBuilder sb = new StringBuilder();
 
@@ -219,7 +230,6 @@ public class SimpleTest {
         log.info("{} {}", step, jsonString);
     }
 
-
     @Getter
     @Setter
     @ToString
@@ -227,6 +237,7 @@ public class SimpleTest {
     @NoArgsConstructor
     static class $_A {
         private String id;
+
         private String name;
 
         public $_A(String id) {
@@ -267,7 +278,6 @@ public class SimpleTest {
         log.info("{}", c);
     }
 
-
     String getPartitionName(Map<String, String> partitionMap) {
         Object ptKey = partitionMap.keySet().toArray()[0];
         Object ptValue = partitionMap.get(ptKey);
@@ -301,6 +311,45 @@ public class SimpleTest {
 
         log.info("{}", s1);
         log.info("{}", s2);
+    }
+
+    public static List<String> getSelectFields(String sql) {
+        List<String> fields = new ArrayList<>();
+        String regex = "(?i)select\\s+(.*?)\\s+from";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(sql);
+
+        if (matcher.find()) {
+            String selectClause = matcher.group(1);
+            String[] splitFields = selectClause.split("\\s*,\\s*");
+            for (String field : splitFields) {
+                fields.add(field.trim());
+            }
+        }
+
+        return fields;
+    }
+
+    @Test
+    public void t15() {
+        String sql = "SELECT id as t_id, name, age FROM users WHERE age > 18";
+        List<String> fields = getSelectFields(sql);
+        log.info("SELECT fields:  {}", fields);
+    }
+
+    @Test
+    public void t16() throws JSQLParserException {
+        String sql = "SELECT id as t_id, name, age FROM users WHERE age > 18";
+
+        PlainSelect select = (PlainSelect) CCJSqlParserUtil.parse(sql);
+
+        List<SelectItem<?>> selectItems = select.getSelectItems();
+
+        for (SelectItem<?> selectItem : selectItems) {
+            Expression expression = selectItem.getExpression();
+            log.info("{}", expression);
+        }
+
     }
 
 }
