@@ -298,4 +298,38 @@
                  b.rela_column_code,
                  a.rela_key_object_id
     </select>
+
+    <select id="queryIndexRelatedDimsByPage" resultMap="objInfoResultMap">
+        select oi.object_id, oi.object_code, oi.object_name, oi.meta_table_id, oi.table_code, oi.key_code
+        from obj_info oi
+        where object_id in (select oktr.rela_key_object_id
+                            from obj_key_table_rela oktr
+                            where oktr.meta_data_id in (SELECT pi.pro_table_id as table_id
+                                                            FROM pro_index pi
+                                                            where 1=1
+                                                                <if test="comAcctId !=null">
+                                                                    AND dii.com_acct_id = #{comAcctId}
+                                                                </if>
+                                                                <if test="indexIds!=null and indexIds.size()>0">
+                                                                    AND pi.index_id in
+                                                                    <foreach collection="indexIds" item="indexId" open="(" separator="," close=")">
+                                                                        #{indexId}
+                                                                    </foreach>
+                                                                </if>
+                                                            UNION ALL
+                                                        SELECT dii.meta_table_id as table_id
+                                                            FROM dim_index_info dii
+                                                            where 1=1
+                                                                <if test="comAcctId !=null">
+                                                                    AND dii.com_acct_id = #{comAcctId}
+                                                                </if>
+                                                                <if test="indexIds!=null and indexIds.size()>0">
+                                                                    AND dii.dim_index_id in
+                                                                    <foreach collection="indexIds" item="indexId" open="(" separator="," close=")">
+                                                                        #{indexId}
+                                                                    </foreach>
+                                                                </if>
+                                                        )
+                            )
+    </select>
 </mapper>
