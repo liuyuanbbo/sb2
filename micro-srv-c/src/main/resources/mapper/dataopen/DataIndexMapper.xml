@@ -299,6 +299,7 @@
                  a.rela_key_object_id
     </select>
 
+    <!--
     <select id="queryIndexRelatedDimsByPage" resultMap="objInfoResultMap">
         select oi.object_id, oi.object_code, oi.object_name, oi.meta_table_id, oi.table_code, oi.key_code
         from obj_info oi
@@ -332,4 +333,5 @@
                                                         )
                             )
     </select>
+    -->
 </mapper>
