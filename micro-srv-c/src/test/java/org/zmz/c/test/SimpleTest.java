@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.assertj.core.util.Maps;
 import org.junit.jupiter.api.Test;
+import org.zmz.c.utils.SqlUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
@@ -350,6 +351,16 @@ public class SimpleTest {
             log.info("{}", expression);
         }
 
+    }
+
+    @Test
+    public void t17() {
+        StringBuilder sb = new StringBuilder(" group by tb4.path_code");
+        int idx = sb.lastIndexOf(SqlUtils.STR_DOT);
+        if (!sb.isEmpty() && idx != -1) {
+            sb.deleteCharAt(idx);
+        }
+        log.info("{}", sb);
     }
 
 }
