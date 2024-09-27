@@ -363,4 +363,9 @@ public class SimpleTest {
         log.info("{}", sb);
     }
 
+    @Test
+    public void t18() {
+        String s18 = "{\"version\": \"v7\",\"countProIndex\": \"-1\",\"grpType\": \"7\",\"parentGrpId\": -1,\"withData\": \"true\",\"language\": \"zh-CN\",\"envType\": \"hunandianxin_cloud\"}";
+    }
+
 }
