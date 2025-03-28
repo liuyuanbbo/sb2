@@ -15,6 +15,7 @@
         <module>mbpGenerator</module>
         <module>micro-srv-c</module>
         <module>micro-srv-d</module>
+        <module>micro-srv-e</module>
     </modules>
 
     <parent>
