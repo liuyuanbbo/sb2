@@ -1,8 +1,0 @@
-redisson:
-  single:
-    address: redis://${spring.redis.host}:${spring.redis.port}
-    password: ${spring.redis.password}
-    database: ${spring.redis.database}
-  cluster:
-    enabled: false
-    nodes: redis://192.168.110.201:6380,redis://192.168.110.201:6381,redis://192.168.110.201:6382
