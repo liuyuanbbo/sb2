@@ -1,5 +1,7 @@
 package org.zmz.a.config;
 
+import javax.sql.DataSource;
+
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -11,36 +13,32 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
-import javax.annotation.Resource;
-import javax.sql.DataSource;
-
 @Configuration
-@MapperScan(basePackages = "org.zmz.a.mapper.dataopen",
-        sqlSessionTemplateRef = "dataopenSqlSessionTemplate")
+@MapperScan(basePackages = "org.zmz.a.mapper.dataopen", sqlSessionTemplateRef = "dataopenSqlSessionTemplate")
 public class MyBatisDataOpenConfig {
-    @Resource
-    private DataSource dataopenMysqlDataSource;
 
     @Bean(name = "dataopenSqlSessionFactory")
     @Primary
-    public SqlSessionFactory dataopenSqlSessionFactory() throws Exception {
+    public SqlSessionFactory dataopenSqlSessionFactory(@Qualifier("dynamicDataOpenDataSource") DataSource dataSource)
+        throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dataopenMysqlDataSource);
-        sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath:mapper/dataopen/*Mapper.xml"));
+        sqlSessionFactoryBean.setDataSource(dataSource);
+        sqlSessionFactoryBean.setMapperLocations(
+            new PathMatchingResourcePatternResolver().getResources("classpath:mapper/dataopen/*Mapper.xml"));
         return sqlSessionFactoryBean.getObject();
     }
 
     @Bean(name = "dataopenTransactionManager")
     @Primary
-    public DataSourceTransactionManager dataopenTransactionManager() {
-        return new DataSourceTransactionManager(dataopenMysqlDataSource);
+    public DataSourceTransactionManager dataopenTransactionManager(
+        @Qualifier("dynamicDataOpenDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean(name = "dataopenSqlSessionTemplate")
     @Primary
     public SqlSessionTemplate dataopenSqlSessionTemplate(
-            @Qualifier("dataopenSqlSessionFactory") SqlSessionFactory dataopenSqlSessionFactory) {
+        @Qualifier("dataopenSqlSessionFactory") SqlSessionFactory dataopenSqlSessionFactory) {
         return new SqlSessionTemplate(dataopenSqlSessionFactory);
     }
 }

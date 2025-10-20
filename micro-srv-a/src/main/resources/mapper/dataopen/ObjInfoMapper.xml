@@ -69,6 +69,6 @@
 
     <select id="selectAll" resultMap="baseMap">
         select *
-        from obj_info;
+        from obj_info
     </select>
 </mapper>

@@ -1,22 +1,21 @@
 package org.zmz.a.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.zmz.common.R;
 import org.zmz.a.model.dataopen.ObjInfo;
 import org.zmz.a.service.ObjInfoService;
 import org.zmz.a.vo.request.ObjInfoQueryQo;
+import org.zmz.common.R;
 
-import javax.annotation.Resource;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/objInfo")
@@ -45,19 +44,10 @@ public class ObjInfoController {
     }
 
     @GetMapping("/selectAll")
-    public R<List<Long>> selectAll() {
+    public R<List<ObjInfo>> selectAll() {
         List<ObjInfo> objInfos = objInfoService.selectAll();
         log.info("objInfos size: {}", objInfos.size());
-        List<Long> metaTableIdList = new ArrayList<>();
-        Map<Long, Long> map = objInfos.stream().collect(
-                Collectors.toMap(ObjInfo::getObjectId,
-                        ObjInfo::getMetaTableId, (v1, v2) -> {
-                            log.info("v1:{},v2:{}", v1, v2);
-                            metaTableIdList.add(v1);
-                            metaTableIdList.add(v2);
-                            return v2;
-                        }));
-        return R.ok(metaTableIdList);
+        return R.ok(objInfos);
     }
 
 }

@@ -15,32 +15,31 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "org.zmz.a.mapper.dataportal",
-        sqlSessionTemplateRef = "dataportalSqlSessionTemplate")
+@MapperScan(basePackages = "org.zmz.a.mapper.dataportal", sqlSessionTemplateRef = "dataportalSqlSessionTemplate")
 public class MyBatisDataPortalConfig {
     @Resource
-    private DataSource dataportalMysqlDataSource;
+    private DataSource dynamicDataPortalDataSource;
 
     @Bean(name = "dataportalSqlSessionFactory")
     @Primary
     public SqlSessionFactory dataportalSqlSessionFactory() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dataportalMysqlDataSource);
-        sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath:mapper/dataportal/*Mapper.xml"));
+        sqlSessionFactoryBean.setDataSource(dynamicDataPortalDataSource);
+        sqlSessionFactoryBean.setMapperLocations(
+            new PathMatchingResourcePatternResolver().getResources("classpath:mapper/dataportal/*Mapper.xml"));
         return sqlSessionFactoryBean.getObject();
     }
 
     @Bean(name = "dataportalTransactionManager")
     @Primary
     public DataSourceTransactionManager dataportalTransactionManager() {
-        return new DataSourceTransactionManager(dataportalMysqlDataSource);
+        return new DataSourceTransactionManager(dynamicDataPortalDataSource);
     }
 
     @Bean(name = "dataportalSqlSessionTemplate")
     @Primary
     public SqlSessionTemplate dataportalSqlSessionTemplate(
-            @Qualifier("dataportalSqlSessionFactory") SqlSessionFactory dataportalSqlSessionFactory) {
+        @Qualifier("dataportalSqlSessionFactory") SqlSessionFactory dataportalSqlSessionFactory) {
         return new SqlSessionTemplate(dataportalSqlSessionFactory);
     }
 }

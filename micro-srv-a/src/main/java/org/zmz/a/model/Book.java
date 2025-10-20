@@ -15,7 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 public class Book implements Serializable {
     private Long id;
+
     private String name;
+
     private BigDecimal price;
+
     private List<String> categories;
 }

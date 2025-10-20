@@ -1,4 +1,4 @@
-package org.zmz.a.vo.request.dataportal;
+package org.zmz.a.vo.request;
 
 import lombok.Getter;
 import lombok.Setter;

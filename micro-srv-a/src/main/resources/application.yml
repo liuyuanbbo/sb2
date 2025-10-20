@@ -5,15 +5,12 @@ spring:
     name: micro-srv-a
   cache:
     type: redis
+  profiles:
+    active: ${app.env:154}
   config:
     import:
-      # - conf/maria-code01.yml
-      # - conf/mysql-iwhale-dev-dataopen.yml
-      - conf/mysql-iwhale-dev-dataportal.yml
-      # - conf/mysql-yoga14s.yml
-      - conf/redis-code01.yml
-      - conf/boot-actuator.yml
-      - conf/kafka-code01.yml
-      # - conf/kafka-yoga14s.yml
-      - conf/postgres-code01.yml
+      - conf/${spring.profiles.active}/dataportal.yml
+      - conf/${spring.profiles.active}/dataopen.yml
+      - conf/${spring.profiles.active}/redis.yml
+
 

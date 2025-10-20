@@ -20,19 +20,19 @@ public class RedisConfig {
 
         redisTemplate.setConnectionFactory(factory);
 
-        //设置 key value 的序列化规则
+        // 设置 key value 的序列化规则
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
 
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.setDateFormat(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"));
-        var jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        Jackson2JsonRedisSerializer<?> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
 
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
 
-        //设置支持事务
+        // 设置支持事务
         redisTemplate.setEnableTransactionSupport(true);
         redisTemplate.afterPropertiesSet();
 
