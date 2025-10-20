@@ -1,5 +1,0 @@
-server:
-  port: 9525
-spring:
-  application:
-    name: micro-srv-e
