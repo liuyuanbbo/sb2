@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.zmz.c.qo.dataopen.OutPutMode;
+
 import com.baomidou.mybatisplus.annotation.TableId;
 
 import lombok.Getter;
@@ -25,6 +27,7 @@ public class DimIndexInfo {
     @TableId
     @Id
     private Long dimIndexId;
+
     /**
      * 指标编码
      */
@@ -119,4 +122,16 @@ public class DimIndexInfo {
      * 来源系统,集团标签group
      */
     private String srcSystem;
+
+    public String outPutMode = OutPutMode.TABLE;
+
+    /**
+     * 指标类型： COMPOSITE_INDEX:复合指标
+     */
+    public String indexType;
+
+    /**
+     * 是否同步纵表(0:不同步 1:同步) 默认不同步
+     */
+    private Short syncZb = 0;
 }

@@ -83,4 +83,6 @@ public class AppSql {
     private String appInstanceSql;
 
     private String condExpression;
+
+    private String needDataPrivCtrl;
 }

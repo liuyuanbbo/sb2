@@ -46,4 +46,6 @@ public class AppSqlAnalysis {
 
     private String version;
 
+    public String outPutMode;
+
 }
