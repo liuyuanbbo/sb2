@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class BuildSqlUtil {
     private BuildSqlUtil() {
@@ -41,7 +42,7 @@ public final class BuildSqlUtil {
         }
         appendComma(sqlColumn);
         sqlColumn.append(zmgrMetaColumns.getColumnCode()).append(" ").append(zmgrMetaColumns.getColumnType())
-                .append(" COMMENT '").append(zmgrMetaColumns.getColumnName()).append("'");
+            .append(" COMMENT '").append(zmgrMetaColumns.getColumnName()).append("'");
         return sqlColumn.toString();
     }
 
@@ -51,13 +52,13 @@ public final class BuildSqlUtil {
 
     public static StringBuilder getAlterAddColumnSql(String schemaCode, String tableCode) {
         return new StringBuilder("ALTER TABLE ").append(schemaCode).append(".").append(tableCode)
-                .append(" ADD COLUMNS ");
+            .append(" ADD COLUMNS ");
     }
 
     /**
      * 检查规格字段是否存在 不区分大小写
      *
-     * @param sourceColumns    原规格字段
+     * @param sourceColumns 原规格字段
      * @param targetColumnCode 目标字段编码
      * @return true/false
      */
@@ -82,7 +83,7 @@ public final class BuildSqlUtil {
         if (source == null) {
             return;
         }
-        if (!source.isEmpty()) {
+        if (source.length() > 0) {
             source.append(",");
         }
     }
@@ -100,7 +101,7 @@ public final class BuildSqlUtil {
     /**
      * 拼接 hive insert 的分区字段
      *
-     * @param partitions      分区字段
+     * @param partitions 分区字段
      * @param partitionValues 分区值顺序跟分区字段一致
      * @return PARTITION(p_column = v)
      */
@@ -131,7 +132,7 @@ public final class BuildSqlUtil {
      * @return select column sql
      */
     public static StringBuilder appendPartitionsSelectColumn(String alias,
-                                                             Collection<? extends ZmgrMetaColumns> partitions) {
+        Collection<? extends ZmgrMetaColumns> partitions) {
         StringBuilder selectPartitionColumnSql = new StringBuilder();
         if (partitions == null || partitions.isEmpty()) {
             return selectPartitionColumnSql;
@@ -145,21 +146,21 @@ public final class BuildSqlUtil {
 
     // ALTER TABLE js_test_del DROP IF EXISTS PARTITION (month_id = '202007');
     public static String dropPartitionSql(String schemaCode, String tableCode, String partitionCode,
-                                          String partitionValue) {
+        String partitionValue) {
         return "ALTER TABLE " + schemaCode + "." + tableCode + " DROP IF EXISTS PARTITION (" + partitionCode + " = '"
-                + partitionValue + "');";
+            + partitionValue + "');";
     }
 
     /**
      * 根据分区字段->value MAP拼接
      *
-     * @param schemaCode   库
-     * @param tableCode    表
+     * @param schemaCode 库
+     * @param tableCode 表
      * @param partitionMap 分区字段->value
      */
     public static String dropPartitionSql(String schemaCode, String tableCode, Map<String, String> partitionMap) {
         StringBuilder dropPartitionSql = new StringBuilder("ALTER TABLE ").append(schemaCode).append(".")
-                .append(tableCode).append(" DROP IF EXISTS PARTITION (");
+            .append(tableCode).append(" DROP IF EXISTS PARTITION (");
         int i = 0;
         for (Map.Entry<String, String> entry : partitionMap.entrySet()) {
             if (i > 0) {
@@ -191,7 +192,7 @@ public final class BuildSqlUtil {
     /**
      * 拼接 hive insert 的分区字段
      *
-     * @param partitions      分区字段
+     * @param partitions 分区字段
      * @param partitionValues 分区值顺序跟分区字段一致
      * @return PARTITION(p_column = v)
      */
@@ -219,31 +220,32 @@ public final class BuildSqlUtil {
      * 业务限定拼接条件
      */
     public static void appendSimpleCond(StringBuilder whereBuilder, ProRestrictColumnVo restrictColumnVo,
-                                        AbstractSqlParser abstractSqlParser) {
+        AbstractSqlParser abstractSqlParser) {
         appendSimpleCond(whereBuilder, restrictColumnVo.getCondType(), restrictColumnVo.getCondOperator(),
-                restrictColumnVo.getCondValue(), restrictColumnVo.getTableCode(), restrictColumnVo.getColumnCode(),
-                restrictColumnVo.getColumnType(), restrictColumnVo.getCycleType(), restrictColumnVo.getDateFormat(),
-                restrictColumnVo.getIsDynamic(), abstractSqlParser);
+            restrictColumnVo.getCondValue(), restrictColumnVo.getTableCode(), restrictColumnVo.getColumnCode(),
+            restrictColumnVo.getColumnType(), restrictColumnVo.getCycleType(), restrictColumnVo.getDateFormat(),
+            restrictColumnVo.getIsDynamic(), abstractSqlParser);
     }
 
     /**
      * 全局条件/度量条件拼接条件
      */
     public static void appendSimpleCond(StringBuilder whereBuilder, DatasetConditionQo datasetConditionQo, String isSql,
-                                        AbstractSqlParser abstractSqlParser) {
+        AbstractSqlParser abstractSqlParser) {
         appendSimpleCond(whereBuilder, datasetConditionQo.getCondType(), datasetConditionQo.getCondOperator(),
-                datasetConditionQo.getCondValue(), datasetConditionQo.getTableAlias(), datasetConditionQo.getColumnCode(),
-                datasetConditionQo.getColumnType(), datasetConditionQo.getCycleType(), datasetConditionQo.getDateFormat(),
-                isSql, abstractSqlParser);
+            datasetConditionQo.getCondValue(), datasetConditionQo.getTableAlias(), datasetConditionQo.getColumnCode(),
+            datasetConditionQo.getColumnType(), datasetConditionQo.getCycleType(), datasetConditionQo.getDateFormat(),
+            isSql, abstractSqlParser);
     }
 
     public static void appendSimpleCond(StringBuilder whereBuilder, String condType, String condOperator,
-                                        String condValue, String tableCode, String columnCode, String columnType, String cycleType, String dataFormat,
-                                        String isSql, AbstractSqlParser abstractSqlParser) {
+        String condValue, String tableCode, String columnCode, String columnType, String cycleType, String dataFormat,
+        String isSql, AbstractSqlParser abstractSqlParser) {
         // 连接符，括号，算术运算符
         if ("connectOpt".equals(condType) || "bracket".equals(condType) || "arithmeticOpt".equals(condType)) {
             whereBuilder.append(" ").append(condValue).append(" ");
-        } else if ("arithmeticCondItem".equals(condType)) {
+        }
+        else if ("arithmeticCondItem".equals(condType)) {
             whereBuilder.append(tableCode).append(SqlUtils.STR_POINT).append(columnCode).append(" ");
             // 算术运算条件
         }
@@ -255,23 +257,24 @@ public final class BuildSqlUtil {
             }
             // 拼接条件
             appendSimpleCond(whereBuilder, condOperator, condValue, columnType, cycleType, dataFormat, isSql,
-                    abstractSqlParser);
+                abstractSqlParser);
         }
     }
 
     public static void appendSimpleCond(StringBuilder whereBuilder, String condOperator, String condValue,
-                                        String columnType, String cycleType, String dataFormat, String isSql, AbstractSqlParser abstractSqlParser) {
+        String columnType, String cycleType, String dataFormat, String isSql, AbstractSqlParser abstractSqlParser) {
         // 拼接条件
         // 有date类型的字段条件，需要格式化日期
         if (columnType.toLowerCase().contains("date") && StrUtil.isNotEmpty(dataFormat)
-                && !KeyValues.YES_VALUE_1.equals(isSql) && !"SQL".equalsIgnoreCase(condOperator)
-                && !"EXPRESSION".equalsIgnoreCase(condOperator)) {
+            && !KeyValues.YES_VALUE_1.equals(isSql) && !"SQL".equalsIgnoreCase(condOperator)
+            && !"EXPRESSION".equalsIgnoreCase(condOperator)) {
             // 分割值
             List<String> condValues = new ArrayList<>();
             String[] splitArray;
             if (condValue.contains("~")) {
                 splitArray = condValue.split("~");
-            } else {
+            }
+            else {
                 splitArray = condValue.split(",");
             }
             for (String split : splitArray) {
@@ -279,9 +282,10 @@ public final class BuildSqlUtil {
             }
             condValue = StringUtils.join(condValues, "~");
             BuildSqlUtil.appendSimpleCond(whereBuilder, condOperator, condValue, false);
-        } else {
+        }
+        else {
             BuildSqlUtil.appendSimpleCond(whereBuilder, condOperator, condValue,
-                    SqlBuilderHelper.isStringType(columnType));
+                SqlBuilderHelper.isStringType(columnType));
         }
     }
 
@@ -293,7 +297,7 @@ public final class BuildSqlUtil {
      * 条件值是否增加单引号
      */
     public static void appendSimpleCond(StringBuilder whereBuilder, String condOperator, String condValue,
-                                        boolean addQuot) {
+        boolean addQuot) {
         if (StrUtil.isNotEmpty(condOperator)) {
             String quot = addQuot ? "'" : "";
             // 拼接条件 arithmeticCond
@@ -314,18 +318,23 @@ public final class BuildSqlUtil {
                 }
                 String newRuleValue = buf.toString();
                 whereBuilder.append("(").append(newRuleValue).append(")").append(" ");
-            } else if ("LIKE".equals(condOperator) || "NOT LIKE".equals(condOperator)) {
+            }
+            else if ("LIKE".equals(condOperator) || "NOT LIKE".equals(condOperator)) {
                 whereBuilder.append(" ").append(condOperator).append(" ");
                 whereBuilder.append("'%").append(condValue).append("%'").append(" ");
-            } else if ("LLIKE".equals(condOperator)) {
+            }
+            else if ("LLIKE".equals(condOperator)) {
                 whereBuilder.append(" LIKE ");
                 whereBuilder.append("'").append(condValue).append("%'").append(" ");
-            } else if ("RLIKE".equals(condOperator)) {
+            }
+            else if ("RLIKE".equals(condOperator)) {
                 whereBuilder.append(" LIKE ");
                 whereBuilder.append("'%").append(condValue).append("' ");
-            } else if ("IS NULL".equals(condOperator) || "IS NOT NULL".equals(condOperator)) {
+            }
+            else if ("IS NULL".equals(condOperator) || "IS NOT NULL".equals(condOperator)) {
                 whereBuilder.append(" ").append(condOperator).append(" ");
-            } else if ("NOT BETWEEN".equals(condOperator) || condOperator.startsWith("BETWEEN")) {
+            }
+            else if ("NOT BETWEEN".equals(condOperator) || condOperator.startsWith("BETWEEN")) {
                 // 适配动态时间（BETWEEN_DYNAMIC）、相对时间
                 if (condOperator.startsWith("BETWEEN")) {
                     condOperator = "BETWEEN";
@@ -335,14 +344,15 @@ public final class BuildSqlUtil {
                 String[] splitArray;
                 if (condValue.contains("~")) {
                     splitArray = condValue.split("~");
-                } else {
+                }
+                else {
                     splitArray = condValue.split(",");
                 }
                 for (int i = 0; i < splitArray.length; i++) {
                     String str = splitArray[i];
                     splitArray[i] = quot + str + quot;
                 }
-                String joinStr = StrUtil.join(" AND ", Arrays.stream(splitArray).toList());
+                String joinStr = StrUtil.join(" AND ", Arrays.stream(splitArray).collect(Collectors.toList()));
                 whereBuilder.append(joinStr).append(" ");
             }
             // 自定义表达式,比如：[a.col] %100 = 0
@@ -352,7 +362,8 @@ public final class BuildSqlUtil {
             // 自定义sql,手写sql
             else if ("SQL".equals(condOperator)) {
                 whereBuilder.append(" ").append(condValue).append(" ");
-            } else {
+            }
+            else {
                 whereBuilder.append(" ").append(condOperator).append(" ");
                 // 字符串处理
                 whereBuilder.append(handleQuotCondValue(condValue, quot));
@@ -383,7 +394,8 @@ public final class BuildSqlUtil {
                 for (int i = 1; i < resultPeriod.length; i++) {
                     if (isStr) {
                         bud.append("'").append(resultPeriod[i].trim()).append("'");
-                    } else {
+                    }
+                    else {
                         bud.append(resultPeriod[i].trim());
                     }
                     if (i != resultPeriod.length - 1) {
@@ -393,7 +405,8 @@ public final class BuildSqlUtil {
                 String newRuleValue = bud.toString();
                 newRuleValue = SqlBuilderHelper.replaceString(newRuleValue, isStr);
                 whereBuilder.append("(").append(newRuleValue).append(")").append(" ");
-            } else if ("BETWEEN".equals(resultPeriod[0]) || "NOT BETWEEN".equals(resultPeriod[0])) {
+            }
+            else if ("BETWEEN".equals(resultPeriod[0]) || "NOT BETWEEN".equals(resultPeriod[0])) {
                 // 适配动态时间（BETWEEN_DYNAMIC）、相对时间
                 whereBuilder.append(" ").append(resultPeriod[0]).append(" ");
                 // 分割后面的值
@@ -401,11 +414,12 @@ public final class BuildSqlUtil {
                 for (int i = 0; i < resultPeriod.length - 1; i++) {
                     if (isStr) {
                         splitArray[i] = "'" + resultPeriod[i + 1] + "'";
-                    } else {
+                    }
+                    else {
                         splitArray[i] = resultPeriod[i + 1];
                     }
                 }
-                String joinStr = StrUtil.join(" AND ", Arrays.stream(splitArray).toList());
+                String joinStr = StrUtil.join(" AND ", Arrays.stream(splitArray).collect(Collectors.toList()));
                 whereBuilder.append(joinStr).append(" ");
             }
 
@@ -413,7 +427,7 @@ public final class BuildSqlUtil {
     }
 
     public static boolean sbIsNotEmpty(StringBuilder sb) {
-        return !sb.isEmpty();
+        return sb.length() > 0;
     }
 
     public static boolean notEqZero(String str) {

@@ -90,21 +90,29 @@ public class SqlBuilderFactory {
     }
 
     public static AbstractSqlBuilder getSqlBuilder(DatasetColumnAndConditionQo params,
-                                                   Map<Long, ModelInfo> modelInfoMap) {
+        Map<Long, ModelInfo> modelInfoMap) {
         if (CollUtil.isNotEmpty(params.getColumnList()) && modelInfoMap.isEmpty()) {
             // 缺少必要参数
             throw new IllegalArgumentException("缺少必要参数");
         }
         String type = getDataSourceType(modelInfoMap);
-        return switch (type) {
-            case KeyValues.DS_ORACLE -> new OracleSqlBuilder(params, modelInfoMap);
-            case KeyValues.DS_GBASE -> new GbaseSqlBuilder(params, modelInfoMap);
-            case KeyValues.DS_HIVE -> new HiveSqlBuilder(params, modelInfoMap);
-            case KeyValues.DS_MYSQL, KeyValues.DS_RDS -> new MysqlSqlBuilder(params, modelInfoMap);
-            case KeyValues.DS_CLICKHOUSE -> new ClickHouseSqlBuilder(params, modelInfoMap);
-            case KeyValues.DS_WHALEHOUSE -> new WhalehouseSqlBuilder(params, modelInfoMap);
-            default -> new GreenplumSqlBuilder(params, modelInfoMap);
-        };
+        switch (type) {
+            case KeyValues.DS_ORACLE:
+                return new OracleSqlBuilder(params, modelInfoMap);
+            case KeyValues.DS_GBASE:
+                return new GbaseSqlBuilder(params, modelInfoMap);
+            case KeyValues.DS_HIVE:
+                return new HiveSqlBuilder(params, modelInfoMap);
+            case KeyValues.DS_MYSQL:
+            case KeyValues.DS_RDS:
+                return new MysqlSqlBuilder(params, modelInfoMap);
+            case KeyValues.DS_CLICKHOUSE:
+                return new ClickHouseSqlBuilder(params, modelInfoMap);
+            case KeyValues.DS_WHALEHOUSE:
+                return new WhalehouseSqlBuilder(params, modelInfoMap);
+            default:
+                return new GreenplumSqlBuilder(params, modelInfoMap);
+        }
     }
 
     public static String getSqlParse(DatasetColumnAndConditionQo params, Map<Long, ModelInfo> modelInfoMap) {

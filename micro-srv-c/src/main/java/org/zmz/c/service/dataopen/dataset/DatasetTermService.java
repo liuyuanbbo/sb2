@@ -106,7 +106,7 @@ public class DatasetTermService {
         // 度量过滤条件
         if (CollUtil.isNotEmpty(metricTerm.getCondList())) {
             allObjIds.addAll(metricTerm.getCondList().stream().filter(d -> d.getColumnId() != null)
-                .map(DatasetConditionQo::getObjId).toList());
+                .map(DatasetConditionQo::getObjId).collect(Collectors.toList()));
         }
         allObjIds = allObjIds.stream().distinct().collect(Collectors.toList());
         log.info("pathMap : {}", pathMap);
@@ -126,7 +126,7 @@ public class DatasetTermService {
         }
         // 判断直接一端个数取最小，关联维度最多
         List<ObjRelaDTO> list = termOneObjMap.values().stream().sorted(Comparator.comparing(ObjRelaDTO::getOneObjSize)
-            .thenComparing(ObjRelaDTO::getRetainObjSize, Comparator.reverseOrder())).toList();
+            .thenComparing(ObjRelaDTO::getRetainObjSize, Comparator.reverseOrder())).collect(Collectors.toList());
         return list.get(0).getObjColumn();
     }
 

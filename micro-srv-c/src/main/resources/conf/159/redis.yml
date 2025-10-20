@@ -1,0 +1,6 @@
+spring:
+  redis:
+    host: 172.21.72.159
+    port: 6479
+    password: 'Redis@docker'
+    database: 0

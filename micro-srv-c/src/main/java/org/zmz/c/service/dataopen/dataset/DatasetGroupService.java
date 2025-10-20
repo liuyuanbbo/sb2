@@ -96,14 +96,16 @@ public class DatasetGroupService {
             Long startObjectId = dimensionList.get(0).getObjectId();
             // 起点对象的字段
             List<DatasetColumnQo> startDimensions = dimensionList.stream()
-                .filter(datasetColumnQo -> startObjectId.equals(datasetColumnQo.getObjectId())).toList();
+                .filter(datasetColumnQo -> startObjectId.equals(datasetColumnQo.getObjectId()))
+                .collect(Collectors.toList());
             // 起点对象的主键
             List<DatasetColumnQo> pkColumns = startDimensions.stream()
                 .filter(datasetColumnQo -> Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
                 .collect(Collectors.toList());
             if (CollUtil.isEmpty(pkColumns)) {
                 List<DatasetColumnQo> notPkColumns = startDimensions.stream()
-                    .filter(datasetColumnQo -> !Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary())).toList();
+                    .filter(datasetColumnQo -> !Constants.YES_VALUE_1.equals(datasetColumnQo.getIsPrimary()))
+                    .collect(Collectors.toList());
                 measureDimensions.addAll(notPkColumns);
                 // 取差集
                 List<DatasetColumnQo> diffDimensionList = dimensionList.stream().filter(b -> startDimensions.stream()

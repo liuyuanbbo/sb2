@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +23,9 @@ public class DatasetObjColumnVo {
 
     public static final String PRO_INDEX = "proIndex";
 
-    public static final List<String> STRING_TYPE_LIST = List.of("CHAR", "VARCHAR", "BINARY", "VARBINARY",
-            "BLOB", "MEDIUMBLOB", "LONGBLOB", "TEXT",
-            "MEDIUMTEXT", "LONGTEXT", "ENUM", "SET",
-            "NCHAR", "VARCHAR2", "NVARCHAR2", "CLOB",
-            "NCLOB", "STRING");
+    public static final List<String> STRING_TYPE_LIST = Arrays.asList("CHAR", "VARCHAR", "BINARY", "VARBINARY", "BLOB",
+        "MEDIUMBLOB", "LONGBLOB", "TEXT", "MEDIUMTEXT", "LONGTEXT", "ENUM", "SET", "NCHAR", "VARCHAR2", "NVARCHAR2",
+        "CLOB", "NCLOB", "STRING");
 
     /**
      * 当前目录标识，前端持载树

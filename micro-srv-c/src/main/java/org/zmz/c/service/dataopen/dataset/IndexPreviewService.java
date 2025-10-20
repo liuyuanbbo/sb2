@@ -25,7 +25,7 @@ public class IndexPreviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public Object addCollect(Map<String, Object> params) {
-        List<Map<String, Object>> datas = MapUtil.get(params, "datas", new TypeReference<>() {
+        List<Map<String, Object>> datas = MapUtil.get(params, "datas", new TypeReference<List<Map<String, Object>>>() {
         });
         for (Map<String, Object> para : datas) {
             DopUserFavorLog dopUserFavorLog = new DopUserFavorLog();

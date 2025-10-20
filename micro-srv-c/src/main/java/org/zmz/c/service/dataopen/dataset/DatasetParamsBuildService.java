@@ -620,7 +620,7 @@ public class DatasetParamsBuildService {
         log.info("handleTempPath里的dataPrivCtrlInfo信息：{}", JsonUtil.toJson(dataPrivCtrlInfo));
         // 找出组织维表id列表
         List<Long> orgDimensionMetaDataIdList = orgDimensionModelInfoList.stream()
-            .map(m -> m.getMetaDataInfo().getMetaDataId()).toList();
+            .map(m -> m.getMetaDataInfo().getMetaDataId()).collect(Collectors.toList());
 
         // 度量中各个路径用到的临时表
         Map<String, Map<String, List<MetricsDimensionPathVo>>> tempTablesMap = new HashMap<>();
@@ -855,7 +855,7 @@ public class DatasetParamsBuildService {
                         if (orgDimensionRelaPath != null) {
                             List<ObjKeyColumnRelaVo> relaColumns = orgDimensionRelaPath.getKeyColumnRelas();
                             List<String> relaColumnLists = relaColumns.stream()
-                                .map(ObjKeyColumnRelaVo::getRelaColumnCode).toList();
+                                .map(ObjKeyColumnRelaVo::getRelaColumnCode).collect(Collectors.toList());
                             // 如果组织维度拖选的最细粒度与用户表配置的组织关联层级一样时，组织明细表只需要拼接一次（与组织维度表关联）
                             // todo 与维度组织表关联，会导致不拼用户表权限条件,暂时将||改成&&，使以下if不执行
                             if (relaColumnLists.contains(existOrgDimensionColumn.getColumnCode())
@@ -872,12 +872,8 @@ public class DatasetParamsBuildService {
                                 dataPrivPath.setTgtTableCode(orgModelInfo.getMetaDataInfo().getMetaDataCode());
 
                                 ObjKeyColumnRelaVo relaColumn = new ObjKeyColumnRelaVo();
-                                relaColumn
-                                    .setColumnCode(addOrgDimensionColumn != null ? addOrgDimensionColumn.getColumnCode()
-                                        : existOrgDimensionColumn.getColumnCode());
-                                relaColumn
-                                    .setColumnId(addOrgDimensionColumn != null ? addOrgDimensionColumn.getColumnId()
-                                        : existOrgDimensionColumn.getColumnId());
+                                relaColumn.setColumnCode(addOrgDimensionColumn.getColumnCode());
+                                relaColumn.setColumnId(addOrgDimensionColumn.getColumnId());
                                 relaColumn.setRelaColumnCode(orgModelPrimaryColumn.getColumnCode());
                                 relaColumn.setRelaColumnId(orgModelPrimaryColumn.getColumnId());
 
@@ -1082,7 +1078,7 @@ public class DatasetParamsBuildService {
         // 所有对象下的所有表
         List<ObjTableRela> objTableRelaList = getObjTableRelas();
         List<Long> tableIds = objTableRelaList.stream().map(ObjTableRela::getMetaDataId).filter(Objects::nonNull)
-            .toList();
+            .collect(Collectors.toList());
         ModelInfoQo modelInfoQo = new ModelInfoQo();
         modelInfoQo.setMetaDataIdList(new ArrayList<>(tableIds));
         List<ModelInfo> modelInfoList = dataCommonService.queryAllModelInfoBatch(modelInfoQo);

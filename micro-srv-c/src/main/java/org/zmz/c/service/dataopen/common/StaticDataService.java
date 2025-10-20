@@ -78,22 +78,23 @@ public class StaticDataService {
         List<AttrValue> attrValueList = this.execStaticAttrDcsqlByCode(code);
         if (CollUtil.isEmpty(attrValueList)) {
             // dc_sql表没有，从缓存取
-            attrValueList = JSONUtil.toBean(stringRedisTemplate.opsForValue().get(attrRedisKey), new TypeReference<>() {
-            }, false);
+            attrValueList = JSONUtil.toBean(stringRedisTemplate.opsForValue().get(attrRedisKey),
+                new TypeReference<List<AttrValue>>() {
+                }, false);
             if (CollUtil.isEmpty(attrValueList)) {
-                //attrRedisKey = RedisUtil.getDcSqlRedisKey(code);
-                //attrValueList = RedisUtil.get(attrRedisKey);
+                // attrRedisKey = RedisUtil.getDcSqlRedisKey(code);
+                // attrValueList = RedisUtil.get(attrRedisKey);
                 if (CollUtil.isEmpty(attrValueList)) {
                     // 缓存找不到，最后从attrValue表查询
-                    //attrValueList = staticDataMapper.getAttrValueByCode(code, language);
-                    //attrRedisKey = RedisUtil.getAttrRedisKey(code);
-                    //RedisUtil.set(attrRedisKey, attrValueList);
+                    // attrValueList = staticDataMapper.getAttrValueByCode(code, language);
+                    // attrRedisKey = RedisUtil.getAttrRedisKey(code);
+                    // RedisUtil.set(attrRedisKey, attrValueList);
                 }
             }
         }
 
         // 对静态参数进行国际化信息替换
-        //attrValueList = setAttrValueI18n(attrValueList);
+        // attrValueList = setAttrValueI18n(attrValueList);
         return attrValueList;
     }
 
@@ -103,7 +104,7 @@ public class StaticDataService {
     private List<AttrValue> execStaticAttrDcsqlByCode(String code) {
         // INJECTION_LABEL_OWM_SYSTEM要查询组织表，组织表已去视图，改为调接口查
         if (Constants.DC_SQL_INJECTION_LABEL_OWM_SYSTEM.equals(code)) {
-            //return getOwnSystem();
+            // return getOwnSystem();
             return null;
         }
 
@@ -112,9 +113,9 @@ public class StaticDataService {
             return Collections.emptyList();
         }
 
-        //dcSql = SqlReplaceUtil.handleSqlReplace(dcSql, Collections.emptyMap());
+        // dcSql = SqlReplaceUtil.handleSqlReplace(dcSql, Collections.emptyMap());
 
-        //return staticDataMapper.execStaticDcsqlGetAttrValueList(dcSql);
+        // return staticDataMapper.execStaticDcsqlGetAttrValueList(dcSql);
         return null;
     }
 
@@ -123,18 +124,18 @@ public class StaticDataService {
      *
      * @return 组织数据封成的AttrValue列表
      */
-//    private List<AttrValue> getOwnSystem() {
-//        OrganizationQo organizationQo = new OrganizationQo();
-//        organizationQo.setOrgId(null);
-//        Result<PageVO<Organization>> pageVo = comsystemService.qryOrgList(organizationQo);
-//        List<Organization> rows = pageVo.getData().getRows();
-//        return rows.stream().map(organization -> {
-//            AttrValue attrValue = new AttrValue();
-//            attrValue.setAttrId(organization.getOrgId());
-//            attrValue.setAttrValueName(organization.getOrgName());
-//            return attrValue;
-//        }).collect(Collectors.toList());
-//    }
+    // private List<AttrValue> getOwnSystem() {
+    // OrganizationQo organizationQo = new OrganizationQo();
+    // organizationQo.setOrgId(null);
+    // Result<PageVO<Organization>> pageVo = comsystemService.qryOrgList(organizationQo);
+    // List<Organization> rows = pageVo.getData().getRows();
+    // return rows.stream().map(organization -> {
+    // AttrValue attrValue = new AttrValue();
+    // attrValue.setAttrId(organization.getOrgId());
+    // attrValue.setAttrValueName(organization.getOrgName());
+    // return attrValue;
+    // }).collect(Collectors.toList());
+    // }
     public List<DcSystemConfigList> getDcSystemConfigList(String standType) {
         QueryWrapper<DcSystemConfigList> wrapper = new QueryWrapper<>();
         wrapper.eq("stand_type", standType);

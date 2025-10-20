@@ -1,6 +1,10 @@
 package org.zmz.c.service.dataopen.sqltype;
 
-import cn.hutool.core.map.MapUtil;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -12,10 +16,7 @@ import org.zmz.c.qo.dataopen.ModelInfo;
 import org.zmz.c.service.dataopen.dataset.SqlFuncEnum;
 import org.zmz.c.utils.SqlUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import cn.hutool.core.map.MapUtil;
 
 public final class SqlBuilderHelper {
 
@@ -26,7 +27,7 @@ public final class SqlBuilderHelper {
      * 替换引号
      *
      * @param srcStr 账期表达式
-     * @param isStr  是否字符串
+     * @param isStr 是否字符串
      * @return 返回替换后的表达式
      */
     public static String replaceString(String srcStr, boolean isStr) {
@@ -44,54 +45,55 @@ public final class SqlBuilderHelper {
     }
 
     public static void copyCommonAlias(Map<String, String> tableAlias, List<MetricsDimensionPathVo> pathVos,
-                                       Map<String, String> publicAlias) {
+        Map<String, String> publicAlias) {
         if (MapUtil.isEmpty(tableAlias) || CollectionUtils.isEmpty(pathVos)) {
             return;
         }
         MetricsDimensionPathVo first = pathVos.stream().findFirst().orElse(null);
         if (StringUtils.isNoneBlank(tableAlias.get(String.valueOf(first.getSrcTableId())))) {
             publicAlias.put(String.valueOf(first.getSrcTableId()),
-                    tableAlias.get(String.valueOf(first.getSrcTableId())));
+                tableAlias.get(String.valueOf(first.getSrcTableId())));
         }
 
         for (MetricsDimensionPathVo pathVo : pathVos) {
             if ("1".equals(pathVo.getMetricsInnerPath())) {
                 if (null != tableAlias.get(String.valueOf(pathVo.getSrcTableId()))) {
                     publicAlias.put(String.valueOf(pathVo.getSrcTableId()),
-                            tableAlias.get(String.valueOf(pathVo.getSrcTableId())));
+                        tableAlias.get(String.valueOf(pathVo.getSrcTableId())));
                 }
                 if (null != tableAlias.get(String.valueOf(pathVo.getTgtTableId()))) {
                     publicAlias.put(String.valueOf(pathVo.getTgtTableId()),
-                            tableAlias.get(String.valueOf(pathVo.getTgtTableId())));
+                        tableAlias.get(String.valueOf(pathVo.getTgtTableId())));
                 }
             }
         }
     }
 
     public static Map<String, String> getAliasMap(DatasetColumnQo metric, DatasetColumnQo dimension,
-                                                  Map<String, Map<String, String>> aliasMap, boolean judgePath) {
+        Map<String, Map<String, String>> aliasMap, boolean judgePath) {
         Map<String, String> map = new HashMap<>();
         if (MapUtil.isEmpty(aliasMap)) {
             return map;
         }
         if (!judgePath) {
             return aliasMap.get(Constants.OBJ_TREE_RELA_TYPE_V.equalsIgnoreCase(dimension.getRelaType())
-                    ? metric.getTableId().toString()
-                    : dimension.getTableId().toString());
+                ? metric.getTableId().toString()
+                : dimension.getTableId().toString());
         }
         String dimPath;
         // 虚拟对象
         if (Constants.OBJ_TREE_RELA_TYPE_V.equalsIgnoreCase(dimension.getRelaType())
-                || metric.getTableId().equals(dimension.getTableId())) {
+            || metric.getTableId().equals(dimension.getTableId())) {
             dimPath = metric.getPath();
-        } else {
+        }
+        else {
             dimPath = getConvertDimPath(metric, dimension);
         }
         for (Map.Entry<String, Map<String, String>> entry : aliasMap.entrySet()) {
             String entryKey = entry.getKey();
             if (entryKey.startsWith(dimPath)
-                    // 虚拟对象
-                    && (Constants.OBJ_TREE_RELA_TYPE_V.equalsIgnoreCase(dimension.getRelaType())
+                // 虚拟对象
+                && (Constants.OBJ_TREE_RELA_TYPE_V.equalsIgnoreCase(dimension.getRelaType())
                     || StringUtils.isNotBlank(entry.getValue().get(String.valueOf(dimension.getTableId()))))) {
                 return entry.getValue();
             }
@@ -109,11 +111,11 @@ public final class SqlBuilderHelper {
      * 检查度量路径上是否有组织维表
      *
      * @param dataPrivCtrlInfo 权限参数
-     * @param pathsMap         度量路径
+     * @param pathsMap 度量路径
      * @return true/有,false/没有
      */
     public static boolean hasOrgTable(DataPrivCtrlVo dataPrivCtrlInfo,
-                                      Map<String, List<MetricsDimensionPathVo>> pathsMap) {
+        Map<String, List<MetricsDimensionPathVo>> pathsMap) {
         if (dataPrivCtrlInfo == null) {
             return false;
         }
@@ -158,24 +160,27 @@ public final class SqlBuilderHelper {
     }
 
     public static String getAliasFromMetricOrTemp(DatasetColumnQo metric, Map<String, Map<String, String>> aliasMap,
-                                                  Map<String, String> temTableAlias, DatasetColumnQo dimension) {
+        Map<String, String> temTableAlias, DatasetColumnQo dimension) {
         String tbName = null;
         String path;
         if (metric.getTableId().equals(dimension.getTableId())) {
             path = metric.getPath();
-        } else {
+        }
+        else {
             path = getConvertDimPath(metric, dimension);
         }
         if (MapUtil.isNotEmpty(aliasMap.get(path))) {
             tbName = aliasMap.get(path).get(String.valueOf(dimension.getTableId()));
-        } else {
+        }
+        else {
             for (Map.Entry<String, Map<String, String>> entry : aliasMap.entrySet()) {
                 if (entry.getKey().startsWith(metric.getPath())) {
                     Map<String, String> value = entry.getValue();
                     // 如果是账期字段，当作度量表字段处理
                     if (Constants.YES_VALUE_1.equals(dimension.getIsAcct())) {
                         tbName = value.get(String.valueOf(metric.getTableId()));
-                    } else {
+                    }
+                    else {
                         tbName = value.get(String.valueOf(dimension.getTableId()));
                     }
                 }
@@ -195,13 +200,14 @@ public final class SqlBuilderHelper {
     }
 
     public static String getAliasFromTempTableAndMetric(DatasetColumnQo metric, DatasetColumnQo dimension,
-                                                        Map<String, List<MetricsDimensionPathVo>> metricsMap, Map<String, Map<String, String>> alias,
-                                                        Map<String, String> temTableAlias) {
+        Map<String, List<MetricsDimensionPathVo>> metricsMap, Map<String, Map<String, String>> alias,
+        Map<String, String> temTableAlias) {
         // 从度量里面找
         String dimPath;
         if (metric.getTableId().equals(dimension.getTableId())) {
             dimPath = metric.getPath();
-        } else {
+        }
+        else {
             dimPath = getConvertDimPath(metric, dimension);
         }
         String tabAlias;
@@ -210,14 +216,14 @@ public final class SqlBuilderHelper {
                 Map<String, String> map = alias.get(entryMetric.getKey());
                 for (MetricsDimensionPathVo pathVo : entryMetric.getValue()) {
                     if (!ObjectUtils.isEmpty(pathVo.getSrcTableId())
-                            && dimension.getTableId().equals(pathVo.getSrcTableId())) {
+                        && dimension.getTableId().equals(pathVo.getSrcTableId())) {
                         tabAlias = map.get(String.valueOf(dimension.getTableId()));
                         if (StringUtils.isNotEmpty(tabAlias)) {
                             return tabAlias;
                         }
                     }
                     if (!ObjectUtils.isEmpty(pathVo.getTgtTableId())
-                            && dimension.getTableId().equals(pathVo.getTgtTableId())) {
+                        && dimension.getTableId().equals(pathVo.getTgtTableId())) {
                         tabAlias = map.get(String.valueOf(dimension.getTableId()));
                         if (StringUtils.isNotEmpty(tabAlias)) {
                             return tabAlias;
@@ -234,7 +240,8 @@ public final class SqlBuilderHelper {
                     return entry.getValue();
                 }
             }
-        } else {
+        }
+        else {
             return MapUtil.getStr(alias.get(dimension.getTableId().toString()), dimension.getTableId().toString());
         }
         return null;
@@ -256,7 +263,8 @@ public final class SqlBuilderHelper {
             }
             if (ObjectUtils.isEmpty(dataPrivCtrlInfo.getAddOrgDimensionColumn())) {
                 return dataPrivCtrlInfo.getExistOrgDimensionColumn();
-            } else {
+            }
+            else {
                 return dataPrivCtrlInfo.getAddOrgDimensionColumn();
             }
         }
@@ -272,12 +280,12 @@ public final class SqlBuilderHelper {
     }
 
     public static String getColumnGroup(List<DatasetColumnQo> columnGroup, Map<String, StringBuilder> expMap,
-                                        String tbName) {
+        String tbName) {
         return getColumnGroup(columnGroup, expMap, tbName, false);
     }
 
     public static String getColumnGroup(List<DatasetColumnQo> columnGroup, Map<String, StringBuilder> expMap,
-                                        String tbName, boolean singleSql) {
+        String tbName, boolean singleSql) {
         StringBuilder groupSql = new StringBuilder();
         for (DatasetColumnQo grpCol : columnGroup) {
             String condValue = grpCol.getCondValue();
@@ -287,22 +295,26 @@ public final class SqlBuilderHelper {
             if ("connectOpt".equals(condType) || "bracket".equals(condType) || "arithmeticOpt".equals(condType)) {
                 if ("arithmeticOpt".equals(condType) && "&".equals(condValue)) {
                     condValue = "and";
-                } else if ("arithmeticOpt".equals(condType) && "||".equals(condValue)) {
+                }
+                else if ("arithmeticOpt".equals(condType) && "||".equals(condValue)) {
                     condValue = "or";
                 }
                 groupSql.append(" ").append(condValue).append(" ");
                 // 算术运算项目
-            } else if ("arithmeticCondItem".equals(condType)) {
+            }
+            else if ("arithmeticCondItem".equals(condType)) {
                 if (StringUtils.isNoneBlank(grpCol.getAlias())) {
                     // 计算字段引用其他度量的别名
                     if (null != expMap.get(grpCol.getAlias())) {
                         groupSql.append(singleSql ? "" : "SUM(").append(expMap.get(grpCol.getAlias()))
-                                .append(singleSql ? "" : ")");
-                    } else {
-                        groupSql.append(singleSql ? "" : "SUM(").append(tbName).append(SqlUtils.STR_POINT)
-                                .append(grpCol.getAlias()).append(singleSql ? "" : ")");
+                            .append(singleSql ? "" : ")");
                     }
-                } else {
+                    else {
+                        groupSql.append(singleSql ? "" : "SUM(").append(tbName).append(SqlUtils.STR_POINT)
+                            .append(grpCol.getAlias()).append(singleSql ? "" : ")");
+                    }
+                }
+                else {
                     groupSql.append(colCode).append(" ");
                     // 算术运算条件
                     // 前端多传一个字段标识是逻辑操作
@@ -310,7 +322,8 @@ public final class SqlBuilderHelper {
                         groupSql.append("=").append(condValue).append(" ");
                     }
                 }
-            } else {
+            }
+            else {
                 groupSql.append(condValue);
             }
         }
@@ -328,7 +341,7 @@ public final class SqlBuilderHelper {
     public static boolean isStringType(String columnType) {
         columnType = columnType.toLowerCase();
         return columnType.contains("char") || columnType.contains("string") || columnType.contains("text")
-                || columnType.contains("clob") || columnType.contains("date");
+            || columnType.contains("clob") || columnType.contains("date");
     }
 
     public static String getConvertDimPath(DatasetColumnQo metric, DatasetColumnQo dimension) {
@@ -339,54 +352,65 @@ public final class SqlBuilderHelper {
                 // 度量和维度同一对象
                 if (metric.getTableId().equals(dimension.getTableId())) {
                     path = metric.getPath().startsWith("n,") ? metric.getPath()
-                            : metric.getRelaType() + "," + metric.getTableId() + "," + metric.getPath();
-                } else {
+                        : metric.getRelaType() + "," + metric.getTableId() + "," + metric.getPath();
+                }
+                else {
                     path = metric.getPath().startsWith("n,") ? metric.getPath() + "," + dimension.getTableId()
-                            : metric.getRelaType() + "," + metric.getTableId() + "," + metric.getPath() + ","
+                        : metric.getRelaType() + "," + metric.getTableId() + "," + metric.getPath() + ","
                             + dimension.getTableId();
                 }
-            } else {
+            }
+            else {
                 // 维度出自于当前对象本身或者1端
                 path = metric.getPath().startsWith("n,") ? metric.getPath() + "," + dimension.getPath()
-                        : metric.getRelaType() + "," + metric.getTableId() + "," + metric.getPath() + ","
+                    : metric.getRelaType() + "," + metric.getTableId() + "," + metric.getPath() + ","
                         + dimension.getPath();
             }
-        } else if (Constants.OBJ_TREE_RELA_TYPE_2.equals(metric.getRelaType())) {
+        }
+        else if (Constants.OBJ_TREE_RELA_TYPE_2.equals(metric.getRelaType())) {
             // 多维
             if (metric.getRelaType().equals(dimension.getRelaType())) {
                 // 多维指标与维度同一对象
                 if (metric.getTableId().equals(dimension.getTableId())) {
                     path = "-2," + metric.getTableId();
-                } else {
+                }
+                else {
                     path = "-2," + metric.getTableId() + "," + dimension.getTableId();
                 }
-            } else {
+            }
+            else {
                 // 维度出自于当前对象本身或者1端
                 path = "-2," + metric.getTableId() + "," + dimension.getPath();
             }
-        } else if (Constants.OBJ_TREE_RELA_TYPE_1.equals(metric.getRelaType())) {
+        }
+        else if (Constants.OBJ_TREE_RELA_TYPE_1.equals(metric.getRelaType())) {
             // 主分析对象的1端
             if (metric.getRelaType().equals(dimension.getRelaType())
-                    && (metric.getIsOrgDimension() == null || metric.getIsOrgDimension() != 1
+                && (metric.getIsOrgDimension() == null || metric.getIsOrgDimension() != 1
                     || dimension.getIsOrgDimension() == null || dimension.getIsOrgDimension() != 1)) {
                 // 维度与1端度量同一对象
                 if (metric.getTableId().equals(dimension.getTableId())) {
                     path = "-1," + metric.getTableId() + "," + dimension.getPath();
-                } else {
+                }
+                else {
                     path = "-1," + metric.getTableId() + "," + dimension.getTableId() + "," + dimension.getPath();
                 }
-            } else {
+            }
+            else {
                 path = "-1," + metric.getTableId() + "," + dimension.getPath();
             }
-        } else if (Constants.OBJ_TREE_RELA_TYPE_0.equals(metric.getRelaType())) {
+        }
+        else if (Constants.OBJ_TREE_RELA_TYPE_0.equals(metric.getRelaType())) {
             // 主分析对象
             if (metric.getRelaType().equals(dimension.getRelaType())) {
                 if (metric.getTableId().equals(dimension.getTableId())) {
                     path = "-0," + metric.getTableId();
-                } else {
+                }
+                else {
                     path = "-0," + metric.getTableId() + "," + dimension.getTableId();
                 }
-            } else {
+            }
+            else {
                 path = "-0," + metric.getTableId() + "," + dimension.getPath();
             }
         }
@@ -398,14 +422,18 @@ public final class SqlBuilderHelper {
         if (Constants.OBJ_TREE_RELA_TYPE_N.equals(metric.getRelaType())) {
             if (!metric.getPath().startsWith("n")) {
                 path = metric.getRelaType() + "," + metric.getTableId() + "," + metric.getPath();
-            } else {
+            }
+            else {
                 path = metric.getPath();
             }
-        } else if (Constants.OBJ_TREE_RELA_TYPE_2.equals(metric.getRelaType())) {
+        }
+        else if (Constants.OBJ_TREE_RELA_TYPE_2.equals(metric.getRelaType())) {
             path = "-2," + metric.getTableId();
-        } else if (Constants.OBJ_TREE_RELA_TYPE_1.equals(metric.getRelaType())) {
+        }
+        else if (Constants.OBJ_TREE_RELA_TYPE_1.equals(metric.getRelaType())) {
             path = "-1," + metric.getTableId();
-        } else if (Constants.OBJ_TREE_RELA_TYPE_0.equals(metric.getRelaType())) {
+        }
+        else if (Constants.OBJ_TREE_RELA_TYPE_0.equals(metric.getRelaType())) {
             path = "-0," + metric.getTableId();
         }
         return path;
@@ -427,22 +455,16 @@ public final class SqlBuilderHelper {
     }
 
     public static boolean isGrowthOrTotal(SqlFuncEnum funcEnum) {
-        Set<SqlFuncEnum> growthOrTotalFuncEnums = Set.of(
-                SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth,
-                SqlFuncEnum.pp, SqlFuncEnum.momGrowth,
-                SqlFuncEnum.mm, SqlFuncEnum.mmGrowth,
-                SqlFuncEnum.yearEnd, SqlFuncEnum.yearEndGrowth,
-                SqlFuncEnum.monthTotal, SqlFuncEnum.yearTotal
-        );
+        List<SqlFuncEnum> growthOrTotalFuncEnums = Arrays.asList(SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth, SqlFuncEnum.pp,
+            SqlFuncEnum.momGrowth, SqlFuncEnum.mm, SqlFuncEnum.mmGrowth, SqlFuncEnum.yearEnd, SqlFuncEnum.yearEndGrowth,
+            SqlFuncEnum.monthTotal, SqlFuncEnum.yearTotal);
         return growthOrTotalFuncEnums.contains(funcEnum);
     }
 
     public static boolean isGrowth(SqlFuncEnum funcEnum) {
-        Set<SqlFuncEnum> growthOrTotalFuncEnums = Set.of(
-                SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth,
-                SqlFuncEnum.pp, SqlFuncEnum.momGrowth,
-                SqlFuncEnum.mm, SqlFuncEnum.mmGrowth,
-                SqlFuncEnum.yearEnd, SqlFuncEnum.yearEndGrowth);
+        List<SqlFuncEnum> growthOrTotalFuncEnums = Arrays.asList(SqlFuncEnum.yoy, SqlFuncEnum.yoyGrowth, SqlFuncEnum.pp,
+            SqlFuncEnum.momGrowth, SqlFuncEnum.mm, SqlFuncEnum.mmGrowth, SqlFuncEnum.yearEnd,
+            SqlFuncEnum.yearEndGrowth);
         return growthOrTotalFuncEnums.contains(funcEnum);
     }
 

@@ -19,19 +19,18 @@ public class AcctTimeUtil {
      * 获取并添加符号
      *
      * @param scheduleType 调度类型
-     * @param cycleType    周期类型
-     * @param columnType   字段类型
-     * @param outPutMode   输出模式
+     * @param cycleType 周期类型
+     * @param columnType 字段类型
+     * @param outPutMode 输出模式
      * @return String
      */
-    public static String getAcctValAddQuotOutPubMode(String scheduleType,
-                                                     String cycleType,
-                                                     String columnType,
-                                                     String outPutMode) {
+    public static String getAcctValAddQuotOutPubMode(String scheduleType, String cycleType, String columnType,
+        String outPutMode) {
         boolean isStr = SqlBuilderHelper.isStringType(columnType);
         if (OutPutMode.SQL.equalsIgnoreCase(outPutMode)) {
             return SqlBuilderHelper.addQuot(Constants.ACCT_CODE_EXP, isStr);
-        } else {
+        }
+        else {
             String acctVal = getAcctVal(scheduleType, cycleType);
 
             return SqlBuilderHelper.addQuot(acctVal, isStr);
@@ -103,7 +102,7 @@ public class AcctTimeUtil {
      */
     public static String getCycleType(Collection<String> dataCycles) {
         List<String> allCycle = Arrays.asList(Constants.SCHEDULE_LOOP_TYPE_F, Constants.SCHEDULE_LOOP_TYPE_H,
-                Constants.SCHEDULE_LOOP_TYPE_D, Constants.SCHEDULE_LOOP_TYPE_M);
+            Constants.SCHEDULE_LOOP_TYPE_D, Constants.SCHEDULE_LOOP_TYPE_M);
         if (CollUtil.isNotEmpty(dataCycles)) {
             for (String cycle : allCycle) {
                 if (!dataCycles.contains(cycle)) {
@@ -118,29 +117,36 @@ public class AcctTimeUtil {
      * 根据获取账期
      *
      * @param scheduleType 调度类型
-     * @param cycleType    周期
-     * @param outPutMode   输出模式
+     * @param cycleType 周期
+     * @param outPutMode 输出模式
      * @return outPutMode
      */
     public static String getAcctValOutPubMode(String scheduleType, String cycleType, String outPutMode) {
         // sql的默认输出账期字段替换
         if (OutPutMode.SQL.equalsIgnoreCase(outPutMode)) {
             return Constants.ACCT_CODE_EXP;
-        } else {
+        }
+        else {
             return getAcctVal(scheduleType, cycleType);
         }
     }
 
     public static String getDefAcctValue(String cycleType) {
         if (isCycle(cycleType)) {
-            return switch (cycleType.toUpperCase()) {
-                case "Y" -> DateUtil.getLastAcct(Calendar.YEAR);
-                case "M" -> DateUtil.getLastMonth(DateUtil.DATE_FORMAT_6);
-                case "H" -> DateUtil.getLastAcct(Calendar.HOUR);
-                case "F" -> DateUtil.getLastAcct(Calendar.MINUTE);
-                case "D" -> DateUtil.getYesterday(DateUtil.DATE_FORMAT_8);
-                default -> DateUtil.getDate();
-            };
+            switch (cycleType.toUpperCase()) {
+                case "Y":
+                    return DateUtil.getLastAcct(Calendar.YEAR);
+                case "M":
+                    return DateUtil.getLastMonth(DateUtil.DATE_FORMAT_6);
+                case "H":
+                    return DateUtil.getLastAcct(Calendar.HOUR);
+                case "F":
+                    return DateUtil.getLastAcct(Calendar.MINUTE);
+                case "D":
+                    return DateUtil.getYesterday(DateUtil.DATE_FORMAT_8);
+                default:
+                    return DateUtil.getDate();
+            }
         }
         return "";
     }

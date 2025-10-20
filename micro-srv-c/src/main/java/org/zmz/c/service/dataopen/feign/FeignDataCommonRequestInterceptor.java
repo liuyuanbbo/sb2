@@ -3,6 +3,7 @@ package org.zmz.c.service.dataopen.feign;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,13 +90,20 @@ public class FeignDataCommonRequestInterceptor implements RequestInterceptor {
                 LoginAccountAndPwd loginAccountAndPwd = list.get(id);
                 String accountCode = loginAccountAndPwd.getAccountCode();
                 String accountPasswd = loginAccountAndPwd.getAccountPasswd();
-                return Map.of("accountCode", accountCode, "accountPasswd", accountPasswd);
+                Map<String, String> rs = new HashMap<>();
+                rs.put("accountCode", accountCode);
+                rs.put("accountPasswd", accountPasswd);
+                return rs;
             }
         }
         catch (Exception e) {
             log.error("读取 loginInfo.json 文件异常", e);
         }
-        return Map.of("accountCode", "lyd_test", "accountPasswd", "cf8fed38bb111ab210b2009905de17da");
+
+        Map<String, String> rs = new HashMap<>();
+        rs.put("accountCode", "lyd_test");
+        rs.put("accountPasswd", "cf8fed38bb111ab210b2009905de17da");
+        return rs;
     }
 
     public static void main(String[] args) {

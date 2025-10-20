@@ -31,7 +31,7 @@ public final class DateUtil {
     /**
      * 返回上一账期
      *
-     * @param date         开始日期
+     * @param date 开始日期
      * @param calendarType 账期类型，Calendar.YEAR
      */
     public static String getLastAcct(Date date, int calendarType) {
@@ -39,14 +39,27 @@ public final class DateUtil {
         calendar.setTime(date);
         // 月份减1
         calendar.add(calendarType, -1);
-        String pattern = switch (calendarType) {
-            case Calendar.YEAR -> DATE_FORMAT_4;
-            case Calendar.MONTH -> DATE_FORMAT_6;
-            case Calendar.HOUR -> DATE_TIME_FORMAT_10;
-            case Calendar.MINUTE -> DATE_TIME_FORMAT_12;
-            case Calendar.SECOND -> DATE_TIME_FORMAT_14;
-            default -> DATE_FORMAT_8;
-        };
+        String pattern;
+        switch (calendarType) {
+            case Calendar.YEAR:
+                pattern = DATE_FORMAT_4;
+                break;
+            case Calendar.MONTH:
+                pattern = DATE_FORMAT_6;
+                break;
+            case Calendar.HOUR:
+                pattern = DATE_TIME_FORMAT_10;
+                break;
+            case Calendar.MINUTE:
+                pattern = DATE_TIME_FORMAT_12;
+                break;
+            case Calendar.SECOND:
+                pattern = DATE_TIME_FORMAT_14;
+                break;
+            default:
+                pattern = DATE_FORMAT_8;
+                break;
+        }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         date = calendar.getTime();
         return simpleDateFormat.format(date);

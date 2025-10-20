@@ -1,23 +1,24 @@
 package org.zmz.c.config;
 
+import javax.sql.DataSource;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.sql.DataSource;
-
 @Configuration
-public class LocalDataSourceConfig {
-    @Bean(name = "localMariaDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.maria.local")
-    public DataSource localMariaDataSource() {
+public class DataSourceConfig {
+
+    @Bean(name = "dynamicDataOpenDataSource")
+    @ConfigurationProperties("spring.datasource.dataopen")
+    public DataSource dataopenDataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "localPgsqlDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.pgsql.local")
-    public DataSource localPgsqlDataSource() {
+    @Bean(name = "dynamicDataPortalDataSource")
+    @ConfigurationProperties("spring.datasource.dataportal")
+    public DataSource dataportalDataSource() {
         return DataSourceBuilder.create().build();
     }
 }

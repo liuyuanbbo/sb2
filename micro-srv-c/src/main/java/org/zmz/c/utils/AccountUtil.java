@@ -246,7 +246,7 @@ public class AccountUtil {
         if (shareCurrentRoles != null) {
             List<RoleInfo> userRoles = null;
             try {
-                userRoles = objectMapper.readValue(shareCurrentRoles.toString(), new TypeReference<>() {
+                userRoles = objectMapper.readValue(shareCurrentRoles.toString(), new TypeReference<List<RoleInfo>>() {
                 });
             } catch (JsonProcessingException e) {
                 log.error("AccountUtil#hasUserRole() JSON处理错误");

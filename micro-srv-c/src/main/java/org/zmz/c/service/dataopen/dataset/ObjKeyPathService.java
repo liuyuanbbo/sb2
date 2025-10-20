@@ -36,20 +36,20 @@ public class ObjKeyPathService {
     @Resource
     DatasetCacheService datasetCacheService;
 
-    //@Resource
-    //AccountUtil accountUtil;
+    // @Resource
+    // AccountUtil accountUtil;
 
     /**
      * 对象两两之间关系
      */
     public Map<String, Set<List<Long>>> getDatasetObjPathMap() {
-        //Long comAcctId = accountUtil.getComAcctId();
+        // Long comAcctId = accountUtil.getComAcctId();
         long comAcctId = 1021L;
         String datasetObjPathMapRedisKey = DATASET_OBJ_PATH_MAP + "_" + comAcctId;
         ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
         String cacheDatasetObjPathMap = stringValueOperations.get(datasetObjPathMapRedisKey);
         if (StrUtil.isNotEmpty(cacheDatasetObjPathMap)) {
-            return JSON.parseObject(cacheDatasetObjPathMap, new TypeReference<>() {
+            return JSON.parseObject(cacheDatasetObjPathMap, new TypeReference<Map<String, Set<List<Long>>>>() {
             });
         }
 
@@ -58,7 +58,7 @@ public class ObjKeyPathService {
         // 构建后放入缓存
         this.buildObjKeyPaths(objKeyTableRelaList);
         cacheDatasetObjPathMap = stringValueOperations.get(datasetObjPathMapRedisKey);
-        return JSON.parseObject(cacheDatasetObjPathMap, new TypeReference<>() {
+        return JSON.parseObject(cacheDatasetObjPathMap, new TypeReference<Map<String, Set<List<Long>>>>() {
         });
     }
 
@@ -78,8 +78,8 @@ public class ObjKeyPathService {
         for (ObjKeyTableRelaVo nKeyTableRela : objKeyTableRelas) {
             // 找到一端的一端
             List<ObjKeyTableRelaVo> oneKeyRelas = objKeyTableRelas.stream()
-                    .filter(keyRela -> nKeyTableRela.getRelaKeyObjectId().equals(keyRela.getObjectId()))
-                    .collect(Collectors.toList());
+                .filter(keyRela -> nKeyTableRela.getRelaKeyObjectId().equals(keyRela.getObjectId()))
+                .collect(Collectors.toList());
             if (CollUtil.isNotEmpty(oneKeyRelas)) {
                 // 找到一端的一端,将路径加到当前对象上
                 for (ObjKeyTableRelaVo oneKeyRela : oneKeyRelas) {
@@ -91,27 +91,22 @@ public class ObjKeyPathService {
         }
 
         for (Map.Entry<String, Set<List<Long>>> entry : pathsMap.entrySet()) {
-            log.info("{} : {}",
-                    JsonUtil.toJson(entry.getKey()), JsonUtil.toJson(entry.getValue()) + System.lineSeparator()
-            );
+            log.info("{} : {}", JsonUtil.toJson(entry.getKey()),
+                JsonUtil.toJson(entry.getValue()) + System.lineSeparator());
         }
-        //Long comAcctId = accountUtil.getComAcctId();
+        // Long comAcctId = accountUtil.getComAcctId();
         long comAcctId = 1021L;
         String datasetObjPathMapRedisKey = DATASET_OBJ_PATH_MAP + "_" + comAcctId;
         String jsonString = JSON.toJSONString(pathsMap);
         stringRedisTemplate.opsForValue().set(datasetObjPathMapRedisKey, jsonString, TIMEOUT, TimeUnit.MILLISECONDS);
     }
 
-    private void recurBuildPath(ObjKeyTableRelaVo nKeyTableRela,
-                                ObjKeyTableRelaVo oneKeyTableRela,
-                                List<ObjKeyTableRelaVo> objKeyTableRelas,
-                                Map<String, Set<List<Long>>> pathsMap,
-                                int recurCount) {
+    private void recurBuildPath(ObjKeyTableRelaVo nKeyTableRela, ObjKeyTableRelaVo oneKeyTableRela,
+        List<ObjKeyTableRelaVo> objKeyTableRelas, Map<String, Set<List<Long>>> pathsMap, int recurCount) {
         // 关系成环，容易死循环
         if (recurCount > 20) {
-            throw new RuntimeException(
-                    String.format("对象关联关系配置成环了，请检查N端: %s , 1端: %s",
-                            nKeyTableRela.getTableCode(), oneKeyTableRela.getTableCode()));
+            throw new RuntimeException(String.format("对象关联关系配置成环了，请检查N端: %s , 1端: %s", nKeyTableRela.getTableCode(),
+                oneKeyTableRela.getTableCode()));
         }
 
         String pathKey = getPathKey(nKeyTableRela.getObjectId(), oneKeyTableRela.getRelaKeyObjectId());
@@ -120,7 +115,7 @@ public class ObjKeyPathService {
         Set<List<Long>> nRelas = pathsMap.get(getPathKey(nKeyTableRela.getObjectId(), oneKeyTableRela.getObjectId()));
         // 一端的一端
         Set<List<Long>> oneRelas = pathsMap
-                .get(getPathKey(oneKeyTableRela.getObjectId(), oneKeyTableRela.getRelaKeyObjectId()));
+            .get(getPathKey(oneKeyTableRela.getObjectId(), oneKeyTableRela.getRelaKeyObjectId()));
         // 笛卡尔积
         List<List<Long>> joinRelas = new ArrayList<>(nRelas.size() * oneRelas.size());
         for (List<Long> nRela : nRelas) {
@@ -136,8 +131,8 @@ public class ObjKeyPathService {
 
         // 找到一端的一端
         List<ObjKeyTableRelaVo> oneOneKeyRelas = objKeyTableRelas.stream()
-                .filter(keyRela -> oneKeyTableRela.getRelaKeyObjectId().equals(keyRela.getObjectId()))
-                .collect(Collectors.toList());
+            .filter(keyRela -> oneKeyTableRela.getRelaKeyObjectId().equals(keyRela.getObjectId()))
+            .collect(Collectors.toList());
         if (CollUtil.isNotEmpty(oneOneKeyRelas)) {
             // 找到一端的一端,将路径加到当前对象上
             for (ObjKeyTableRelaVo oneOneKeyRela : oneOneKeyRelas) {
@@ -149,7 +144,7 @@ public class ObjKeyPathService {
     /**
      * key值固定，n端对象～1端对象
      *
-     * @param nObjectId   nObjectId
+     * @param nObjectId nObjectId
      * @param oneObjectId oneObjectId
      */
     public String getPathKey(Long nObjectId, Long oneObjectId) {

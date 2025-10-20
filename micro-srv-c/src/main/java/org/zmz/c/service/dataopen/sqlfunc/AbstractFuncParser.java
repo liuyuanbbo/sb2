@@ -260,7 +260,7 @@ public abstract class AbstractFuncParser {
         List<DatasetConditionQo> condList = this.builder.params.getCondList();
         List<DatasetConditionQo> acct = CollectionUtils.isEmpty(condList) ? Collections.emptyList()
                 : condList.stream().filter(obj -> KeyValues.YES_VALUE_1.equals(obj.getIsAcct()))
-                .toList();
+                .collect(Collectors.toList());
         Column columnPeriod = this.builder.allPeriod.get(currMetric.getTableId());
         // 其他度量上有账期
         boolean hasPeriods = checkOtherMetricsHasPeriod();

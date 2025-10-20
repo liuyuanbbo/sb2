@@ -8,7 +8,9 @@ import java.util.Map;
 
 public interface Constants {
     int PAGE_INDEX = 1;
+
     String APP_TYPE_DIMENSION = "dimension";
+
     String APP_TYPE_METRICS = "metrics";
 
     /**
@@ -37,7 +39,9 @@ public interface Constants {
      * 指标
      */
     String REFER_TYPE_INDEX = "index";
+
     String YES_VALUE_1 = "1";
+
     /**
      * 一次性
      */
@@ -82,7 +86,6 @@ public interface Constants {
      */
     String SCHEDULE_LOOP_TYPE_F = "F";
 
-
     String BRACKET_LEFT = "(";
 
     String BRACKET_RIGHT = ")";
@@ -97,7 +100,7 @@ public interface Constants {
      */
     List<String> LIST_DIVIDEND_SYMBOL = new ArrayList<>(Arrays.asList("+", "-", "*", "/"));
 
-    Map<String, String> DATA_TYPE_STRING = new HashMap<>() {
+    Map<String, String> DATA_TYPE_STRING = new HashMap<String, String>() {
         {
             put("mysql", "VARCHAR");
             put("hive", "STRING");
@@ -116,7 +119,7 @@ public interface Constants {
     /**
      * 账期用整型，由于分钟级别超长，修改为BIGINT
      */
-    Map<String, String> DATA_TYPE_INT = new HashMap<>() {
+    Map<String, String> DATA_TYPE_INT = new HashMap<String, String>() {
         {
             put("mysql", "BIGINT");
             put("hive", "BIGINT");
@@ -138,6 +141,7 @@ public interface Constants {
     String SQL_PREVIEW = "preview";
 
     String NEW_LINE_STR = System.lineSeparator();
+
     /**
      * 默认账期+分区字段 日
      */

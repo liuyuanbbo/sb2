@@ -25,10 +25,8 @@ public class RedissonConfig {
     public RedissonClient redissonSingleClient(RedissonSingleProperties redissonSingleProperties) {
         log.info("加载 Redisson 单节点配置: {}", redissonSingleProperties);
         Config redissonSingleConfig = new Config();
-        redissonSingleConfig.useSingleServer()
-                .setAddress(redissonSingleProperties.getAddress())
-                .setPassword(redissonSingleProperties.getPassword())
-                .setDatabase(redissonSingleProperties.getDatabase());
+        redissonSingleConfig.useSingleServer().setAddress(redissonSingleProperties.getAddress())
+            .setPassword(redissonSingleProperties.getPassword()).setDatabase(redissonSingleProperties.getDatabase());
         return Redisson.create(redissonSingleConfig);
     }
 
@@ -38,8 +36,8 @@ public class RedissonConfig {
         log.info("加载 Redisson 集群节点配置: {}", redissonClusterProperties);
         Config redissonSingleConfig = new Config();
         redissonSingleConfig.useClusterServers()
-                .addNodeAddress(redissonClusterProperties.getNodes().toArray(new String[0]))
-                .setPassword(redissonClusterProperties.getPassword());
+            .addNodeAddress(redissonClusterProperties.getNodes().toArray(new String[0]))
+            .setPassword(redissonClusterProperties.getPassword());
         return Redisson.create(redissonSingleConfig);
     }
 
@@ -49,6 +47,7 @@ public class RedissonConfig {
     @Component
     public static class RedissonClusterProperties {
         private List<String> nodes;
+
         private String password;
 
         @Override
@@ -63,7 +62,9 @@ public class RedissonConfig {
     @Component
     public static class RedissonSingleProperties {
         private String address;
+
         private String password;
+
         private int database;
 
         @Override

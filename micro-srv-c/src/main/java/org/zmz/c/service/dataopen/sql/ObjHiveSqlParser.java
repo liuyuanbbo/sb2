@@ -225,7 +225,7 @@ public final class ObjHiveSqlParser extends AbstractSqlParser {
         // hive表字段顺序
         if (CollUtil.isNotEmpty(physicColumnList)) {
             List<String> selectColumnCodes = columnList.stream().map(Column::getColumnCode)
-                    .toList();
+                    .collect(Collectors.toList());
             List<String> columnCodes = new ArrayList<>();
             for (Column column : physicColumnList) {
                 if (CollUtil.isNotEmpty(partitionList) && partitions.contains(column.getColumnCode())) {

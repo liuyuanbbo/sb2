@@ -67,7 +67,7 @@ public class DatasetCacheService {
             stringValueOperations.set(redisKey, JSON.toJSONString(objDimRelaVosMap), TIMEOUT, TimeUnit.MILLISECONDS);
             return objDimRelaVosMap;
         }
-        return JSON.parseObject(data, new TypeReference<>() {
+        return JSON.parseObject(data, new TypeReference<Map<Long, List<ObjKeyTableRelaVo>>>() {
         });
     }
 

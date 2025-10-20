@@ -1,9 +1,0 @@
-spring:
-  datasource:
-    mysql:
-      dev:
-        dataopen:
-          driverClassName: com.mysql.cj.jdbc.Driver
-          jdbcUrl: jdbc:mysql://172.21.72.155:8003/dataopen?serverTimezone=Asia/Shanghai
-          username: dataopen
-          password: 'dataopen'
